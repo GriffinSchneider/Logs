@@ -4,4 +4,5 @@ target 'tracker' do
   pod 'DRYUI'
   pod 'MoveViewUpForKeyboardKit'
   pod 'BlocksKit'
+  pod 'JSONModel'
 end

@@ -7,8 +7,17 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <JSONModel/JSONModel.h>
 
-@interface Event : NSObject
+typedef NS_ENUM(NSInteger, EventType) {
+    EventTypeStartState,
+    EventTypeEndState
+};
 
+@interface Event : JSONModel
+
+@property (nonatomic, strong) NSString *name;
+@property (nonatomic, strong) NSDate *date;
+@property (nonatomic, assign) EventType type;
 
 @end

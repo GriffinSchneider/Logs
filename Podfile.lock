@@ -16,20 +16,23 @@ PODS:
     - BlocksKit/DynamicDelegate
   - DRYUI (0.8.0):
     - Masonry
+  - JSONModel (1.2.0)
   - Masonry (1.0.0)
   - MoveViewUpForKeyboardKit (1.0.0)
 
 DEPENDENCIES:
   - BlocksKit
   - DRYUI
+  - JSONModel
   - MoveViewUpForKeyboardKit
 
 SPEC CHECKSUMS:
   BlocksKit: 7f422b971407001178d181a43b99014ea2591fe6
   DRYUI: 53e2afe831500d17a12f6c9e3e7f137a15ff4061
+  JSONModel: 12523685c4b623553ccf844bbbf7007624317b2c
   Masonry: b529bb169217897b6354d4b56b1fada6d475b13d
   MoveViewUpForKeyboardKit: cfb46dd1d2b5a022ee78ecd6d78695749ce921cd
 
-PODFILE CHECKSUM: 3fe0b9e688846d667f52be37cb2796bfd2f8589d
+PODFILE CHECKSUM: 316f24481147b7ba9b52d505fedc22abb99c7af7
 
 COCOAPODS: 1.0.1
