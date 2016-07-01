@@ -14,5 +14,6 @@
 + (instancetype)get;
 
 @property (nonatomic, strong) NSArray<NSString *> *states;
+@property (nonatomic, strong) NSArray<NSString *> *readings;
 
 @end

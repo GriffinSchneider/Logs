@@ -29,4 +29,20 @@
     return retVal;
 }
 
+- (NSDictionary<NSString *, Event *> *)lastReadings {
+    NSMutableDictionary<NSString *, Event *> *retVal = [NSMutableDictionary new];
+    [self.events enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(Event * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (obj.type == EventTypeReading) {
+            if (![retVal objectForKey:obj.name]) {
+                [retVal setObject:obj forKey:obj.name];
+            }
+        }
+        if ([obj.name isEqual:EVENT_SLEEP]) {
+            *stop = YES;
+            return;
+        }
+    }];
+    return retVal;
+}
+
 @end

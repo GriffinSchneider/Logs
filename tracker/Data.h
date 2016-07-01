@@ -14,5 +14,6 @@
 @property (nonatomic, strong) NSMutableArray<Event> *events;
 
 - (NSSet<NSString *> *)activeStates;
+- (NSDictionary<NSString *, Event *> *)lastReadings;
 
 @end
