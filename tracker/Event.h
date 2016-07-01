@@ -14,7 +14,8 @@
 typedef NS_ENUM(NSInteger, EventType) {
     EventTypeStartState,
     EventTypeEndState,
-    EventTypeReading
+    EventTypeReading,
+    EventTypeOccurrence,
 };
 
 @protocol Event
@@ -28,5 +29,6 @@ typedef NS_ENUM(NSInteger, EventType) {
 @property (nonatomic, assign) EventType type;
 
 @property (nonatomic, strong) NSNumber<Optional> *reading;
+@property (nonatomic, strong) NSString<Optional> *noteText;
 
 @end
