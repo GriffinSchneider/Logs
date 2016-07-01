@@ -15,5 +15,6 @@
 
 - (NSSet<NSString *> *)activeStates;
 - (NSDictionary<NSString *, Event *> *)lastReadings;
+- (NSSet<NSString *> *)recentOccurrences;
 
 @end

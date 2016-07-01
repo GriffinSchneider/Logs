@@ -55,23 +55,12 @@
     [self buildView];
 }
 
-- (void)buildView {
-    NSSet<NSString *> *activeStates = self.data.activeStates;
-    NSDictionary<NSString *, Event *> *lastReadings = self.data.lastReadings;
-    
+- (UIView *)buildGridWithLastView:(UIView *)lastVieww titles:(NSArray<NSString *> *)titles buttonBlock:(void (^)(UIButton *b, NSString *title))buttonBlock {
+    __block UIView *lastView = lastVieww;
     build_subviews(self.view) {
-        _.backgroundColor = [UIColor purpleColor];
-        __block UIView *add_subview(lastView) {
-            _.make.top.equalTo(_.superview).with.offset(20);
-        };
-        [self.schema.states enumerateObjectsUsingBlock:^(NSString *state, NSUInteger idx, BOOL *stop) {
+        [titles enumerateObjectsUsingBlock:^(NSString *title, NSUInteger idx, BOOL *stop) {
             UIButton *add_subview(button) {
-                if ([activeStates containsObject:state]) {
-                    _.backgroundColor = [UIColor greenColor];
-                } else {
-                    _.backgroundColor = [UIColor redColor];
-                }
-                [_ setTitle:state forState:UIControlStateNormal];
+                [_ setTitle:title forState:UIControlStateNormal];
                 _.make.width.equalTo(superview).multipliedBy(0.45);
                 if (idx % 2 == 0) {
                     _.make.left.equalTo(superview).with.offset(10);
@@ -81,15 +70,57 @@
                     _.make.right.equalTo(superview).with.offset(-10);
                 }
             };
-            [button bk_addEventHandler:^(id _) { [self selectedState:state]; } forControlEvents:UIControlEventTouchUpInside];
+            buttonBlock(button, title);
             [self.buttons addObject:button];
             lastView = button;
+        }];
+    }
+    return lastView;
+}
+
+- (void)buildView {
+    NSDictionary<NSString *, Event *> *lastReadings = self.data.lastReadings;
+    NSSet<NSString *> *activeStates = self.data.activeStates;
+    NSSet<NSString *> *recentOccurrences = self.data.recentOccurrences;
+    
+    build_subviews(self.view) {
+        _.backgroundColor = [UIColor purpleColor];
+        __block UIView *add_subview(lastView) {
+            _.make.top.equalTo(_.superview).with.offset(20);
+        };
+        lastView = [self buildGridWithLastView:lastView titles:self.schema.occurrences buttonBlock:^(UIButton *b, NSString *title) {
+            if ([recentOccurrences containsObject:title]) {
+                b.backgroundColor = [UIColor greenColor];
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    b.backgroundColor = [UIColor orangeColor];
+                });
+            } else {
+                b.backgroundColor = [UIColor orangeColor];
+            }
+            [b bk_addEventHandler:^(id _) {
+                [self selectedOccurrence:title];
+            } forControlEvents:UIControlEventTouchUpInside];
         }];
         UIView *add_subview(spacer) {
             _.make.height.equalTo(@0);
             _.make.top.equalTo(lastView.mas_bottom).with.offset(20);
         };
         lastView = spacer;
+        lastView = [self buildGridWithLastView:lastView titles:self.schema.states buttonBlock:^(UIButton *b, NSString *title) {
+            if ([activeStates containsObject:title]) {
+                b.backgroundColor = [UIColor greenColor];
+            } else {
+                b.backgroundColor = [UIColor redColor];
+            }
+            [b bk_addEventHandler:^(id _) {
+                [self selectedState:title];
+            } forControlEvents:UIControlEventTouchUpInside];
+        }];
+        UIView *add_subview(spacer2) {
+            _.make.height.equalTo(@0);
+            _.make.top.equalTo(lastView.mas_bottom).with.offset(20);
+        };
+        lastView = spacer2;
         [self.schema.readings enumerateObjectsUsingBlock:^(NSString *reading, NSUInteger idx, BOOL *stop) {
             UISlider *add_subview(slider) {
                 _.value = [lastReadings[reading].reading floatValue];
@@ -134,6 +165,14 @@
     [self.data.events addObject:e];
     [self saveToFile];
     [self rebuildView];
+}
+
+- (void)selectedOccurrence:(NSString *)occurrence {
+    Event *e = [Event new];
+    e.type = EventTypeOccurrence;
+    e.name = occurrence;
+    e.date = [NSDate date];
+    [self addEvent:e];
 }
 
 - (void)selectedState:(NSString *)state {

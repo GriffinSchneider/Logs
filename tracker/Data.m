@@ -45,4 +45,16 @@
     return retVal;
 }
 
+- (NSSet<NSString *> *)recentOccurrences {
+    NSMutableSet<NSString *> *retVal = [NSMutableSet new];
+    [self.events enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(Event * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([[NSDate date] timeIntervalSinceDate:obj.date] > 1) {
+            *stop = YES;
+            return;
+        }
+        [retVal addObject:obj.name];
+    }];
+    return retVal;
+}
+
 @end

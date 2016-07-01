@@ -10,7 +10,6 @@
 
 @implementation Event
 
-
 - (void)setTypeWithNSString:(NSString*)string {
     if ([string isEqual:@"StartState"]) {
         self.type = EventTypeStartState;

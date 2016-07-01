@@ -14,16 +14,26 @@
 + (instancetype)get {
     return [[Schema alloc]
             initWithDictionary:
-            @{@"states": @[
+            @{@"occurrences": @[
+                      @"p",
+                      @"c",
+                      @"t",
+                      @"m",
+                      @"w",
+                      @"l"
+                      ],
+              @"states": @[
                       EVENT_SLEEP,
                       @"Showering",
                       @"Walking",
                       @"Onewheeling",
                       @"At Work",
                       @"Eating",
+                      @"People",
                       @"Programming",
+                      @"Guitar Prac",
+                      @"Guitar Rec",
                       @"Juggling",
-                      @"Guitar",
                       @"Gaming",
                       @"Flying"
                       ],
@@ -31,7 +41,8 @@
                       @"Mood",
                       @"Energy",
                       @"Focus",
-                      @"Stomach"
+                      @"Stomach",
+                      @"Wheeee"
                       ]
               }
             error:nil];
