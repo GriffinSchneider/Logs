@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <JSONModel/JSONModel.h>
 
-#define EVENT_SLEEP @"Sleep"
+#define EVENT_SLEEP @"Sleeping"
 
 typedef NS_ENUM(NSInteger, EventType) {
     EventTypeStartState,

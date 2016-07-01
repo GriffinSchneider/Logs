@@ -14,7 +14,7 @@
 + (instancetype)get {
     return [[Schema alloc]
             initWithDictionary: @{
-                                  @"states": @[EVENT_SLEEP, @"Outside", @"Somehting", @"Another Thing" ]
+                                  @"states": @[EVENT_SLEEP, @"Showering", @"Walking", @"Onewheeling", @"At Work", @"Eating", @"Programming", @"Juggling", @"Guitar", @"Gaming"]
                                   }
             error:nil];
 }

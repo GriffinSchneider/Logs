@@ -15,10 +15,7 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-@interface ViewController () <
-UICollectionViewDataSource,
-UICollectionViewDelegate
->
+@interface ViewController ()
 
 @property (nonatomic, strong) Schema *schema;
 @property (nonatomic, strong) Data *data;
@@ -32,7 +29,15 @@ UICollectionViewDelegate
 @implementation ViewController
 
 
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    if ((self = [super initWithCoder:aDecoder])) {
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+    }
+    return self;
+}
+
 - (void)loadView {
+    self.edgesForExtendedLayout = UIRectEdgeNone;
     self.view = [UIView new];
     self.buttons = [NSMutableArray array];
     
@@ -55,7 +60,9 @@ UICollectionViewDelegate
     
     build_subviews(self.view) {
         _.backgroundColor = [UIColor purpleColor];
-        __block UIButton *lastButton = nil;
+        __block UIView *add_subview(lastView) {
+            _.make.top.equalTo(_.superview).with.offset(20);
+        };
         [self.schema.states enumerateObjectsUsingBlock:^(NSString *state, NSUInteger idx, BOOL *stop) {
             UIButton *add_subview(button) {
                 if ([activeStates containsObject:state]) {
@@ -67,15 +74,15 @@ UICollectionViewDelegate
                 _.make.width.equalTo(superview).multipliedBy(0.45);
                 if (idx % 2 == 0) {
                     _.make.left.equalTo(superview).with.offset(10);
-                    _.make.top.equalTo(lastButton.mas_bottom ?: superview).with.offset(10);
+                    _.make.top.equalTo(lastView.mas_bottom ?: superview).with.offset(10);
                 } else {
-                    _.make.top.equalTo(lastButton);
+                    _.make.top.equalTo(lastView);
                     _.make.right.equalTo(superview).with.offset(-10);
                 }
             };
             [button bk_addEventHandler:^(id _) { [self selectedState:state]; } forControlEvents:UIControlEventTouchUpInside];
             [self.buttons addObject:button];
-            lastButton = button;
+            lastView = button;
         }];
     };
 }
