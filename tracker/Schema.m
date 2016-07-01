@@ -7,13 +7,14 @@
 //
 
 #import "Schema.h"
+#import "Event.h"
 
 @implementation Schema
 
 + (instancetype)get {
     return [[Schema alloc]
             initWithDictionary: @{
-                                  @"states": @[@"outside", @"somehting", @"outside", @"outside", @"outside" ]
+                                  @"states": @[EVENT_SLEEP, @"Outside", @"Somehting", @"Another Thing" ]
                                   }
             error:nil];
 }

@@ -9,12 +9,18 @@
 #import <Foundation/Foundation.h>
 #import <JSONModel/JSONModel.h>
 
+#define EVENT_SLEEP @"Sleep"
+
 typedef NS_ENUM(NSInteger, EventType) {
     EventTypeStartState,
     EventTypeEndState
 };
 
-@interface Event : JSONModel
+@protocol Event
+
+@end
+
+@interface Event : JSONModel <Event>
 
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSDate *date;

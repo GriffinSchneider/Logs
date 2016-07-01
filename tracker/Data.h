@@ -11,6 +11,8 @@
 
 @interface Data : JSONModel
 
-@property (nonatomic, strong) NSMutableArray<Event *> *events;
+@property (nonatomic, strong) NSMutableArray<Event> *events;
+
+- (NSSet<NSString *> *)activeStates;
 
 @end
