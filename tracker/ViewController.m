@@ -35,6 +35,8 @@
 
 @property (nonatomic, strong) NSMutableArray<UIButton *> *buttons;
 
+@property (nonatomic, strong) NSTimer *saveTimer;
+
 @end
 
 
@@ -69,6 +71,10 @@
                                                  selector:@selector(refresh)
                                                      name:UIApplicationWillEnterForegroundNotification
                                                    object:[UIApplication sharedApplication]];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(enteringBackground)
+                                                     name:UIApplicationWillResignActiveNotification
+                                                   object:[UIApplication sharedApplication]];
     }
 }
 
@@ -79,6 +85,11 @@
 
 - (void)refresh {
     [self readFromFile];
+}
+
+- (void)enteringBackground {
+    [self.saveTimer fire];
+    [self.saveTimer invalidate];
 }
 
 - (void)rebuildView {
@@ -251,10 +262,17 @@
 }
 
 - (void)saveToFile {
+    [self.saveTimer invalidate];
+    self.saveTimer = [NSTimer timerWithTimeInterval:3.0 target:self selector:@selector(saveTimerDone) userInfo:nil repeats:NO];
+    [[NSRunLoop currentRunLoop] addTimer:self.saveTimer forMode:NSRunLoopCommonModes];
+}
+
+- (void)saveTimerDone {
     NSLog(@"Writing data:\n%@", PRETTY_PRINT(self.data));
     NSData *nsData = [self.data toJSONData];
     [nsData writeToFile:self.localDataPath atomically:YES];
     [self.restClient uploadFile:@"data.json" toPath:@"/" withParentRev:self.fileRev fromPath:self.localDataPath];
+    
 }
 
 - (void)makeSchemaFile {
