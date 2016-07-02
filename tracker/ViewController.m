@@ -10,6 +10,7 @@
 #import <DRYUI/DRYUI.h>
 #import <BlocksKit/BlocksKit+UIKit.h>
 #import <ChameleonFramework/Chameleon.h>
+#import <DropboxSDK/DropboxSDK.h>
 #import "UIButton+ANDYHighlighted.h"
 
 #import "Schema.h"
@@ -17,10 +18,13 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-@interface ViewController ()
+@interface ViewController () <DBRestClientDelegate>
 
 @property (nonatomic, strong) Schema *schema;
 @property (nonatomic, strong) Data *data;
+@property (nonatomic, strong) NSString *fileRev;
+
+@property (nonatomic, strong) DBRestClient* restClient;
 
 @property (nonatomic, strong) NSMutableArray<UIButton *> *buttons;
 
@@ -31,9 +35,11 @@
 @implementation ViewController
 
 
-- (instancetype)initWithCoder:(NSCoder *)aDecoder {
-    if ((self = [super initWithCoder:aDecoder])) {
+- (instancetype)init {
+    if ((self = [super init])) {
         self.edgesForExtendedLayout = UIRectEdgeNone;
+        self.restClient = [[DBRestClient alloc] initWithSession:[DBSession sharedSession]];
+        self.restClient.delegate = self;
     }
     return self;
 }
@@ -46,12 +52,12 @@
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.view = [UIView new];
     self.buttons = [NSMutableArray array];
-    
     self.schema = [Schema get];
-    
+    [self refresh];
+}
+
+- (void)refresh {
     [self readFromFile];
-    
-    [self buildView];
 }
 
 - (void)rebuildView {
@@ -228,17 +234,37 @@
                                                                                               options:NSJSONWritingPrettyPrinted
                                                                                                 error:nil]
                                                      encoding:NSUTF8StringEncoding]);
-    NSData *nsData = [self.data toJSONData];
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *appFile = [documentsDirectory stringByAppendingPathComponent:@"DATAR.json"];
+    NSString *appFile = [documentsDirectory stringByAppendingPathComponent:@"data.json"];
+    NSData *nsData = [self.data toJSONData];
     [nsData writeToFile:appFile atomically:YES];
+    
+    [self.restClient uploadFile:@"data.json" toPath:@"/" withParentRev:self.fileRev fromPath:appFile];
+}
+
+- (NSString *)localFilePath {
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    return [documentsDirectory stringByAppendingPathComponent:@"data.json"];
 }
 
 - (void)readFromFile {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSData *data = [NSData dataWithContentsOfFile:[documentsDirectory stringByAppendingPathComponent:@"DATAR.json"]];
+    [self.restClient loadMetadata:@"/data.json"];
+}
+
+- (void)restClient:(DBRestClient*)client loadedMetadata:(DBMetadata*)metadata {
+    self.fileRev = metadata.rev;
+    [self.restClient loadFile:metadata.path intoPath:self.localFilePath];
+}
+
+- (void)restClient:(DBRestClient*)client loadMetadataFailedWithError:(NSError*)error {
+    NSLog(@"restClient:loadMetadataFailedWithError: %@", [error localizedDescription]);
+    [self restClient:nil loadedFile:self.localFilePath];
+}
+
+- (void)restClient:(DBRestClient *)client loadedFile:(NSString *)destPath {
+    NSData *data = [NSData dataWithContentsOfFile:destPath];
     
     NSDictionary *dict = nil;
     if (data) {
@@ -256,6 +282,25 @@
                                                                                            options:NSJSONWritingPrettyPrinted
                                                                                              error:nil]
                                                   encoding:NSUTF8StringEncoding]);
+    
+    [self rebuildView];
+    
 }
+
+- (void)restClient:(DBRestClient *)client loadFileFailedWithError:(NSError *)error {
+    NSLog(@"restClient:loadFileFailedWithError: %@", [error localizedDescription]);
+    [self restClient:nil loadedFile:self.localFilePath];
+    [self saveToFile];
+}
+
+
+- (void)restClient:(DBRestClient*)client uploadedFile:(NSString*)destPath from:(NSString*)srcPath metadata:(DBMetadata*)metadata {
+    self.fileRev = metadata.rev;
+}
+
+- (void)restClient:(DBRestClient *)client uploadFileFailedWithError:(NSError *)error {
+    NSLog(@"restClient:uploadFileFailedWithError: %@", [error localizedDescription]);
+}
+
 
 @end
