@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import <DRYUI/DRYUI.h>
 #import <BlocksKit/BlocksKit+UIKit.h>
+#import <ChameleonFramework/Chameleon.h>
 
 #import "Schema.h"
 #import "Data.h"
@@ -55,32 +56,12 @@
     [self buildView];
 }
 
-- (UIColor *)green {
-    return [UIColor colorWithRed:0 green:0.3 blue:0 alpha:1.0];
-}
-
-- (UIColor *)red {
-    return [UIColor colorWithRed:0.3 green:0 blue:0 alpha:1.0];
-}
-
-- (UIColor *)orange {
-    return [UIColor colorWithRed:0.3 green:0.15 blue:0 alpha:1.0];
-}
-
-- (UIColor *)blue {
-    return [UIColor colorWithRed:0 green:0 blue:0.3 alpha:1.0];
-}
-
-- (UIColor *)textColor {
-    return [UIColor colorWithRed:0.7 green:0.7 blue:0.7 alpha:1.0];
-}
-
 - (UIView *)buildGridWithLastView:(UIView *)lastVieww titles:(NSArray<NSString *> *)titles buttonBlock:(void (^)(UIButton *b, NSString *title))buttonBlock {
     __block UIView *lastView = lastVieww;
     build_subviews(self.view) {
         [titles enumerateObjectsUsingBlock:^(NSString *title, NSUInteger idx, BOOL *stop) {
             UIButton *add_subview(button) {
-                [_ setTitleColor:self.textColor forState:UIControlStateNormal];
+                [_ setTitleColor:FlatWhiteDark forState:UIControlStateNormal];
                 [_ setTitle:title forState:UIControlStateNormal];
                 _.make.width.equalTo(superview).multipliedBy(0.45);
                 if (idx % 2 == 0) {
@@ -112,18 +93,18 @@
     };
     
     build_subviews(scrollView) {
-        _.backgroundColor = [UIColor blackColor];
+        _.backgroundColor = FlatNavyBlueDark;
         __block UIView *add_subview(lastView) {
             _.make.top.equalTo(_.superview).with.offset(20);
         };
         lastView = [self buildGridWithLastView:lastView titles:self.schema.occurrences buttonBlock:^(UIButton *b, NSString *title) {
             if ([recentOccurrences containsObject:title]) {
-                b.backgroundColor = self.green;
+                b.backgroundColor = FlatGreenDark;
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    b.backgroundColor = self.orange;
+                    b.backgroundColor = FlatOrangeDark;
                 });
             } else {
-                b.backgroundColor = self.orange;
+                b.backgroundColor = FlatOrangeDark;
             }
             [b bk_addEventHandler:^(id _) {
                 [self selectedOccurrence:title];
@@ -136,9 +117,9 @@
         lastView = spacer;
         lastView = [self buildGridWithLastView:lastView titles:self.schema.states buttonBlock:^(UIButton *b, NSString *title) {
             if ([activeStates containsObject:title]) {
-                b.backgroundColor = self.green;
+                b.backgroundColor = FlatGreenDark;
             } else {
-                b.backgroundColor = self.red;
+                b.backgroundColor = FlatRedDark;
             }
             [b bk_addEventHandler:^(id _) {
                 [self selectedState:title];
@@ -152,23 +133,23 @@
         [self.schema.readings enumerateObjectsUsingBlock:^(NSString *reading, NSUInteger idx, BOOL *stop) {
             UISlider *add_subview(slider) {
                 _.value = [lastReadings[reading].reading floatValue];
-                _.thumbTintColor = self.green;
-                _.minimumTrackTintColor = self.green;
-                _.maximumTrackTintColor = self.red;
+                _.thumbTintColor = FlatGreenDark;
+                _.minimumTrackTintColor = FlatGreenDark;
+                _.maximumTrackTintColor = FlatRedDark;
                 _.make.left.equalTo(superview).with.offset(10);
                 _.make.top.equalTo(lastView.mas_bottom).with.offset(15);
                 if (idx > 0) { _.make.width.equalTo(lastView); }
             };
             UIButton *add_subview(button) {
-                [_ setTitleColor:self.textColor forState:UIControlStateNormal];
+                [_ setTitleColor:FlatWhiteDark forState:UIControlStateNormal];
                 
                 if ([[NSDate date] timeIntervalSinceDate:lastReadings[reading].date] < 1) {
-                    _.backgroundColor = self.green;
+                    _.backgroundColor = FlatGreenDark;
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                        _.backgroundColor = self.blue;
+                        _.backgroundColor = FlatBlueDark;
                     });
                 } else {
-                    _.backgroundColor = self.blue;
+                    _.backgroundColor = FlatBlueDark;
                 }
                 
                 _.make.top.and.bottom.equalTo(slider);
