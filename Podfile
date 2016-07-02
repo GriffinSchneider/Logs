@@ -8,4 +8,5 @@ target 'tracker' do
   pod 'JSONModel'
   pod 'ChameleonFramework'
   pod 'UIButton-ANDYHighlighted'
+  pod 'Toast'
 end

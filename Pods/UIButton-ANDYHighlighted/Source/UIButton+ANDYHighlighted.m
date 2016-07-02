@@ -4,7 +4,7 @@
 
 @interface UIButton (ANDYHighlightedPrivate)
 
-@property (nonatomic, strong) UIColor *originalBackgroundColor;
+@property (nonatomic, strong) UIColor *originalColor;
 
 @end
 
@@ -18,9 +18,9 @@
 
 #pragma mark - Getters
 
-- (instancetype)originalBackgroundColor
+- (instancetype)originalColor
 {
-    return objc_getAssociatedObject(self, @selector(originalBackgroundColor));
+    return objc_getAssociatedObject(self, @selector(originalColor));
 }
 
 - (instancetype)highlightedBackgroundColor
@@ -40,14 +40,14 @@
 
 #pragma mark - Setters
 
-- (void)setOriginalBackgroundColor:(UIColor *)anOriginalBackgroundColor
+- (void)setOriginalColor:(UIColor *)anOriginalColor
 {
-    objc_setAssociatedObject(self, @selector(originalBackgroundColor), anOriginalBackgroundColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(originalColor), anOriginalColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (void)setHighlightedBackgroundColor:(UIColor *)aHighlightedBackgroundColor
 {
-    self.originalBackgroundColor = self.backgroundColor;
+    self.originalColor = self.backgroundColor;
 
     objc_setAssociatedObject(self, @selector(highlightedBackgroundColor), aHighlightedBackgroundColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
@@ -70,14 +70,6 @@
 {
     [super setHighlighted:highlighted];
 
-    if (self.highlightedTitleColor == nil){
-        self.highlightedTitleColor = [self titleColorForState:UIControlStateHighlighted];
-    }
-
-    if (self.titleColor == nil){
-        self.titleColor = [self titleColorForState:UIControlStateNormal];
-    }
-
     if (self.highlightedTitleColor && self.titleColor) {
         UIColor *titleColor = self.highlighted ? self.highlightedTitleColor : self.titleColor;
         [self setTitleColor:titleColor forState:UIControlStateNormal];
@@ -85,8 +77,8 @@
         [self setTitleColor:titleColor forState:UIControlStateSelected];
     }
 
-    if (self.highlightedBackgroundColor && self.originalBackgroundColor) {
-        self.backgroundColor = self.highlighted ? self.highlightedBackgroundColor : self.originalBackgroundColor;
+    if (self.highlightedBackgroundColor && self.originalColor) {
+        self.backgroundColor = self.highlighted ? self.highlightedBackgroundColor : self.originalColor;
     }
 }
 
