@@ -63,6 +63,7 @@
             UIButton *add_subview(button) {
                 [_ setTitleColor:FlatWhiteDark forState:UIControlStateNormal];
                 [_ setTitle:title forState:UIControlStateNormal];
+                _.layer.cornerRadius = 5;
                 _.make.width.equalTo(superview).multipliedBy(0.45);
                 if (idx % 2 == 0) {
                     _.make.left.equalTo(superview).with.offset(10);
@@ -142,6 +143,7 @@
             };
             UIButton *add_subview(button) {
                 [_ setTitleColor:FlatWhiteDark forState:UIControlStateNormal];
+                _.layer.cornerRadius = 5;
                 
                 if ([[NSDate date] timeIntervalSinceDate:lastReadings[reading].date] < 1) {
                     _.backgroundColor = FlatGreenDark;
