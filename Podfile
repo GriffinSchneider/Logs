@@ -6,4 +6,5 @@ target 'tracker' do
   pod 'MoveViewUpForKeyboardKit'
   pod 'BlocksKit'
   pod 'JSONModel'
+  pod 'ChameleonFramework'
 end
