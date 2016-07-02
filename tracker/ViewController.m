@@ -55,11 +55,32 @@
     [self buildView];
 }
 
+- (UIColor *)green {
+    return [UIColor colorWithRed:0 green:0.3 blue:0 alpha:1.0];
+}
+
+- (UIColor *)red {
+    return [UIColor colorWithRed:0.3 green:0 blue:0 alpha:1.0];
+}
+
+- (UIColor *)orange {
+    return [UIColor colorWithRed:0.3 green:0.15 blue:0 alpha:1.0];
+}
+
+- (UIColor *)blue {
+    return [UIColor colorWithRed:0 green:0 blue:0.3 alpha:1.0];
+}
+
+- (UIColor *)textColor {
+    return [UIColor colorWithRed:0.7 green:0.7 blue:0.7 alpha:1.0];
+}
+
 - (UIView *)buildGridWithLastView:(UIView *)lastVieww titles:(NSArray<NSString *> *)titles buttonBlock:(void (^)(UIButton *b, NSString *title))buttonBlock {
     __block UIView *lastView = lastVieww;
     build_subviews(self.view) {
         [titles enumerateObjectsUsingBlock:^(NSString *title, NSUInteger idx, BOOL *stop) {
             UIButton *add_subview(button) {
+                [_ setTitleColor:self.textColor forState:UIControlStateNormal];
                 [_ setTitle:title forState:UIControlStateNormal];
                 _.make.width.equalTo(superview).multipliedBy(0.45);
                 if (idx % 2 == 0) {
@@ -83,19 +104,26 @@
     NSSet<NSString *> *activeStates = self.data.activeStates;
     NSSet<NSString *> *recentOccurrences = self.data.recentOccurrences;
     
+    __block UIScrollView *scrollView;
     build_subviews(self.view) {
-        _.backgroundColor = [UIColor purpleColor];
+        add_subview(scrollView) {
+            _.make.edges.equalTo(superview);
+        };
+    };
+    
+    build_subviews(scrollView) {
+        _.backgroundColor = [UIColor blackColor];
         __block UIView *add_subview(lastView) {
             _.make.top.equalTo(_.superview).with.offset(20);
         };
         lastView = [self buildGridWithLastView:lastView titles:self.schema.occurrences buttonBlock:^(UIButton *b, NSString *title) {
             if ([recentOccurrences containsObject:title]) {
-                b.backgroundColor = [UIColor greenColor];
+                b.backgroundColor = self.green;
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    b.backgroundColor = [UIColor orangeColor];
+                    b.backgroundColor = self.orange;
                 });
             } else {
-                b.backgroundColor = [UIColor orangeColor];
+                b.backgroundColor = self.orange;
             }
             [b bk_addEventHandler:^(id _) {
                 [self selectedOccurrence:title];
@@ -108,9 +136,9 @@
         lastView = spacer;
         lastView = [self buildGridWithLastView:lastView titles:self.schema.states buttonBlock:^(UIButton *b, NSString *title) {
             if ([activeStates containsObject:title]) {
-                b.backgroundColor = [UIColor greenColor];
+                b.backgroundColor = self.green;
             } else {
-                b.backgroundColor = [UIColor redColor];
+                b.backgroundColor = self.red;
             }
             [b bk_addEventHandler:^(id _) {
                 [self selectedState:title];
@@ -124,24 +152,27 @@
         [self.schema.readings enumerateObjectsUsingBlock:^(NSString *reading, NSUInteger idx, BOOL *stop) {
             UISlider *add_subview(slider) {
                 _.value = [lastReadings[reading].reading floatValue];
+                _.thumbTintColor = self.green;
+                _.minimumTrackTintColor = self.green;
+                _.maximumTrackTintColor = self.red;
                 _.make.left.equalTo(superview).with.offset(10);
                 _.make.top.equalTo(lastView.mas_bottom).with.offset(15);
                 if (idx > 0) { _.make.width.equalTo(lastView); }
             };
             UIButton *add_subview(button) {
-                [_ setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+                [_ setTitleColor:self.textColor forState:UIControlStateNormal];
                 
                 if ([[NSDate date] timeIntervalSinceDate:lastReadings[reading].date] < 1) {
-                    _.backgroundColor = [UIColor greenColor];
+                    _.backgroundColor = self.green;
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                        _.backgroundColor = [UIColor blueColor];
+                        _.backgroundColor = self.blue;
                     });
                 } else {
-                    _.backgroundColor = [UIColor blueColor];
+                    _.backgroundColor = self.blue;
                 }
                 
                 _.make.top.and.bottom.equalTo(slider);
-                _.make.right.equalTo(superview).with.offset(-10);
+                _.make.right.equalTo(superview.superview).with.offset(-10);
                 _.make.left.equalTo(slider.mas_right).with.offset(10);
             };
             [self sliderChanged:slider forReading:reading withButton:button];
@@ -149,12 +180,15 @@
             [slider bk_addEventHandler:^(id _) { [self sliderChanged:slider forReading:reading withButton:button]; } forControlEvents:UIControlEventAllEvents];
             lastView = slider;
         }];
+        [lastView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(scrollView.mas_bottom).with.offset(-15);
+        }];
     };
 }
 
 - (void)addEvent:(Event *)e {
     NSSet<NSString *> *activeStates = self.data.activeStates;
-    // If we're in sleep state but an event is toggled, we must not be asleep anymore.
+    // If we're in sleep state but an event is added, we must not be asleep anymore.
     if ([activeStates containsObject:EVENT_SLEEP]) {
         Event *e = [Event new];
         e.type = EventTypeEndState;
