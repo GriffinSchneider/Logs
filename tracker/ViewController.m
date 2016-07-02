@@ -12,6 +12,7 @@
 #import <ChameleonFramework/Chameleon.h>
 #import <DropboxSDK/DropboxSDK.h>
 #import "UIButton+ANDYHighlighted.h"
+#import <Toast/UIView+Toast.h>
 
 #import "Schema.h"
 #import "Data.h"
@@ -53,7 +54,20 @@
     self.view = [UIView new];
     self.buttons = [NSMutableArray array];
     self.schema = [Schema get];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     [self refresh];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(refresh)
+                                                 name:UIApplicationWillEnterForegroundNotification
+                                               object:[UIApplication sharedApplication]];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)refresh {
@@ -250,6 +264,7 @@
 }
 
 - (void)readFromFile {
+    [self.view makeToastActivity:CSToastPositionCenter];
     [self.restClient loadMetadata:@"/data.json"];
 }
 
@@ -259,11 +274,11 @@
 }
 
 - (void)restClient:(DBRestClient*)client loadMetadataFailedWithError:(NSError*)error {
-    NSLog(@"restClient:loadMetadataFailedWithError: %@", [error localizedDescription]);
     [self restClient:nil loadedFile:self.localFilePath];
 }
 
 - (void)restClient:(DBRestClient *)client loadedFile:(NSString *)destPath {
+    [self.view hideToastActivity];
     NSData *data = [NSData dataWithContentsOfFile:destPath];
     
     NSDictionary *dict = nil;
@@ -284,22 +299,25 @@
                                                   encoding:NSUTF8StringEncoding]);
     
     [self rebuildView];
+    [self.view makeToast:@"✅⏬✅"];
     
 }
 
 - (void)restClient:(DBRestClient *)client loadFileFailedWithError:(NSError *)error {
-    NSLog(@"restClient:loadFileFailedWithError: %@", [error localizedDescription]);
     [self restClient:nil loadedFile:self.localFilePath];
     [self saveToFile];
+    [self.view makeToast:@"❌❌⏬❌❌"];
 }
 
 
 - (void)restClient:(DBRestClient*)client uploadedFile:(NSString*)destPath from:(NSString*)srcPath metadata:(DBMetadata*)metadata {
     self.fileRev = metadata.rev;
+    [self.view makeToast:@"✅⏫✅"];
 }
 
 - (void)restClient:(DBRestClient *)client uploadFileFailedWithError:(NSError *)error {
     NSLog(@"restClient:uploadFileFailedWithError: %@", [error localizedDescription]);
+    [self.view makeToast:@"❌❌❌⏫❌❌❌"];
 }
 
 
