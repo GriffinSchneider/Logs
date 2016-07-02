@@ -22,6 +22,7 @@ PODS:
   - JSONModel (1.2.0)
   - Masonry (1.0.0)
   - MoveViewUpForKeyboardKit (1.0.0)
+  - UIButton-ANDYHighlighted (1.0.0)
 
 DEPENDENCIES:
   - BlocksKit
@@ -29,6 +30,7 @@ DEPENDENCIES:
   - DRYUI
   - JSONModel
   - MoveViewUpForKeyboardKit
+  - UIButton-ANDYHighlighted
 
 SPEC CHECKSUMS:
   BlocksKit: 7f422b971407001178d181a43b99014ea2591fe6
@@ -37,7 +39,8 @@ SPEC CHECKSUMS:
   JSONModel: 12523685c4b623553ccf844bbbf7007624317b2c
   Masonry: b529bb169217897b6354d4b56b1fada6d475b13d
   MoveViewUpForKeyboardKit: cfb46dd1d2b5a022ee78ecd6d78695749ce921cd
+  UIButton-ANDYHighlighted: da99b536b0b4a3c8d86c15c9b38cb10fddb09be6
 
-PODFILE CHECKSUM: 1860c769ecd50228cef812949977b1846442ff87
+PODFILE CHECKSUM: 19bc288dc90a24a31eecc1de7d8c65b2d96416db
 
 COCOAPODS: 1.0.1

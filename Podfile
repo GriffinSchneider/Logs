@@ -7,4 +7,5 @@ target 'tracker' do
   pod 'BlocksKit'
   pod 'JSONModel'
   pod 'ChameleonFramework'
+  pod 'UIButton-ANDYHighlighted'
 end

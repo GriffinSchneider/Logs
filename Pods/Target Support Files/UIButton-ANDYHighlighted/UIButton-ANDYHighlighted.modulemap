@@ -1,0 +1,6 @@
+framework module UIButton_ANDYHighlighted {
+  umbrella header "UIButton-ANDYHighlighted-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -39,6 +39,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>UIButton-ANDYHighlighted.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
@@ -47,12 +52,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>32E52F8FAEF5C2A9226EB55D2A5C64AA</key>
+		<key>392F6023674EBA604B98D4EB4CC2E90F</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
 		<key>7A9557F7CFC0A76656228765962E537F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>7ACBFFEAA40A4A04207E905722F8CB99</key>
 		<dict>
 			<key>primary</key>
 			<true/>

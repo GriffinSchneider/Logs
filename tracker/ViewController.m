@@ -10,6 +10,7 @@
 #import <DRYUI/DRYUI.h>
 #import <BlocksKit/BlocksKit+UIKit.h>
 #import <ChameleonFramework/Chameleon.h>
+#import "UIButton+ANDYHighlighted.h"
 
 #import "Schema.h"
 #import "Data.h"
@@ -64,6 +65,7 @@
                 [_ setTitleColor:FlatWhiteDark forState:UIControlStateNormal];
                 [_ setTitle:title forState:UIControlStateNormal];
                 _.layer.cornerRadius = 5;
+                _.adjustsImageWhenHighlighted = YES;
                 _.make.width.equalTo(superview).multipliedBy(0.45);
                 if (idx % 2 == 0) {
                     _.make.left.equalTo(superview).with.offset(10);
@@ -74,6 +76,7 @@
                 }
             };
             buttonBlock(button, title);
+            button.highlightedBackgroundColor = [self darkerColorForColor:button.backgroundColor];
             [self.buttons addObject:button];
             lastView = button;
         }];
@@ -149,10 +152,12 @@
                     _.backgroundColor = FlatGreenDark;
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                         _.backgroundColor = FlatBlueDark;
+                        _.highlightedBackgroundColor = [self darkerColorForColor:_.backgroundColor];
                     });
                 } else {
                     _.backgroundColor = FlatBlueDark;
                 }
+                _.highlightedBackgroundColor = [self darkerColorForColor:_.backgroundColor];
                 
                 _.make.top.and.bottom.equalTo(slider);
                 _.make.right.equalTo(superview.superview).with.offset(-10);
@@ -247,6 +252,16 @@
                                                                                            options:NSJSONWritingPrettyPrinted
                                                                                              error:nil]
                                                   encoding:NSUTF8StringEncoding]);
+}
+
+- (UIColor *)darkerColorForColor:(UIColor *)c {
+    CGFloat r, g, b, a;
+    if ([c getRed:&r green:&g blue:&b alpha:&a])
+        return [UIColor colorWithRed:MAX(r - 0.1, 0.0)
+                               green:MAX(g - 0.1, 0.0)
+                                blue:MAX(b - 0.1, 0.0)
+                               alpha:a];
+    return nil;
 }
 
 @end
