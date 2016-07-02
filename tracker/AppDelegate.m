@@ -22,16 +22,9 @@
 #define S(x) SS(x)
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    
-    
-    // Set these variables before launching the app
     NSString* appKey = @"2gt2dkk6vio9f5k";
     NSString *appSecret = @S(DROPBOX_SECRET);
-    NSString *root = @"sandbox"; // Should be set to either kDBRootAppFolder or kDBRootDropbox
-    // You can determine if you have App folder access or Full Dropbox along with your consumer key/secret
-    // from https://dropbox.com/developers/apps
-    
-    // Look below where the DBSession is created to understand how to use DBSession in your app
+    NSString *root = kDBRootAppFolder;
     
     NSString* errorMsg = nil;
     if ([appKey rangeOfCharacterFromSet:[[NSCharacterSet alphanumericCharacterSet] invertedSet]].location != NSNotFound) {
@@ -56,6 +49,10 @@
     
     [DBRequest setNetworkRequestDelegate:self];
     
+    if (![[DBSession sharedSession] isLinked]) {
+        [[DBSession sharedSession] linkFromController:self.window.rootViewController];
+    }
+    
     if (errorMsg != nil) {
         [[[UIAlertView alloc]
           initWithTitle:@"Error Configuring Dropbox" message:errorMsg
@@ -66,18 +63,12 @@
     [self.window makeKeyAndVisible];
     self.window.rootViewController = [ViewController new];
     
-    if (![[DBSession sharedSession] isLinked]) {
-        [[DBSession sharedSession] linkFromController:self.window.rootViewController];
-    }
-    
     return YES;
 }
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
     if ([[DBSession sharedSession] handleOpenURL:url]) {
-        if ([[DBSession sharedSession] isLinked]) {
-            [(ViewController *)self.window.rootViewController refresh];
-        } else {
+        if (![[DBSession sharedSession] isLinked]) {
             NSAssert(NO, @"something went wrong with dropbox.");
         }
         return YES;

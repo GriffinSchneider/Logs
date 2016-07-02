@@ -11,8 +11,6 @@
 
 @interface Schema : JSONModel
 
-+ (instancetype)get;
-
 @property (nonatomic, strong) NSArray<NSString *> *occurrences;
 @property (nonatomic, strong) NSArray<NSString *> *states;
 @property (nonatomic, strong) NSArray<NSString *> *readings;

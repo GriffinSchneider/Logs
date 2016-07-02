@@ -11,41 +11,13 @@
 
 @implementation Schema
 
-+ (instancetype)get {
-    return [[Schema alloc]
-            initWithDictionary:
-            @{@"occurrences": @[
-                      @"p",
-                      @"c",
-                      @"t",
-                      @"m",
-                      @"w",
-                      @"l"
-                      ],
-              @"states": @[
-                      EVENT_SLEEP,
-                      @"Showering",
-                      @"Walking",
-                      @"Onewheeling",
-                      @"At Work",
-                      @"Eating",
-                      @"People",
-                      @"Programming",
-                      @"Guitar Prac",
-                      @"Guitar Rec",
-                      @"Juggling",
-                      @"Gaming",
-                      @"Flying"
-                      ],
-              @"readings": @[
-                      @"Mood",
-                      @"Energy",
-                      @"Focus",
-                      @"Stomach",
-                      @"Wheeee"
-                      ]
-              }
-            error:nil];
+- (instancetype)init {
+    if (self = [super init]) {
+        self.occurrences = [NSArray new];
+        self.states = [NSArray new];
+        self.readings = [NSArray new];
+    }
+    return self;
 }
 
 @end
