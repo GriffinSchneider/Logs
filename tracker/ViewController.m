@@ -38,6 +38,10 @@
     return self;
 }
 
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return UIStatusBarStyleLightContent;
+}
+
 - (void)loadView {
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.view = [UIView new];
