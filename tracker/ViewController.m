@@ -108,12 +108,15 @@
                 [_ setTitle:title forState:UIControlStateNormal];
                 _.layer.cornerRadius = 5;
                 _.adjustsImageWhenHighlighted = YES;
-                _.make.width.equalTo(superview).multipliedBy(0.45);
+                if (lastView) {
+                    _.make.width.equalTo(lastView);
+                }
                 if (idx % 2 == 0) {
                     _.make.left.equalTo(superview).with.offset(10);
                     _.make.top.equalTo(lastView.mas_bottom ?: superview).with.offset(10);
                 } else {
                     _.make.top.equalTo(lastView);
+                    _.make.left.equalTo(lastView.mas_right).with.offset(10);
                     _.make.right.equalTo(superview).with.offset(-10);
                 }
             };
@@ -158,7 +161,7 @@
         }];
         UIView *add_subview(spacer) {
             _.make.height.equalTo(@0);
-            _.make.top.equalTo(lastView.mas_bottom).with.offset(20);
+            _.make.top.equalTo(lastView.mas_bottom).with.offset(10);
         };
         lastView = spacer;
         lastView = [self buildGridWithLastView:lastView titles:self.schema.states buttonBlock:^(UIButton *b, NSString *title) {
@@ -173,7 +176,7 @@
         }];
         UIView *add_subview(spacer2) {
             _.make.height.equalTo(@0);
-            _.make.top.equalTo(lastView.mas_bottom).with.offset(20);
+            _.make.top.equalTo(lastView.mas_bottom).with.offset(10);
         };
         lastView = spacer2;
         [self.schema.readings enumerateObjectsUsingBlock:^(NSString *reading, NSUInteger idx, BOOL *stop) {
