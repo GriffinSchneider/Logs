@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		04439B03210A85AFF895CC30 /* Pods_tracker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF11449F2EFACA3CE0CA70BB /* Pods_tracker.framework */; };
 		854C75AF1D09185800DD4CEF /* Data.m in Sources */ = {isa = PBXBuildFile; fileRef = 854C75AE1D09185800DD4CEF /* Data.m */; };
+		854F17B51D28371A0051BE48 /* DropboxSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 854F17B41D28371A0051BE48 /* DropboxSDK.framework */; };
+		854F17B71D2837290051BE48 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 854F17B61D2837290051BE48 /* Security.framework */; };
+		854F17B91D28372D0051BE48 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 854F17B81D28372D0051BE48 /* QuartzCore.framework */; };
 		857DA4B31D090C7B00497E60 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 857DA4B21D090C7B00497E60 /* main.m */; };
 		857DA4B61D090C7B00497E60 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 857DA4B51D090C7B00497E60 /* AppDelegate.m */; };
 		857DA4B91D090C7B00497E60 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 857DA4B81D090C7B00497E60 /* ViewController.m */; };
@@ -22,6 +25,9 @@
 		4376796216BAE32BD89DC4AF /* Pods-tracker.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tracker.debug.xcconfig"; path = "Pods/Target Support Files/Pods-tracker/Pods-tracker.debug.xcconfig"; sourceTree = "<group>"; };
 		854C75AD1D09185800DD4CEF /* Data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Data.h; sourceTree = "<group>"; };
 		854C75AE1D09185800DD4CEF /* Data.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Data.m; sourceTree = "<group>"; };
+		854F17B41D28371A0051BE48 /* DropboxSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DropboxSDK.framework; sourceTree = "<group>"; };
+		854F17B61D2837290051BE48 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		854F17B81D28372D0051BE48 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		857DA4AE1D090C7B00497E60 /* tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		857DA4B21D090C7B00497E60 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		857DA4B41D090C7B00497E60 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -44,6 +50,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				854F17B91D28372D0051BE48 /* QuartzCore.framework in Frameworks */,
+				854F17B71D2837290051BE48 /* Security.framework in Frameworks */,
+				854F17B51D28371A0051BE48 /* DropboxSDK.framework in Frameworks */,
 				04439B03210A85AFF895CC30 /* Pods_tracker.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -54,6 +63,9 @@
 		19361570CE402AADC59B0A76 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				854F17B81D28372D0051BE48 /* QuartzCore.framework */,
+				854F17B61D2837290051BE48 /* Security.framework */,
+				854F17B41D28371A0051BE48 /* DropboxSDK.framework */,
 				AF11449F2EFACA3CE0CA70BB /* Pods_tracker.framework */,
 			);
 			name = Frameworks;
@@ -350,6 +362,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = tracker/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = zone.griff.tracker;
@@ -365,6 +381,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = tracker/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = zone.griff.tracker;
