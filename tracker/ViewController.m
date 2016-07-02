@@ -80,7 +80,7 @@
                 }
             };
             buttonBlock(button, title);
-            button.highlightedBackgroundColor = [self darkerColorForColor:button.backgroundColor];
+            button.highlightedBackgroundColor = [button.backgroundColor darkenByPercentage:0.2];
             [self.buttons addObject:button];
             lastView = button;
         }];
@@ -156,12 +156,12 @@
                     _.backgroundColor = FlatGreenDark;
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                         _.backgroundColor = FlatBlueDark;
-                        _.highlightedBackgroundColor = [self darkerColorForColor:_.backgroundColor];
+                        _.highlightedBackgroundColor = [_.backgroundColor darkenByPercentage:0.2];
                     });
                 } else {
                     _.backgroundColor = FlatBlueDark;
                 }
-                _.highlightedBackgroundColor = [self darkerColorForColor:_.backgroundColor];
+                _.highlightedBackgroundColor = [_.backgroundColor darkenByPercentage:0.2];
                 
                 _.make.top.and.bottom.equalTo(slider);
                 _.make.right.equalTo(superview.superview).with.offset(-10);
@@ -256,16 +256,6 @@
                                                                                            options:NSJSONWritingPrettyPrinted
                                                                                              error:nil]
                                                   encoding:NSUTF8StringEncoding]);
-}
-
-- (UIColor *)darkerColorForColor:(UIColor *)c {
-    CGFloat r, g, b, a;
-    if ([c getRed:&r green:&g blue:&b alpha:&a])
-        return [UIColor colorWithRed:MAX(r - 0.1, 0.0)
-                               green:MAX(g - 0.1, 0.0)
-                                blue:MAX(b - 0.1, 0.0)
-                               alpha:a];
-    return nil;
 }
 
 @end
