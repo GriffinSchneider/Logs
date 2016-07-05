@@ -46,7 +46,7 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>db-2gt2dkk6vio9f5k</string>
+				<string>db-$(DROPBOX_APP_KEY)</string>
 			</array>
 		</dict>
 	</array>

@@ -22,7 +22,7 @@
 #define S(x) SS(x)
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    NSString* appKey = @"2gt2dkk6vio9f5k";
+    NSString* appKey = @S(DROPBOX_APP_KEY);
     NSString *appSecret = @S(DROPBOX_SECRET);
     NSString *root = kDBRootAppFolder;
     
@@ -49,6 +49,10 @@
     
     [DBRequest setNetworkRequestDelegate:self];
     
+    self.window = [UIWindow new];
+    [self.window makeKeyAndVisible];
+    self.window.rootViewController = [ViewController new];
+    
     if (![[DBSession sharedSession] isLinked]) {
         [[DBSession sharedSession] linkFromController:self.window.rootViewController];
     }
@@ -59,9 +63,6 @@
           delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil]
          show];
     }
-    self.window = [UIWindow new];
-    [self.window makeKeyAndVisible];
-    self.window.rootViewController = [ViewController new];
     
     return YES;
 }
