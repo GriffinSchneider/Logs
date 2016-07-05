@@ -10,6 +10,7 @@
 #import <DRYUI/DRYUI.h>
 #import <ChameleonFramework/Chameleon.h>
 #import <BlocksKit/BlocksKit+UIKit.h>
+#import <MoveViewUpForKeyboardKit/MVUFKKView.h>
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -46,14 +47,7 @@
     self.view = [UIView new];
     self.view.backgroundColor = FlatNavyBlueDark;
     build_subviews(self.view) {
-        UITextField *add_subview(name) {
-            _.text = self.editingEvent.name;
-            _.backgroundColor = FlatNavyBlue;
-            _.textColor = FlatWhiteDark;
-            _.make.left.and.right.equalTo(superview);
-            _.make.top.equalTo(superview).with.offset(10);
-            _.make.height.equalTo(@50);
-        };
+        MVUFKKView *add_subview(keyboardView){};
         UITextField *add_subview(date) {
             _.text = [self.dateFormatter stringFromDate:self.editingEvent.date];
             _.textColor = FlatWhiteDark;
@@ -80,9 +74,17 @@
             } forControlEvents:UIControlEventValueChanged];
             
             _.make.left.and.right.equalTo(superview);
-            _.make.top.equalTo(name.mas_bottom).with.offset(10);
+            _.make.bottom.equalTo(keyboardView.mas_top).with.offset(-10);
             _.make.height.equalTo(@50);
-        }
+        };
+        UITextField *add_subview(name) {
+            _.text = self.editingEvent.name;
+            _.backgroundColor = FlatNavyBlue;
+            _.textColor = FlatWhiteDark;
+            _.make.left.and.right.equalTo(superview);
+            _.make.bottom.equalTo(date.mas_top).with.offset(-10);
+            _.make.height.equalTo(@50);
+        };
     };
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed:)];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed:)];
