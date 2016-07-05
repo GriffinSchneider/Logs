@@ -8,6 +8,19 @@
 
 #import "Event.h"
 
+NSString *EventType_toString(EventType t) {
+    switch (t) {
+        case EventTypeStartState:
+            return @"StartState";
+        case EventTypeEndState:
+            return @"EndState";
+        case EventTypeReading:
+            return @"Reading";
+        case EventTypeOccurrence:
+            return @"Occurrence";
+    }
+};
+
 @implementation Event
 
 - (void)setTypeWithNSString:(NSString*)string {
@@ -23,16 +36,7 @@
 }
 
 - (NSString *)JSONObjectForType {
-    switch (self.type) {
-        case EventTypeStartState:
-            return @"StartState";
-        case EventTypeEndState:
-            return @"EndState";
-        case EventTypeReading:
-            return @"Reading";
-        case EventTypeOccurrence:
-            return @"Occurrence";
-    }
+    return EventType_toString(self.type);
 }
 
 @end

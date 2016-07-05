@@ -18,6 +18,8 @@ typedef NS_ENUM(NSInteger, EventType) {
     EventTypeOccurrence,
 };
 
+NSString *EventType_toString(EventType t);
+
 @protocol Event
 
 @end

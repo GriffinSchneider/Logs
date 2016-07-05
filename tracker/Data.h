@@ -17,4 +17,6 @@
 - (NSDictionary<NSString *, Event *> *)lastReadings;
 - (NSSet<NSString *> *)recentOccurrences;
 
+- (void)sortEvents;
+
 @end

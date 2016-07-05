@@ -57,4 +57,8 @@
     return retVal;
 }
 
+- (void)sortEvents {
+    [self.events sortUsingSelector:@selector(date)];
+}
+
 @end

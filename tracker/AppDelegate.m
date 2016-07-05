@@ -22,6 +22,7 @@
 #define S(x) SS(x)
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    
     NSString* appKey = @S(DROPBOX_APP_KEY);
     NSString *appSecret = @S(DROPBOX_SECRET);
     NSString *root = kDBRootAppFolder;

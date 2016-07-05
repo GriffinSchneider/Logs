@@ -16,6 +16,7 @@
 
 #import "Schema.h"
 #import "Data.h"
+#import "ListViewController.h"
 
 #define PRETTY_PRINT(x) \
 ([[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:[(x) toDictionary] \
@@ -49,6 +50,8 @@
         self.edgesForExtendedLayout = UIRectEdgeNone;
         self.restClient = [[DBRestClient alloc] initWithSession:[DBSession sharedSession]];
         self.restClient.delegate = self;
+        
+        [[UINavigationBar appearance] setBarTintColor:FlatGrayDark];
     }
     return self;
 }
@@ -146,6 +149,20 @@
         __block UIView *add_subview(lastView) {
             _.make.top.equalTo(_.superview).with.offset(20);
         };
+        lastView = [self buildGridWithLastView:lastView titles:@[@"Edit"] buttonBlock:^(UIButton *b, NSString *title) {
+            b.backgroundColor = FlatPlum;
+            [b bk_addEventHandler:^(id sender) {
+                ListViewController *lvc = [[ListViewController alloc] initWithSchema:self.schema andData:self.data done:^{
+                    [self dismissViewControllerAnimated:YES completion:nil];
+                }];
+                [self presentViewController:[[UINavigationController alloc] initWithRootViewController:lvc] animated:YES completion:^{}];
+            } forControlEvents:UIControlEventTouchUpInside];
+        }];
+        UIView *add_subview(spacer) {
+            _.make.height.equalTo(@0);
+            _.make.top.equalTo(lastView.mas_bottom).with.offset(10);
+        };
+        lastView = spacer;
         lastView = [self buildGridWithLastView:lastView titles:self.schema.occurrences buttonBlock:^(UIButton *b, NSString *title) {
             if ([recentOccurrences containsObject:title]) {
                 b.backgroundColor = FlatGreenDark;
@@ -159,11 +176,11 @@
                 [self selectedOccurrence:title];
             } forControlEvents:UIControlEventTouchUpInside];
         }];
-        UIView *add_subview(spacer) {
+        UIView *add_subview(spacer2) {
             _.make.height.equalTo(@0);
             _.make.top.equalTo(lastView.mas_bottom).with.offset(10);
         };
-        lastView = spacer;
+        lastView = spacer2;
         lastView = [self buildGridWithLastView:lastView titles:self.schema.states buttonBlock:^(UIButton *b, NSString *title) {
             if ([activeStates containsObject:title]) {
                 b.backgroundColor = FlatGreenDark;
@@ -174,11 +191,11 @@
                 [self selectedState:title];
             } forControlEvents:UIControlEventTouchUpInside];
         }];
-        UIView *add_subview(spacer2) {
+        UIView *add_subview(spacer3) {
             _.make.height.equalTo(@0);
             _.make.top.equalTo(lastView.mas_bottom).with.offset(10);
         };
-        lastView = spacer2;
+        lastView = spacer3;
         [self.schema.readings enumerateObjectsUsingBlock:^(NSString *reading, NSUInteger idx, BOOL *stop) {
             UISlider *add_subview(slider) {
                 _.value = [lastReadings[reading].reading floatValue];
