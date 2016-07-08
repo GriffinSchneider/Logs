@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "ViewController.h"
 #import <DropboxSDK/DropboxSDK.h>
+#import <Toast/UIView+Toast.h>
 
 @interface AppDelegate () <DBSessionDelegate, DBNetworkRequestDelegate>
 
@@ -22,6 +23,8 @@
 #define S(x) SS(x)
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    
+    [CSToastManager setQueueEnabled:NO];
     
     NSString* appKey = @S(DROPBOX_APP_KEY);
     NSString *appSecret = @S(DROPBOX_SECRET);

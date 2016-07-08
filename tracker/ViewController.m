@@ -17,12 +17,8 @@
 #import "Schema.h"
 #import "Data.h"
 #import "ListViewController.h"
+#import "SyncManager.h"
 
-#define PRETTY_PRINT(x) \
-([[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:[(x) toDictionary] \
-                                                                options:NSJSONWritingPrettyPrinted \
-                                                                  error:nil] \
-                       encoding:NSUTF8StringEncoding]) \
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 @interface ViewController () <DBRestClientDelegate>
@@ -64,6 +60,12 @@
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.view = [UIView new];
     self.buttons = [NSMutableArray array];
+    
+    [RACObserve([SyncManager i], data) subscribeNext:^(id x) {
+        self.data = [SyncManager i].data;
+        self.schema = [SyncManager i].schema;
+        [self rebuildView];
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -87,7 +89,7 @@
 }
 
 - (void)refresh {
-    [self readFromFile];
+    [[SyncManager i] loadFromDropbox];
 }
 
 - (void)enteringBackground {
@@ -247,7 +249,7 @@
         [self.data.events addObject:e];
     }
     [self.data.events addObject:e];
-    [self saveToFile];
+    [[SyncManager i] writeToDropbox];
     [self rebuildView];
 }
 
@@ -280,128 +282,5 @@
     e.reading = [NSNumber numberWithFloat:slider.value];
     [self addEvent:e];
 }
-
-- (void)saveToFile {
-    [self.saveTimer invalidate];
-    self.saveTimer = [NSTimer timerWithTimeInterval:3.0 target:self selector:@selector(saveTimerDone) userInfo:nil repeats:NO];
-    [[NSRunLoop currentRunLoop] addTimer:self.saveTimer forMode:NSRunLoopCommonModes];
-}
-
-- (void)saveTimerDone {
-    NSLog(@"Writing data:\n%@", PRETTY_PRINT(self.data));
-    NSData *nsData = [self.data toJSONData];
-    [nsData writeToFile:self.localDataPath atomically:YES];
-    [self.restClient uploadFile:@"data.json" toPath:@"/" withParentRev:self.fileRev fromPath:self.localDataPath];
-    
-}
-
-- (void)makeSchemaFile {
-    if (!self.schema) {
-        self.schema = [Schema new];
-    }
-    if (![[NSFileManager defaultManager] fileExistsAtPath:self.localSchemaPath]) {
-        [[NSFileManager defaultManager] createFileAtPath:self.localSchemaPath contents:[self.schema toJSONData] attributes:nil];
-    }
-    [self.restClient uploadFile:@"schema.json" toPath:@"/" withParentRev:nil fromPath:self.localSchemaPath];
-}
-
-- (NSString *)localDataPath {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    return [documentsDirectory stringByAppendingPathComponent:@"data.json"];
-}
-
-- (NSString *)localSchemaPath {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    return [documentsDirectory stringByAppendingPathComponent:@"schema.json"];
-}
-
-- (void)readFromFile {
-    [self.view makeToastActivity:CSToastPositionCenter];
-    self.currentlyLoadingFile = self.localSchemaPath;
-    [self.restClient loadFile:@"/schema.json" intoPath:self.localSchemaPath];
-}
-
-- (void)restClient:(DBRestClient*)client loadedMetadata:(DBMetadata*)metadata {
-    self.fileRev = metadata.rev;
-    [self.restClient loadFile:metadata.path intoPath:self.localDataPath];
-}
-
-- (void)restClient:(DBRestClient*)client loadMetadataFailedWithError:(NSError*)error {
-    [self restClient:nil loadedFile:self.localDataPath];
-}
-
-- (void)restClient:(DBRestClient *)client loadedFile:(NSString *)destPath {
-    
-    void (^block)(NSDictionary *dict);
-    
-    if ([destPath isEqual:self.localSchemaPath]) {
-        self.currentlyLoadingFile = self.localDataPath;
-        [self.restClient loadMetadata:@"/data.json"];
-        block = ^(NSDictionary *dict) {
-            self.schema = [[Schema alloc] initWithDictionary:dict error:nil];
-            NSLog(@"Read schema:\n%@", PRETTY_PRINT(self.schema));
-            [self.view makeToast:@"✅Loaded Schema✅"];
-        };
-    } else {
-        block = ^(NSDictionary *dict) {
-            if (dict) {
-                self.data = [[Data alloc] initWithDictionary:dict error:nil];
-            }
-            if (!self.data) {
-                self.data = [Data new];
-                self.data.events = [NSMutableArray<Event> new];
-            }
-            NSLog(@"Read data:\n%@", PRETTY_PRINT(self.data));
-            [self rebuildView];
-            [self.view makeToast:@"✅Loaded Data✅"];
-        };
-    }
-    NSData *data = [NSData dataWithContentsOfFile:destPath];
-    NSDictionary *dict = nil;
-    if (data) {
-        dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-    }
-    block(dict);
-    [self.view hideToastActivity];
-}
-
-- (void)restClient:(DBRestClient *)client loadFileFailedWithError:(NSError *)error {
-    NSLog(@"LOAD FAILED WITH ERROR: %@", error);
-    if (error.code == 401) {
-        [self.view makeToast:@"Authentication Failure."];
-        return;
-    }
-    if ([self.currentlyLoadingFile isEqualToString:self.localSchemaPath]) {
-        [self.view makeToast:@"❌Loading Schema Failed!❌"];
-        [self makeSchemaFile];
-    } else {
-        [self.view makeToast:@"❌Loading Data Failed!❌"];
-        [self restClient:nil loadedFile:self.localDataPath];
-        [self saveToFile];
-    }
-}
-
-
-- (void)restClient:(DBRestClient*)client uploadedFile:(NSString*)destPath from:(NSString*)srcPath metadata:(DBMetadata*)metadata {
-    self.fileRev = metadata.rev;
-    if ([srcPath isEqualToString:self.localSchemaPath]) {
-        [self.view makeToast:@"✅Created Schema File✅"];
-        [self readFromFile];
-    } else {
-        [self.view makeToast:@"✅⏫✅"];
-    }
-}
-
-- (void)restClient:(DBRestClient *)client uploadFileFailedWithError:(NSError *)error {
-    if ([self.currentlyLoadingFile isEqualToString:self.localSchemaPath]) {
-        [self.view makeToast:@"❌Failed to Create Schema File!❌"];
-    } else {
-        [self.view makeToast:@"❌Failed to Upload Data!❌"];
-        
-    }
-}
-
 
 @end

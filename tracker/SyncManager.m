@@ -60,6 +60,7 @@ DBRestClientDelegate
 #pragma mark - Toasts
 
 - (void)toast:(NSString *)text {
+    [[[UIApplication sharedApplication] keyWindow] hideToastActivity];
     [[[UIApplication sharedApplication] keyWindow] makeToast:text];
 }
 
@@ -153,7 +154,6 @@ DBRestClientDelegate
                 self.data.events = [NSMutableArray<Event> new];
             }
             NSLog(@"Read data:\n%@", PRETTY_PRINT(self.data));
-//            [self rebuildView];
             [self toast:@"✅Loaded Data✅"];
         };
     }
