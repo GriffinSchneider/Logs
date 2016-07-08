@@ -88,7 +88,7 @@
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-    [[SyncManager i] loadFromDropbox];
+    
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {

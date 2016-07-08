@@ -23,7 +23,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 @interface ViewController () <DBRestClientDelegate>
 
-@property (nonatomic, strong) NSMutableArray<UIButton *> *buttons;
 
 @end
 
@@ -47,7 +46,6 @@
 - (void)loadView {
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.view = [UIView new];
-    self.buttons = [NSMutableArray array];
     
     [RACObserve([SyncManager i], data) subscribeNext:^(id x) {
         [self rebuildView];
@@ -56,30 +54,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    if ([[DBSession sharedSession] isLinked]) {
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(enteringForeground)
-                                                     name:UIApplicationWillEnterForegroundNotification
-                                                   object:[UIApplication sharedApplication]];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(enteringBackground)
-                                                     name:UIApplicationWillResignActiveNotification
-                                                   object:[UIApplication sharedApplication]];
-    }
     [self rebuildView];
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-- (void)enteringForeground {
-    [[SyncManager i] loadFromDropbox];
-}
-
-- (void)enteringBackground {
-    [[SyncManager i] saveImmediately];
 }
 
 - (void)rebuildView {
@@ -98,6 +73,8 @@
                 [_ setTitle:title forState:UIControlStateNormal];
                 _.layer.cornerRadius = 5;
                 _.adjustsImageWhenHighlighted = YES;
+                buttonBlock(_, title);
+                _.highlightedBackgroundColor = [_.backgroundColor darkenByPercentage:0.2];
                 if (lastView) {
                     _.make.width.equalTo(lastView);
                 }
@@ -110,9 +87,34 @@
                     _.make.right.equalTo(superview).with.offset(-10);
                 }
             };
-            buttonBlock(button, title);
-            button.highlightedBackgroundColor = [button.backgroundColor darkenByPercentage:0.2];
-            [self.buttons addObject:button];
+            lastView = button;
+        }];
+    }
+    return lastView;
+}
+
+- (UIView *)buildRowWithLastView:(UIView *)lastVieww titles:(NSArray<NSString *> *)titles buttonBlock:(void (^)(UIButton *b, NSString *title))buttonBlock {
+    __block UIView *lastView = lastVieww;
+    build_subviews(self.view) {
+        [titles enumerateObjectsUsingBlock:^(NSString *title, NSUInteger idx, BOOL *stop) {
+            UIButton *add_subview(button) {
+                [_ setTitleColor:FlatWhiteDark forState:UIControlStateNormal];
+                [_ setTitle:title forState:UIControlStateNormal];
+                _.layer.cornerRadius = 5;
+                _.adjustsImageWhenHighlighted = YES;
+                _.make.top.equalTo(lastView);
+                buttonBlock(_, title);
+                _.highlightedBackgroundColor = [_.backgroundColor darkenByPercentage:0.2];
+                if (idx == 0) {
+                    _.make.left.equalTo(superview).with.offset(10);
+                } else {
+                    _.make.width.equalTo(lastView);
+                    _.make.left.equalTo(lastView.mas_right).with.offset(10);
+                }
+                if (idx == titles.count-1) {
+                    _.make.right.equalTo(superview).with.offset(-10);
+                }
+            };
             lastView = button;
         }];
     }
@@ -136,13 +138,21 @@
         __block UIView *add_subview(lastView) {
             _.make.top.equalTo(_.superview).with.offset(20);
         };
-        lastView = [self buildGridWithLastView:lastView titles:@[@"Edit"] buttonBlock:^(UIButton *b, NSString *title) {
+        lastView = [self buildRowWithLastView:lastView titles:@[@"Edit", @"Reload", @"Save"] buttonBlock:^(UIButton *b, NSString *title) {
             b.backgroundColor = FlatPlum;
-            [b bk_addEventHandler:^(id sender) {
-                ListViewController *lvc = [[ListViewController alloc] initWithDone:^{
-                    [self dismissViewControllerAnimated:YES completion:nil];
-                }];
-                [self presentViewController:[[UINavigationController alloc] initWithRootViewController:lvc] animated:YES completion:^{}];
+            [b bk_addEventHandler:^(UIButton *sender) {
+                if ([sender.currentTitle isEqualToString:@"Edit"]) {
+                    ListViewController *lvc = [[ListViewController alloc] initWithDone:^{
+                        [self dismissViewControllerAnimated:YES completion:nil];
+                    }];
+                    [self presentViewController:[[UINavigationController alloc] initWithRootViewController:lvc] animated:YES completion:^{}];
+                }
+                if ([sender.currentTitle isEqualToString:@"Reload"]) {
+                    [[SyncManager i] loadFromDropbox];
+                }
+                if ([sender.currentTitle isEqualToString:@"Save"]) {
+                    [[SyncManager i] saveImmediately];
+                }
             } forControlEvents:UIControlEventTouchUpInside];
         }];
         UIView *add_subview(spacer) {
