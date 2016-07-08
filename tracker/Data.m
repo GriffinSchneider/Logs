@@ -9,8 +9,8 @@
 #import "Data.h"
 
 
-BOOL hasEventNamed(NSSet<Event *> *events, NSString *eventName) {
-    return [events filteredSetUsingPredicate:[NSPredicate predicateWithFormat:@"name = %@", eventName]].count > 0;
+Event *eventNamed(NSSet<Event *> *events, NSString *eventName) {
+    return [[events filteredSetUsingPredicate:[NSPredicate predicateWithFormat:@"name = %@", eventName]] anyObject];
 };
 
 

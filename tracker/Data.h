@@ -10,7 +10,7 @@
 #import "Event.h"
 
 
-BOOL hasEventNamed(NSSet<Event *> *events, NSString *eventName);
+Event *eventNamed(NSSet<Event *> *events, NSString *eventName);
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

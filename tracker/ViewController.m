@@ -169,8 +169,15 @@
         };
         lastView = spacer2;
         lastView = [self buildGridWithLastView:lastView titles:[SyncManager i].schema.states buttonBlock:^(UIButton *b, NSString *title) {
-            if (hasEventNamed(activeStates, title)) {
+            Event *e = eventNamed(activeStates, title);
+            if (e) {
                 b.backgroundColor = FlatGreenDark;
+                NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:e.date];
+                NSDate *date = [NSDate dateWithTimeIntervalSince1970:interval];
+                NSDateFormatter *dateFormatter = [NSDateFormatter new];
+                [dateFormatter setDateFormat:@"HH:mm:ss"];
+                [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
+                [b setTitle:[NSString stringWithFormat:@"%@ (%@)", e.name, [dateFormatter stringFromDate:date]] forState:UIControlStateNormal];
             } else {
                 b.backgroundColor = FlatRedDark;
             }
@@ -226,7 +233,7 @@
 - (void)addEvent:(Event *)e {
     NSSet<Event *> *activeStates = [SyncManager i].data.activeStates;
     // If we're in sleep state but an event is added, we must not be asleep anymore.
-    if (hasEventNamed(activeStates, EVENT_SLEEP)) {
+    if (eventNamed(activeStates, EVENT_SLEEP)) {
         Event *e = [Event new];
         e.type = EventTypeEndState;
         e.name = EVENT_SLEEP;
@@ -249,7 +256,7 @@
 - (void)selectedState:(NSString *)state {
     NSSet<Event *> *activeStates = [SyncManager i].data.activeStates;
     Event *e = [Event new];
-    e.type = hasEventNamed(activeStates, state) ? EventTypeEndState : EventTypeStartState;
+    e.type = eventNamed(activeStates, state) ? EventTypeEndState : EventTypeStartState;
     e.name = state;
     e.date = [NSDate date];
     [self addEvent:e];
