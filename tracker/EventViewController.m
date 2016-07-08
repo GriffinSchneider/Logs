@@ -22,6 +22,7 @@
 @property (nonatomic, strong) EventViewControllerDoneBlock done;
 
 @property (nonatomic, strong) NSDateFormatter *dateFormatter;
+@property (nonatomic, strong) UITextField *dateTextField;
 
 @end
 
@@ -48,7 +49,7 @@
     self.view.backgroundColor = FlatNavyBlueDark;
     build_subviews(self.view) {
         MVUFKKView *add_subview(keyboardView){};
-        UITextField *add_subview(date) {
+         add_subview(self.dateTextField) {
             _.text = [self.dateFormatter stringFromDate:self.editingEvent.date];
             _.textColor = FlatWhiteDark;
             _.backgroundColor = FlatNavyBlue;
@@ -83,12 +84,16 @@
             _.backgroundColor = FlatNavyBlue;
             _.textColor = FlatWhiteDark;
             _.make.left.and.right.equalTo(superview);
-            _.make.bottom.equalTo(date.mas_top).with.offset(-10);
+            _.make.bottom.equalTo(self.dateTextField.mas_top).with.offset(-10);
             _.make.height.equalTo(@50);
         };
     };
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed:)];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed:)];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [self.dateTextField becomeFirstResponder];
 }
 
 - (void)dateDoneButtonPressed:(id)sender {
