@@ -54,6 +54,7 @@
             _.backgroundColor = FlatNavyBlue;
             
             UIDatePicker *pickerView = [UIDatePicker new];
+            pickerView.date = self.editingEvent.date;
             _.inputView = pickerView;
             
             // create a done view + done button, attach to it a doneClicked action, and place it in a toolbar as an accessory input view...
