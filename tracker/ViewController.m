@@ -121,7 +121,7 @@
 
 - (void)buildView {
     NSDictionary<NSString *, Event *> *lastReadings = [SyncManager i].data.lastReadings;
-    NSSet<NSString *> *activeStates = [SyncManager i].data.activeStates;
+    NSSet<Event *> *activeStates = [SyncManager i].data.activeStates;
     NSSet<NSString *> *recentOccurrences = [SyncManager i].data.recentOccurrences;
     
     __block UIScrollView *scrollView;
@@ -169,7 +169,7 @@
         };
         lastView = spacer2;
         lastView = [self buildGridWithLastView:lastView titles:[SyncManager i].schema.states buttonBlock:^(UIButton *b, NSString *title) {
-            if ([activeStates containsObject:title]) {
+            if (hasEventNamed(activeStates, title)) {
                 b.backgroundColor = FlatGreenDark;
             } else {
                 b.backgroundColor = FlatRedDark;
@@ -224,9 +224,9 @@
 }
 
 - (void)addEvent:(Event *)e {
-    NSSet<NSString *> *activeStates = [SyncManager i].data.activeStates;
+    NSSet<Event *> *activeStates = [SyncManager i].data.activeStates;
     // If we're in sleep state but an event is added, we must not be asleep anymore.
-    if ([activeStates containsObject:EVENT_SLEEP]) {
+    if (hasEventNamed(activeStates, EVENT_SLEEP)) {
         Event *e = [Event new];
         e.type = EventTypeEndState;
         e.name = EVENT_SLEEP;
@@ -247,9 +247,9 @@
 }
 
 - (void)selectedState:(NSString *)state {
-    NSSet<NSString *> *activeStates = [SyncManager i].data.activeStates;
+    NSSet<Event *> *activeStates = [SyncManager i].data.activeStates;
     Event *e = [Event new];
-    e.type = [activeStates containsObject:state] ? EventTypeEndState : EventTypeStartState;
+    e.type = hasEventNamed(activeStates, state) ? EventTypeEndState : EventTypeStartState;
     e.name = state;
     e.date = [NSDate date];
     [self addEvent:e];

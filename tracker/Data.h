@@ -9,11 +9,16 @@
 #import <JSONModel/JSONModel.h>
 #import "Event.h"
 
+
+BOOL hasEventNamed(NSSet<Event *> *events, NSString *eventName);
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 @interface Data : JSONModel
 
 @property (nonatomic, strong) NSMutableArray<Event> *events;
 
-- (NSSet<NSString *> *)activeStates;
+- (NSSet<Event *> *)activeStates;
 - (NSDictionary<NSString *, Event *> *)lastReadings;
 - (NSSet<NSString *> *)recentOccurrences;
 

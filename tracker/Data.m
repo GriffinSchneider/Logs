@@ -8,17 +8,24 @@
 
 #import "Data.h"
 
+
+BOOL hasEventNamed(NSSet<Event *> *events, NSString *eventName) {
+    return [events filteredSetUsingPredicate:[NSPredicate predicateWithFormat:@"name = %@", eventName]].count > 0;
+};
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 @implementation Data
 
-- (NSSet<NSString *> *)activeStates {
-    NSMutableSet<NSString *> *retVal = [NSMutableSet new];
+- (NSSet<Event *> *)activeStates {
+    NSMutableSet<Event *> *retVal = [NSMutableSet new];
     NSMutableSet<NSString *> *endedStates = [NSMutableSet new];
     [self.events enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(Event * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if (obj.type == EventTypeEndState) {
             [endedStates addObject:obj.name];
         } else if (obj.type == EventTypeStartState) {
             if (![endedStates containsObject:obj.name]) {
-                [retVal addObject:obj.name];
+                [retVal addObject:obj];
             }
         }
         if ([obj.name isEqual:EVENT_SLEEP]) {
