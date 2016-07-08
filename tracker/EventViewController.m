@@ -11,6 +11,7 @@
 #import <ChameleonFramework/Chameleon.h>
 #import <BlocksKit/BlocksKit+UIKit.h>
 #import <MoveViewUpForKeyboardKit/MVUFKKView.h>
+#import <ReactiveCocoa/ReactiveCocoa.h>
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -86,6 +87,9 @@
             _.make.left.and.right.equalTo(superview);
             _.make.bottom.equalTo(self.dateTextField.mas_top).with.offset(-10);
             _.make.height.equalTo(@50);
+            [_.rac_textSignal subscribeNext:^(id x) {
+                self.editingEvent.name = _.text;
+            }];
         };
     };
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed:)];
