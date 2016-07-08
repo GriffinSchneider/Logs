@@ -15,6 +15,6 @@ typedef void (^ListViewControllerDoneBlock)();
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 @interface ListViewController : UIViewController
 
-- (instancetype)initWithSchema:(Schema *)schema andData:(Data *)data done:(ListViewControllerDoneBlock)done;
+- (instancetype)initWithDone:(ListViewControllerDoneBlock)done;
 
 @end

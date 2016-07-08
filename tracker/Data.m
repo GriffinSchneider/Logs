@@ -58,7 +58,7 @@
 }
 
 - (void)sortEvents {
-    [self.events sortUsingSelector:@selector(date)];
+    [self.events sortUsingSelector:@selector(compare:)];
 }
 
 @end

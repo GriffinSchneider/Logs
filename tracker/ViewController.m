@@ -23,11 +23,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 @interface ViewController () <DBRestClientDelegate>
 
-@property (nonatomic, strong) Schema *schema;
-@property (nonatomic, strong) Data *data;
-
-@property (nonatomic, strong) DBRestClient* restClient;
-
 @property (nonatomic, strong) NSMutableArray<UIButton *> *buttons;
 
 @end
@@ -40,9 +35,6 @@
 - (instancetype)init {
     if ((self = [super init])) {
         self.edgesForExtendedLayout = UIRectEdgeNone;
-        self.restClient = [[DBRestClient alloc] initWithSession:[DBSession sharedSession]];
-        self.restClient.delegate = self;
-        
         [[UINavigationBar appearance] setBarTintColor:FlatGrayDark];
     }
     return self;
@@ -58,8 +50,6 @@
     self.buttons = [NSMutableArray array];
     
     [RACObserve([SyncManager i], data) subscribeNext:^(id x) {
-        self.data = [SyncManager i].data;
-        self.schema = [SyncManager i].schema;
         [self rebuildView];
     }];
 }
@@ -76,6 +66,7 @@
                                                      name:UIApplicationWillResignActiveNotification
                                                    object:[UIApplication sharedApplication]];
     }
+    [self rebuildView];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -129,9 +120,9 @@
 }
 
 - (void)buildView {
-    NSDictionary<NSString *, Event *> *lastReadings = self.data.lastReadings;
-    NSSet<NSString *> *activeStates = self.data.activeStates;
-    NSSet<NSString *> *recentOccurrences = self.data.recentOccurrences;
+    NSDictionary<NSString *, Event *> *lastReadings = [SyncManager i].data.lastReadings;
+    NSSet<NSString *> *activeStates = [SyncManager i].data.activeStates;
+    NSSet<NSString *> *recentOccurrences = [SyncManager i].data.recentOccurrences;
     
     __block UIScrollView *scrollView;
     build_subviews(self.view) {
@@ -148,7 +139,7 @@
         lastView = [self buildGridWithLastView:lastView titles:@[@"Edit"] buttonBlock:^(UIButton *b, NSString *title) {
             b.backgroundColor = FlatPlum;
             [b bk_addEventHandler:^(id sender) {
-                ListViewController *lvc = [[ListViewController alloc] initWithSchema:self.schema andData:self.data done:^{
+                ListViewController *lvc = [[ListViewController alloc] initWithDone:^{
                     [self dismissViewControllerAnimated:YES completion:nil];
                 }];
                 [self presentViewController:[[UINavigationController alloc] initWithRootViewController:lvc] animated:YES completion:^{}];
@@ -159,7 +150,7 @@
             _.make.top.equalTo(lastView.mas_bottom).with.offset(10);
         };
         lastView = spacer;
-        lastView = [self buildGridWithLastView:lastView titles:self.schema.occurrences buttonBlock:^(UIButton *b, NSString *title) {
+        lastView = [self buildGridWithLastView:lastView titles:[SyncManager i].schema.occurrences buttonBlock:^(UIButton *b, NSString *title) {
             if ([recentOccurrences containsObject:title]) {
                 b.backgroundColor = FlatGreenDark;
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -177,7 +168,7 @@
             _.make.top.equalTo(lastView.mas_bottom).with.offset(10);
         };
         lastView = spacer2;
-        lastView = [self buildGridWithLastView:lastView titles:self.schema.states buttonBlock:^(UIButton *b, NSString *title) {
+        lastView = [self buildGridWithLastView:lastView titles:[SyncManager i].schema.states buttonBlock:^(UIButton *b, NSString *title) {
             if ([activeStates containsObject:title]) {
                 b.backgroundColor = FlatGreenDark;
             } else {
@@ -192,7 +183,7 @@
             _.make.top.equalTo(lastView.mas_bottom).with.offset(10);
         };
         lastView = spacer3;
-        [self.schema.readings enumerateObjectsUsingBlock:^(NSString *reading, NSUInteger idx, BOOL *stop) {
+        [[SyncManager i].schema.readings enumerateObjectsUsingBlock:^(NSString *reading, NSUInteger idx, BOOL *stop) {
             UISlider *add_subview(slider) {
                 _.value = [lastReadings[reading].reading floatValue];
                 _.thumbTintColor = FlatGreenDark;
@@ -233,16 +224,16 @@
 }
 
 - (void)addEvent:(Event *)e {
-    NSSet<NSString *> *activeStates = self.data.activeStates;
+    NSSet<NSString *> *activeStates = [SyncManager i].data.activeStates;
     // If we're in sleep state but an event is added, we must not be asleep anymore.
     if ([activeStates containsObject:EVENT_SLEEP]) {
         Event *e = [Event new];
         e.type = EventTypeEndState;
         e.name = EVENT_SLEEP;
         e.date = [NSDate date];
-        [self.data.events addObject:e];
+        [[SyncManager i].data.events addObject:e];
     }
-    [self.data.events addObject:e];
+    [[SyncManager i].data.events addObject:e];
     [[SyncManager i] writeToDropbox];
     [self rebuildView];
 }
@@ -256,7 +247,7 @@
 }
 
 - (void)selectedState:(NSString *)state {
-    NSSet<NSString *> *activeStates = self.data.activeStates;
+    NSSet<NSString *> *activeStates = [SyncManager i].data.activeStates;
     Event *e = [Event new];
     e.type = [activeStates containsObject:state] ? EventTypeEndState : EventTypeStartState;
     e.name = state;

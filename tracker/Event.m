@@ -23,6 +23,10 @@ NSString *EventType_toString(EventType t) {
 
 @implementation Event
 
+- (NSComparisonResult)compare:(Event *)otherObject {
+    return [self.date compare:otherObject.date];
+}
+
 - (void)setTypeWithNSString:(NSString*)string {
     if ([string isEqual:@"StartState"]) {
         self.type = EventTypeStartState;

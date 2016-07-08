@@ -12,6 +12,7 @@
 
 #import "Event.h"
 #import "EventViewController.h"
+#import "SyncManager.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 @interface ListViewController () <
@@ -19,8 +20,6 @@ UITableViewDelegate,
 UITableViewDataSource
 >
 
-@property (nonatomic, strong) Schema *schema;
-@property (nonatomic, strong) Data *data;
 @property (nonatomic, strong) ListViewControllerDoneBlock done;
 
 @property (nonatomic, strong) NSDateFormatter *dateFormatter;
@@ -32,10 +31,8 @@ UITableViewDataSource
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 @implementation ListViewController
 
-- (instancetype)initWithSchema:(Schema *)schema andData:(Data *)data done:(ListViewControllerDoneBlock)done {
+- (instancetype)initWithDone:(ListViewControllerDoneBlock)done {
     if ((self = [super init])) {
-        self.schema = schema;
-        self.data = data;
         self.done = done;
         self.dateFormatter = [[NSDateFormatter alloc] init];
         [self.dateFormatter setDateStyle:NSDateFormatterMediumStyle];
@@ -67,11 +64,11 @@ UITableViewDataSource
 #pragma mark - Helper Functions
 
 - (NSUInteger)eventIndexForRow:(NSUInteger)row {
-    return self.data.events.count - row - 1;
+    return [SyncManager i].data.events.count - row - 1;
 }
 
 - (Event *)eventForRow:(NSUInteger)row {
-    return self.data.events[[self eventIndexForRow:row]];
+    return [SyncManager i].data.events[[self eventIndexForRow:row]];
 }
 
 #pragma mark - UI Responding
@@ -83,7 +80,7 @@ UITableViewDataSource
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.data.events.count;
+    return [SyncManager i].data.events.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -110,10 +107,11 @@ UITableViewDataSource
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     Event *event = [self eventForRow:indexPath.row];
     NSUInteger eventIndex = [self eventIndexForRow:indexPath.row];
-    [self.navigationController pushViewController:[[EventViewController alloc] initWithData:self.data andEvent:event done:^(Event *editedEvent) {
+    [self.navigationController pushViewController:[[EventViewController alloc] initWithData:[SyncManager i].data andEvent:event done:^(Event *editedEvent) {
         if (![[editedEvent toDictionary] isEqual:[event toDictionary]]) {
-            [self.data.events replaceObjectAtIndex:eventIndex withObject:editedEvent];
-            [self.data sortEvents];
+            [[SyncManager i].data.events replaceObjectAtIndex:eventIndex withObject:editedEvent];
+            [[SyncManager i].data sortEvents];
+            [[SyncManager i] writeToDropbox];
         }
         [self.navigationController popViewControllerAnimated:YES];
     }] animated:YES];
@@ -125,8 +123,9 @@ UITableViewDataSource
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [self.data.events removeObjectAtIndex:[self eventIndexForRow:indexPath.row]];
+        [[SyncManager i].data.events removeObjectAtIndex:[self eventIndexForRow:indexPath.row]];
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
+        [[SyncManager i] writeToDropbox];
     }
 }
 
