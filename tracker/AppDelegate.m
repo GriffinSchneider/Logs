@@ -48,6 +48,13 @@
         }
     }
     
+    if (errorMsg != nil) {
+        [[[UIAlertView alloc]
+          initWithTitle:@"Error Configuring Dropbox" message:errorMsg
+          delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil]
+         show];
+    }
+    
     DBSession* session = [[DBSession alloc] initWithAppKey:appKey appSecret:appSecret root:root];
     session.delegate = self; // DBSessionDelegate methods allow you to handle re-authenticating
     [DBSession setSharedSession:session];
@@ -58,19 +65,8 @@
     [self.window makeKeyAndVisible];
     self.window.rootViewController = [ViewController new];
     
-    if (![[DBSession sharedSession] isLinked]) {
-        [[DBSession sharedSession] linkFromController:self.window.rootViewController];
-    } else {
+    if ([[DBSession sharedSession] isLinked]) {
         [[SyncManager i] loadFromDropbox];
-    }
-    
-    
-    
-    if (errorMsg != nil) {
-        [[[UIAlertView alloc]
-          initWithTitle:@"Error Configuring Dropbox" message:errorMsg
-          delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil]
-         show];
     }
     
     return YES;

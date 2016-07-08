@@ -99,11 +99,16 @@ DBRestClientDelegate
 
 - (void)writeToDropbox {
     [self.saveTimer invalidate];
-    self.saveTimer = [NSTimer timerWithTimeInterval:3.0 target:self selector:@selector(saveTimerDone) userInfo:nil repeats:NO];
+    self.saveTimer = [NSTimer timerWithTimeInterval:3.0 target:self selector:@selector(saveImmediately) userInfo:nil repeats:NO];
     [[NSRunLoop currentRunLoop] addTimer:self.saveTimer forMode:NSRunLoopCommonModes];
 }
 
-- (void)saveTimerDone {
+- (void)saveImmediately {
+    [self.saveTimer invalidate];
+    self.saveTimer = nil;
+    if (!self.data) {
+        return;
+    }
     NSLog(@"Writing data:\n%@", PRETTY_PRINT(self.data));
     NSData *nsData = [self.data toJSONData];
     [nsData writeToFile:self.localDataPath atomically:YES];
