@@ -22,5 +22,6 @@
 
 - (void)loadFromDropbox;
 - (void)writeToDropbox;
+- (void)saveImmediately;
 
 @end

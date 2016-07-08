@@ -27,12 +27,8 @@
 @property (nonatomic, strong) Data *data;
 
 @property (nonatomic, strong) DBRestClient* restClient;
-@property (nonatomic, strong) NSString *currentlyLoadingFile;
-@property (nonatomic, strong) NSString *fileRev;
 
 @property (nonatomic, strong) NSMutableArray<UIButton *> *buttons;
-
-@property (nonatomic, strong) NSTimer *saveTimer;
 
 @end
 
@@ -71,9 +67,8 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     if ([[DBSession sharedSession] isLinked]) {
-        [self refresh];
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(refresh)
+                                                 selector:@selector(enteringForeground)
                                                      name:UIApplicationWillEnterForegroundNotification
                                                    object:[UIApplication sharedApplication]];
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -88,13 +83,12 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)refresh {
+- (void)enteringForeground {
     [[SyncManager i] loadFromDropbox];
 }
 
 - (void)enteringBackground {
-    [self.saveTimer fire];
-    [self.saveTimer invalidate];
+    [[SyncManager i] saveImmediately];
 }
 
 - (void)rebuildView {
