@@ -136,7 +136,7 @@
     build_subviews(scrollView) {
         _.backgroundColor = FlatNavyBlueDark;
         __block UIView *add_subview(lastView) {
-            _.make.top.equalTo(_.superview).with.offset(20);
+            _.make.top.equalTo(_.superview).with.offset(30);
         };
         lastView = [self buildRowWithLastView:lastView titles:@[@"Edit", @"Reload", @"Save"] buttonBlock:^(UIButton *b, NSString *title) {
             b.backgroundColor = FlatPlum;
