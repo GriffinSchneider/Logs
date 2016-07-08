@@ -9,4 +9,5 @@ target 'tracker' do
   pod 'ChameleonFramework'
   pod 'UIButton-ANDYHighlighted'
   pod 'Toast'
+  pod 'ReactiveCocoa'
 end

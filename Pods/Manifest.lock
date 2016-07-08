@@ -22,6 +22,18 @@ PODS:
   - JSONModel (1.2.0)
   - Masonry (1.0.0)
   - MoveViewUpForKeyboardKit (1.0.0)
+  - ReactiveCocoa (4.1.0):
+    - ReactiveCocoa/UI (= 4.1.0)
+    - Result (~> 2.0)
+  - ReactiveCocoa/Core (4.1.0):
+    - ReactiveCocoa/no-arc
+    - Result (~> 2.0)
+  - ReactiveCocoa/no-arc (4.1.0):
+    - Result (~> 2.0)
+  - ReactiveCocoa/UI (4.1.0):
+    - ReactiveCocoa/Core
+    - Result (~> 2.0)
+  - Result (2.0.0)
   - Toast (3.0)
   - UIButton-ANDYHighlighted (0.2.1)
 
@@ -31,6 +43,7 @@ DEPENDENCIES:
   - DRYUI
   - JSONModel
   - MoveViewUpForKeyboardKit
+  - ReactiveCocoa
   - Toast
   - UIButton-ANDYHighlighted
 
@@ -41,9 +54,11 @@ SPEC CHECKSUMS:
   JSONModel: 12523685c4b623553ccf844bbbf7007624317b2c
   Masonry: b529bb169217897b6354d4b56b1fada6d475b13d
   MoveViewUpForKeyboardKit: cfb46dd1d2b5a022ee78ecd6d78695749ce921cd
+  ReactiveCocoa: d70004d7a366a7b8e87e60ce2347182c77701949
+  Result: 9e75e1111c774c6ac594e14907b15057053a7959
   Toast: 32c59229abfcf41850162b83bb9259dc84372473
   UIButton-ANDYHighlighted: 3f5e9fb68fb3425bd9fddc030af452d3ac9d1613
 
-PODFILE CHECKSUM: 1a8f61afdc163c191e8cefab7eb2321e92d36482
+PODFILE CHECKSUM: b43cf064d482965c66d6097ca69536e1f992f92e
 
 COCOAPODS: 1.0.1
