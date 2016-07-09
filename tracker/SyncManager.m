@@ -19,6 +19,8 @@
                                                                   error:nil] \
                        encoding:NSUTF8StringEncoding]) \
 
+#define DATA_REVISION_KEY @"DataRevision"
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 @interface SyncManager () <
@@ -32,7 +34,6 @@ DBRestClientDelegate
 
 @property (nonatomic, strong) NSTimer *saveTimer;
 @property (nonatomic, strong) NSString *currentlyLoadingFile;
-@property (nonatomic, strong) NSString *fileRev;
 
 @end
 
@@ -88,6 +89,17 @@ DBRestClientDelegate
 }
 
 
+#pragma mark - Revision Tracking
+
+- (NSString *)dataRevision {
+    return [[NSUserDefaults standardUserDefaults] objectForKey:DATA_REVISION_KEY];
+}
+
+- (void)setDataRevision:(NSString *)dataRevision {
+    [[NSUserDefaults standardUserDefaults] setObject:dataRevision forKey:DATA_REVISION_KEY];
+}
+
+
 #pragma mark - Real Stuff
 
 
@@ -139,7 +151,7 @@ DBRestClientDelegate
     [self.saveTimer invalidate];
     self.saveTimer = nil;
     [self writeToDisk];
-    [self.restClient uploadFile:@"data.json" toPath:@"/" withParentRev:self.fileRev fromPath:self.localDataPath];
+    [self.restClient uploadFile:@"data.json" toPath:@"/" withParentRev:self.dataRevision fromPath:self.localDataPath];
 }
 
 - (void)makeSchemaFile {
@@ -155,7 +167,7 @@ DBRestClientDelegate
 #pragma mark - DBRestClientDelegate
 
 - (void)restClient:(DBRestClient*)client loadedMetadata:(DBMetadata*)metadata {
-    self.fileRev = metadata.rev;
+    self.dataRevision = metadata.rev;
     [self.restClient loadFile:metadata.path intoPath:self.localDataPath];
 }
 
@@ -191,7 +203,7 @@ DBRestClientDelegate
 
 
 - (void)restClient:(DBRestClient*)client uploadedFile:(NSString*)destPath from:(NSString*)srcPath metadata:(DBMetadata*)metadata {
-    self.fileRev = metadata.rev;
+    self.dataRevision = metadata.rev;
     if ([srcPath isEqualToString:self.localSchemaPath]) {
         [self toast:@"✅Created Schema File✅"];
         [self loadFromDropbox];
