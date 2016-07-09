@@ -111,7 +111,7 @@ UITableViewDataSource
         if (![[editedEvent toDictionary] isEqual:[event toDictionary]]) {
             [[SyncManager i].data.events replaceObjectAtIndex:eventIndex withObject:editedEvent];
             [[SyncManager i].data sortEvents];
-            [[SyncManager i] writeToDropbox];
+            [[SyncManager i] writeToDisk];
         }
         [self.navigationController popViewControllerAnimated:YES];
     }] animated:YES];
@@ -125,7 +125,7 @@ UITableViewDataSource
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         [[SyncManager i].data.events removeObjectAtIndex:[self eventIndexForRow:indexPath.row]];
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
-        [[SyncManager i] writeToDropbox];
+        [[SyncManager i] writeToDisk];
     }
 }
 

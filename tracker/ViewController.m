@@ -251,7 +251,6 @@
         [[SyncManager i].data.events addObject:e];
     }
     [[SyncManager i].data.events addObject:e];
-    [[SyncManager i] writeToDropbox];
     [self rebuildView];
 }
 

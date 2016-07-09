@@ -66,7 +66,7 @@
     self.window.rootViewController = [ViewController new];
     
     if ([[DBSession sharedSession] isLinked]) {
-        [[SyncManager i] loadFromDropbox];
+        [[SyncManager i] loadFromDisk];
     }
     
     return YES;
@@ -84,7 +84,7 @@
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
-    [[SyncManager i] saveImmediately];
+    [[SyncManager i] writeToDisk];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
@@ -100,6 +100,7 @@
 
 - (void)sessionDidReceiveAuthorizationFailure:(DBSession*)session userId:(NSString *)userId {
     self.relinkUserId = userId;
+    [[SyncManager i] hideActivity];
     [[[UIAlertView alloc]
       initWithTitle:@"Dropbox Session Ended" message:@"Do you want to relink?" delegate:self
       cancelButtonTitle:@"Cancel" otherButtonTitles:@"Relink", nil]

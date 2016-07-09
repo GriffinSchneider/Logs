@@ -20,7 +20,12 @@
 - (Data *)data;
 - (Schema *)schema;
 
+- (void)hideActivity;
+
 - (void)loadFromDropbox;
+- (void)loadFromDisk;
+
+- (void)writeToDisk;
 - (void)writeToDropbox;
 - (void)saveImmediately;
 

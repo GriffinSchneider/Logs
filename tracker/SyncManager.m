@@ -97,7 +97,39 @@ DBRestClientDelegate
     [self.restClient loadFile:@"/schema.json" intoPath:self.localSchemaPath];
 }
 
+- (void)loadFromDisk {
+    NSData *schemaData = [NSData dataWithContentsOfFile:self.localSchemaPath];
+    NSDictionary *schemaDict = nil;
+    if (schemaData) {
+        schemaDict = [NSJSONSerialization JSONObjectWithData:schemaData options:0 error:nil];
+    }
+    self.schema = [[Schema alloc] initWithDictionary:schemaDict error:nil];
+    
+    NSData *dataData = [NSData dataWithContentsOfFile:self.localDataPath];
+    NSDictionary *dataDict = nil;
+    if (dataData) {
+        dataDict = [NSJSONSerialization JSONObjectWithData:dataData options:0 error:nil];
+    }
+    if (dataDict) {
+        self.data = [[Data alloc] initWithDictionary:dataDict error:nil];
+    }
+    if (!self.data) {
+        self.data = [Data new];
+        self.data.events = [NSMutableArray<Event> new];
+    }
+}
+
+- (void)writeToDisk {
+    if (!self.data) {
+        return;
+    }
+    NSLog(@"Writing data:\n%@", PRETTY_PRINT(self.data));
+    NSData *nsData = [self.data toJSONData];
+    [nsData writeToFile:self.localDataPath atomically:YES];
+}
+
 - (void)writeToDropbox {
+    [self writeToDisk];
     [self.saveTimer invalidate];
     self.saveTimer = [NSTimer timerWithTimeInterval:3.0 target:self selector:@selector(saveImmediately) userInfo:nil repeats:NO];
     [[NSRunLoop currentRunLoop] addTimer:self.saveTimer forMode:NSRunLoopCommonModes];
@@ -106,14 +138,8 @@ DBRestClientDelegate
 - (void)saveImmediately {
     [self.saveTimer invalidate];
     self.saveTimer = nil;
-    if (!self.data) {
-        return;
-    }
-    NSLog(@"Writing data:\n%@", PRETTY_PRINT(self.data));
-    NSData *nsData = [self.data toJSONData];
-    [nsData writeToFile:self.localDataPath atomically:YES];
+    [self writeToDisk];
     [self.restClient uploadFile:@"data.json" toPath:@"/" withParentRev:self.fileRev fromPath:self.localDataPath];
-    
 }
 
 - (void)makeSchemaFile {
@@ -138,36 +164,13 @@ DBRestClientDelegate
 }
 
 - (void)restClient:(DBRestClient *)client loadedFile:(NSString *)destPath {
-    
-    void (^block)(NSDictionary *dict);
-    
     if ([destPath isEqual:self.localSchemaPath]) {
+        [self toast:@"✅Loaded Schema✅"];
         self.currentlyLoadingFile = self.localDataPath;
         [self.restClient loadMetadata:@"/data.json"];
-        block = ^(NSDictionary *dict) {
-            self.schema = [[Schema alloc] initWithDictionary:dict error:nil];
-            NSLog(@"Read schema:\n%@", PRETTY_PRINT(self.schema));
-            [self toast:@"✅Loaded Schema✅"];
-        };
     } else {
-        block = ^(NSDictionary *dict) {
-            if (dict) {
-                self.data = [[Data alloc] initWithDictionary:dict error:nil];
-            }
-            if (!self.data) {
-                self.data = [Data new];
-                self.data.events = [NSMutableArray<Event> new];
-            }
-            NSLog(@"Read data:\n%@", PRETTY_PRINT(self.data));
-            [self toast:@"✅Loaded Data✅"];
-        };
+        [self toast:@"✅Loaded Data✅"];
     }
-    NSData *data = [NSData dataWithContentsOfFile:destPath];
-    NSDictionary *dict = nil;
-    if (data) {
-        dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-    }
-    block(dict);
     [self hideActivity];
 }
 
@@ -183,7 +186,6 @@ DBRestClientDelegate
     } else {
         [self toast:@"❌Loading Data Failed!❌"];
         [self restClient:nil loadedFile:self.localDataPath];
-        [self writeToDropbox];
     }
 }
 
