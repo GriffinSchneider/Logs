@@ -106,10 +106,9 @@ UITableViewDataSource
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     Event *event = [self eventForRow:indexPath.row];
-    NSUInteger eventIndex = [self eventIndexForRow:indexPath.row];
     [self.navigationController pushViewController:[[EventViewController alloc] initWithData:[SyncManager i].data andEvent:event done:^(Event *editedEvent) {
         if (![[editedEvent toDictionary] isEqual:[event toDictionary]]) {
-            [[SyncManager i].data.events replaceObjectAtIndex:eventIndex withObject:editedEvent];
+            [[SyncManager i].data replaceEvent:event withEvent:editedEvent];
             [[SyncManager i].data sortEvents];
             [[SyncManager i] writeToDisk];
         }
@@ -123,7 +122,7 @@ UITableViewDataSource
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [[SyncManager i].data.events removeObjectAtIndex:[self eventIndexForRow:indexPath.row]];
+        [[SyncManager i].data removeEvent:[self eventForRow:indexPath.row]];
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
         [[SyncManager i] writeToDisk];
     }

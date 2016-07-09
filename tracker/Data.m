@@ -15,7 +15,41 @@ Event *eventNamed(NSSet<Event *> *events, NSString *eventName) {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+@interface Data()
+
+@property (nonatomic, strong) NSMutableArray<Event> *_events;
+
+@end
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 @implementation Data
+
+- (instancetype)init {
+    if ((self = [super init])) {
+        if (!self._events) {
+            self._events = [NSMutableArray<Event> new];
+        }
+    }
+    return self;
+}
+
+
+- (NSArray<Event *> *)events {
+    return self._events;
+}
+
+- (void)addEvent:(Event *)event {
+    [self._events addObject:event];
+}
+
+- (void)replaceEvent:(Event *)oldEvent withEvent:(Event *)newEvent {
+    [self._events replaceObjectAtIndex:[self._events indexOfObject:oldEvent] withObject:newEvent];
+}
+
+- (void)removeEvent:(Event *)event {
+    [self._events removeObject:event];
+}
 
 - (NSSet<Event *> *)activeStates {
     NSMutableSet<Event *> *retVal = [NSMutableSet new];
@@ -65,7 +99,7 @@ Event *eventNamed(NSSet<Event *> *events, NSString *eventName) {
 }
 
 - (void)sortEvents {
-    [self.events sortUsingSelector:@selector(compare:)];
+    [self._events sortUsingSelector:@selector(compare:)];
 }
 
 @end

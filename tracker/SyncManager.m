@@ -127,7 +127,6 @@ DBRestClientDelegate
     }
     if (!self.data) {
         self.data = [Data new];
-        self.data.events = [NSMutableArray<Event> new];
     }
 }
 

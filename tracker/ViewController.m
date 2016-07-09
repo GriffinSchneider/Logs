@@ -248,9 +248,9 @@
         e.type = EventTypeEndState;
         e.name = EVENT_SLEEP;
         e.date = [NSDate date];
-        [[SyncManager i].data.events addObject:e];
+        [[SyncManager i].data addEvent:e];
     }
-    [[SyncManager i].data.events addObject:e];
+    [[SyncManager i].data addEvent:e];
     [self rebuildView];
 }
 

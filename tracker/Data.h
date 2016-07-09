@@ -16,12 +16,16 @@ Event *eventNamed(NSSet<Event *> *events, NSString *eventName);
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 @interface Data : JSONModel
 
-@property (nonatomic, strong) NSMutableArray<Event> *events;
+- (NSArray<Event *> *)events;
+
+- (void)addEvent:(Event *)event;
+- (void)replaceEvent:(Event *)oldEvent withEvent:(Event *)newEvent;
+- (void)removeEvent:(Event *)event;
+- (void)sortEvents;
 
 - (NSSet<Event *> *)activeStates;
 - (NSDictionary<NSString *, Event *> *)lastReadings;
 - (NSSet<NSString *> *)recentOccurrences;
 
-- (void)sortEvents;
 
 @end
