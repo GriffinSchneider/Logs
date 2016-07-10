@@ -16,7 +16,7 @@ Event *eventNamed(NSSet<Event *> *events, NSString *eventName);
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 @interface Data : JSONModel
 
-- (NSArray<Event *> *)events;
+@property (nonatomic, strong) NSMutableArray<Event> *events;
 
 - (void)addEvent:(Event *)event;
 - (void)replaceEvent:(Event *)oldEvent withEvent:(Event *)newEvent;

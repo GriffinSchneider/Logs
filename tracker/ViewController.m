@@ -23,6 +23,10 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 @interface ViewController () <DBRestClientDelegate>
 
+@property (nonatomic, strong) NSMutableDictionary<NSString *, UIButton *> *occurrenceButtons;
+@property (nonatomic, strong) NSMutableDictionary<NSString *, UIButton *> *stateButtons;
+@property (nonatomic, strong) NSMutableDictionary<NSString *, UISlider *> *readingSliders;
+@property (nonatomic, strong) NSMutableDictionary<NSString *, UIButton *> *readingButtons;
 
 @end
 
@@ -34,6 +38,10 @@
 - (instancetype)init {
     if ((self = [super init])) {
         self.edgesForExtendedLayout = UIRectEdgeNone;
+        self.occurrenceButtons = [NSMutableDictionary new];
+        self.stateButtons = [NSMutableDictionary new];
+        self.readingSliders = [NSMutableDictionary new];
+        self.readingButtons = [NSMutableDictionary new];
         [[UINavigationBar appearance] setBarTintColor:FlatGrayDark];
     }
     return self;
@@ -54,7 +62,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self rebuildView];
+    [self updateViews];
 }
 
 - (void)rebuildView {
@@ -122,10 +130,6 @@
 }
 
 - (void)buildView {
-    NSDictionary<NSString *, Event *> *lastReadings = [SyncManager i].data.lastReadings;
-    NSSet<Event *> *activeStates = [SyncManager i].data.activeStates;
-    NSSet<NSString *> *recentOccurrences = [SyncManager i].data.recentOccurrences;
-    
     __block UIScrollView *scrollView;
     build_subviews(self.view) {
         add_subview(scrollView) {
@@ -161,14 +165,8 @@
         };
         lastView = spacer;
         lastView = [self buildGridWithLastView:lastView titles:[SyncManager i].schema.occurrences buttonBlock:^(UIButton *b, NSString *title) {
-            if ([recentOccurrences containsObject:title]) {
-                b.backgroundColor = FlatGreenDark;
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    b.backgroundColor = FlatOrangeDark;
-                });
-            } else {
-                b.backgroundColor = FlatOrangeDark;
-            }
+            b.backgroundColor = FlatOrangeDark;
+            self.occurrenceButtons[title] = b;
             [b bk_addEventHandler:^(id _) {
                 [self selectedOccurrence:title];
             } forControlEvents:UIControlEventTouchUpInside];
@@ -179,18 +177,7 @@
         };
         lastView = spacer2;
         lastView = [self buildGridWithLastView:lastView titles:[SyncManager i].schema.states buttonBlock:^(UIButton *b, NSString *title) {
-            Event *e = eventNamed(activeStates, title);
-            if (e) {
-                b.backgroundColor = FlatGreenDark;
-                NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:e.date];
-                NSDate *date = [NSDate dateWithTimeIntervalSince1970:interval];
-                NSDateFormatter *dateFormatter = [NSDateFormatter new];
-                [dateFormatter setDateFormat:@"HH:mm:ss"];
-                [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
-                [b setTitle:[NSString stringWithFormat:@"%@ (%@)", e.name, [dateFormatter stringFromDate:date]] forState:UIControlStateNormal];
-            } else {
-                b.backgroundColor = FlatRedDark;
-            }
+            self.stateButtons[title] = b;
             [b bk_addEventHandler:^(id _) {
                 [self selectedState:title];
             } forControlEvents:UIControlEventTouchUpInside];
@@ -202,34 +189,23 @@
         lastView = spacer3;
         [[SyncManager i].schema.readings enumerateObjectsUsingBlock:^(NSString *reading, NSUInteger idx, BOOL *stop) {
             UISlider *add_subview(slider) {
-                _.value = [lastReadings[reading].reading floatValue];
                 _.thumbTintColor = FlatGreenDark;
                 _.minimumTrackTintColor = FlatGreenDark;
                 _.maximumTrackTintColor = FlatRedDark;
+                self.readingSliders[reading] = _;
                 _.make.left.equalTo(superview).with.offset(10);
                 _.make.top.equalTo(lastView.mas_bottom).with.offset(15);
                 if (idx > 0) { _.make.width.equalTo(lastView); }
             };
             UIButton *add_subview(button) {
                 [_ setTitleColor:FlatWhiteDark forState:UIControlStateNormal];
+                _.backgroundColor = FlatBlueDark;
                 _.layer.cornerRadius = 5;
-                
-                if ([[NSDate date] timeIntervalSinceDate:lastReadings[reading].date] < 1) {
-                    _.backgroundColor = FlatGreenDark;
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                        _.backgroundColor = FlatBlueDark;
-                        _.highlightedBackgroundColor = [_.backgroundColor darkenByPercentage:0.2];
-                    });
-                } else {
-                    _.backgroundColor = FlatBlueDark;
-                }
-                _.highlightedBackgroundColor = [_.backgroundColor darkenByPercentage:0.2];
-                
+                self.readingButtons[reading] = _;
                 _.make.top.and.bottom.equalTo(slider);
                 _.make.right.equalTo(superview.superview).with.offset(-10);
                 _.make.left.equalTo(slider.mas_right).with.offset(10);
             };
-            [self sliderChanged:slider forReading:reading withButton:button];
             [button bk_addEventHandler:^(id _) { [self madeReading:reading withSlider:slider]; } forControlEvents:UIControlEventTouchUpInside];
             [slider bk_addEventHandler:^(id _) { [self sliderChanged:slider forReading:reading withButton:button]; } forControlEvents:UIControlEventAllEvents];
             lastView = slider;
@@ -238,6 +214,41 @@
             make.bottom.equalTo(scrollView.mas_bottom).with.offset(-15);
         }];
     };
+    
+    [self updateViews];
+}
+
+- (void)updateViews {
+    NSDictionary<NSString *, Event *> *lastReadings = [SyncManager i].data.lastReadings;
+    NSSet<Event *> *activeStates = [SyncManager i].data.activeStates;
+    
+    [self.stateButtons enumerateKeysAndObjectsUsingBlock:^(NSString *eventName, UIButton *b, BOOL *stop) {
+        Event *e = eventNamed(activeStates, eventName);
+        if (e) {
+            b.backgroundColor = FlatGreenDark;
+            NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:e.date];
+            NSDate *date = [NSDate dateWithTimeIntervalSince1970:interval];
+            NSDateFormatter *dateFormatter = [NSDateFormatter new];
+            [dateFormatter setDateFormat:@"HH:mm:ss"];
+            [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
+            [b setTitle:[NSString stringWithFormat:@"%@ (%@)", e.name, [dateFormatter stringFromDate:date]] forState:UIControlStateNormal];
+        } else {
+            b.backgroundColor = FlatRedDark;
+        }
+    }];
+    
+    [self.readingSliders enumerateKeysAndObjectsUsingBlock:^(NSString *eventName, UISlider *slider, BOOL *stop) {
+        slider.value = lastReadings[eventName].reading.floatValue;
+        [self sliderChanged:slider forReading:eventName withButton:self.readingButtons[eventName]];
+    }];
+}
+
+- (void)momentaryGreenButton:(UIButton *)b {
+    UIColor *old = b.backgroundColor;
+    b.layer.backgroundColor = FlatGreenDark.CGColor;
+    [UIView animateWithDuration:3.0 animations:^{
+        b.layer.backgroundColor = old.CGColor;
+    }];
 }
 
 - (void)addEvent:(Event *)e {
@@ -251,7 +262,7 @@
         [[SyncManager i].data addEvent:e];
     }
     [[SyncManager i].data addEvent:e];
-    [self rebuildView];
+    [self updateViews];
 }
 
 - (void)selectedOccurrence:(NSString *)occurrence {
@@ -260,6 +271,7 @@
     e.name = occurrence;
     e.date = [NSDate date];
     [self addEvent:e];
+    [self momentaryGreenButton:self.occurrenceButtons[occurrence]];
 }
 
 - (void)selectedState:(NSString *)state {
@@ -282,6 +294,7 @@
     e.date = [NSDate date];
     e.reading = [NSNumber numberWithFloat:slider.value];
     [self addEvent:e];
+    [self momentaryGreenButton:self.readingButtons[reading]];
 }
 
 @end
