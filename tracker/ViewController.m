@@ -28,6 +28,8 @@
 @property (nonatomic, strong) NSMutableDictionary<NSString *, UISlider *> *readingSliders;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, UIButton *> *readingButtons;
 
+@property (nonatomic, strong) NSTimer *updateTimer;
+
 @end
 
 
@@ -63,6 +65,8 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self updateViews];
+    [self.updateTimer invalidate];
+    self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(updateStateButtons) userInfo:nil repeats:YES];
 }
 
 - (void)rebuildView {
@@ -219,9 +223,16 @@
 }
 
 - (void)updateViews {
+    [self updateStateButtons];
     NSDictionary<NSString *, Event *> *lastReadings = [SyncManager i].data.lastReadings;
+    [self.readingSliders enumerateKeysAndObjectsUsingBlock:^(NSString *eventName, UISlider *slider, BOOL *stop) {
+        slider.value = lastReadings[eventName].reading.floatValue;
+        [self sliderChanged:slider forReading:eventName withButton:self.readingButtons[eventName]];
+    }];
+}
+
+- (void)updateStateButtons {
     NSSet<Event *> *activeStates = [SyncManager i].data.activeStates;
-    
     [self.stateButtons enumerateKeysAndObjectsUsingBlock:^(NSString *eventName, UIButton *b, BOOL *stop) {
         Event *e = eventNamed(activeStates, eventName);
         if (e) {
@@ -235,11 +246,7 @@
         } else {
             b.backgroundColor = FlatRedDark;
         }
-    }];
-    
-    [self.readingSliders enumerateKeysAndObjectsUsingBlock:^(NSString *eventName, UISlider *slider, BOOL *stop) {
-        slider.value = lastReadings[eventName].reading.floatValue;
-        [self sliderChanged:slider forReading:eventName withButton:self.readingButtons[eventName]];
+        b.highlightedBackgroundColor = [b.backgroundColor darkenByPercentage:0.2];
     }];
 }
 
