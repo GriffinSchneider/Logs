@@ -245,6 +245,7 @@
             [b setTitle:[NSString stringWithFormat:@"%@ (%@)", e.name, [dateFormatter stringFromDate:date]] forState:UIControlStateNormal];
         } else {
             b.backgroundColor = FlatRedDark;
+            [b setTitle:eventName forState:UIControlStateNormal];
         }
         b.highlightedBackgroundColor = [b.backgroundColor darkenByPercentage:0.2];
     }];
