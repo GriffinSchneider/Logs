@@ -8,6 +8,7 @@
 
 #import <JSONModel/JSONModel.h>
 #import "Event.h"
+#import "State.h"
 
 
 Event *eventNamed(NSSet<Event *> *events, NSString *eventName);
@@ -26,6 +27,9 @@ Event *eventNamed(NSSet<Event *> *events, NSString *eventName);
 - (NSSet<Event *> *)activeStates;
 - (NSDictionary<NSString *, Event *> *)lastReadings;
 - (NSSet<NSString *> *)recentOccurrences;
+- (NSArray<Event *> *)eventsToday;
+
+- (NSArray<State *> *)allStates;
 
 
 @end

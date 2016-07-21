@@ -17,6 +17,7 @@
 #import "Schema.h"
 #import "Data.h"
 #import "ListViewController.h"
+#import "TimelineViewController.h"
 #import "SyncManager.h"
 
 
@@ -146,7 +147,7 @@
         __block UIView *add_subview(lastView) {
             _.make.top.equalTo(_.superview).with.offset(30);
         };
-        lastView = [self buildRowWithLastView:lastView titles:@[@"Edit", @"Reload", @"Save"] buttonBlock:^(UIButton *b, NSString *title) {
+        lastView = [self buildRowWithLastView:lastView titles:@[@"Edit", @"Timeline", @"Reload", @"Save"] buttonBlock:^(UIButton *b, NSString *title) {
             b.backgroundColor = FlatPlum;
             [b bk_addEventHandler:^(UIButton *sender) {
                 if ([sender.currentTitle isEqualToString:@"Edit"]) {
@@ -154,6 +155,12 @@
                         [self dismissViewControllerAnimated:YES completion:nil];
                     }];
                     [self presentViewController:[[UINavigationController alloc] initWithRootViewController:lvc] animated:YES completion:^{}];
+                }
+                if ([sender.currentTitle isEqualToString:@"Timeline"]) {
+                    TimelineViewController *vc = [[TimelineViewController alloc] initWithDone:^{
+                        [self dismissViewControllerAnimated:YES completion:nil];
+                    }];
+                    [self presentViewController:[[UINavigationController alloc] initWithRootViewController:vc] animated:YES completion:^{}];
                 }
                 if ([sender.currentTitle isEqualToString:@"Reload"]) {
                     [[SyncManager i] loadFromDropbox];
