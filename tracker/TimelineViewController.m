@@ -39,16 +39,23 @@
 
 static NSArray<UIColor *> *colors;
 + (void)load {
-    colors = @[FlatBlue, FlatCoffee, FlatForestGreen, FlatGreen,
-               FlatLime, FlatMagenta, FlatMaroon, FlatMint,
-               FlatNavyBlue, FlatOrange, FlatPink, FlatPurple,
-               FlatRed, FlatSkyBlue, FlatWatermelon, FlatYellow];
+    colors = @[FlatBlueDark, FlatRedDark, FlatGreenDark, FlatBlueDark,
+             FlatMagentaDark,
+               FlatOrangeDark, FlatPinkDark, FlatPurpleDark, FlatRedDark,
+               FlatSkyBlueDark, FlatWatermelonDark, FlatYellowDark];
+    colorMap = [NSMutableDictionary new];
 }
 
 static NSUInteger colorIndex = 0;
-- (UIColor *)getColor {
-    colorIndex = (colorIndex + 1) % colors.count;
-    return colors[colorIndex];
+static NSMutableDictionary<NSString *, UIColor *> *colorMap;
+- (UIColor *)getColor:(NSString *)key {
+    UIColor *retVal = colorMap[key];
+    if (!retVal) {
+        colorIndex = (colorIndex + 1) % colors.count;
+        retVal = colors[colorIndex];
+        colorMap[key] = retVal;
+    }
+    return retVal;
 }
 
 - (instancetype)initWithDone:(TimelineViewControllerDoneBlock)done {
@@ -125,8 +132,7 @@ static NSUInteger colorIndex = 0;
 }
 
 - (CGFloat)scale:(NSTimeInterval)interval {
-//    return interval/120.0;
-    return interval/10.0;
+    return roundf(interval/40.0);
 }
 
 - (void)loadView {
@@ -140,16 +146,32 @@ static NSUInteger colorIndex = 0;
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]  initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed:)];
     
     build_subviews(self.view) {
-        _.backgroundColor = [UIColor whiteColor];
+        _.backgroundColor = FlatNavyBlue;
         UIScrollView *add_subview(scrollView) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                CGPoint bottomOffset = CGPointMake(0, _.contentSize.height - _.bounds.size.height);
+                [_ setContentOffset:bottomOffset animated:NO];
+            });
             _.make.edges.equalTo(superview);
             [slots enumerateObjectsUsingBlock:^(NSArray<StateSlotInfo *> *slotArray, NSUInteger slot, BOOL *stop) {
                 [slotArray enumerateObjectsUsingBlock:^(StateSlotInfo *s, NSUInteger idx, BOOL * _Nonnull stop) {
-                    UIView *add_subview(v) {
-                        _.backgroundColor = [self getColor];
-                        _.layer.borderWidth = 4.0;
+                    UILabel *add_subview(v) {
+                        _.text = s.state.name;
+                        _.textAlignment = NSTextAlignmentCenter;
+                        _.minimumScaleFactor = 0.1;
+                        _.font = [UIFont systemFontOfSize:12 weight:UIFontWeightBold];
+                        _.numberOfLines = 0;
+                        _.clipsToBounds = YES;
+                        _.backgroundColor = [self getColor:s.state.name];
+                        _.textColor = [_.backgroundColor darkenByPercentage:0.9];
+                        _.layer.borderWidth = 1.0;
+                        _.layer.cornerRadius = 1.0;
+                        _.layer.shadowOffset = CGSizeMake(-3, -3);
+                        _.layer.shadowOpacity = 0.3;
+                        _.layer.shadowColor = [_.backgroundColor darkenByPercentage:0.9].CGColor;
+                        _.layer.borderColor = [_.backgroundColor darkenByPercentage:0.1].CGColor;
                         CGFloat w = [UIScreen mainScreen].bounds.size.width;
-                        _.make.left.equalTo(superview.superview).with.offset((w/s.numberOfActiveSlots-4)*s.slotIndex);
+                        _.make.left.equalTo(superview.superview).with.offset((w/s.numberOfActiveSlots)*s.slotIndex);
                         _.make.width.equalTo(@((w/s.numberOfActiveSlots)));
                         _.make.height.equalTo(@([self scale:[s.state.end timeIntervalSinceDate:s.state.start]]));
                         if (idx == 0) {
