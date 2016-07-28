@@ -78,15 +78,14 @@
     [self buildView];
 }
 
-- (UIView *)buildGridWithLastView:(UIView *)lastVieww titles:(NSArray<NSString *> *)titles buttonBlock:(void (^)(UIButton *b, NSString *title))buttonBlock {
+- (UIView *)buildGridInView:(UIView *)superview withLastView:(UIView *)lastVieww titles:(NSArray<NSString *> *)titles buttonBlock:(void (^)(UIButton *b, NSString *title))buttonBlock {
     __block UIView *lastView = lastVieww;
-    build_subviews(self.view) {
+    build_subviews(superview) {
         [titles enumerateObjectsUsingBlock:^(NSString *title, NSUInteger idx, BOOL *stop) {
             UIButton *add_subview(button) {
                 [_ setTitleColor:FlatWhiteDark forState:UIControlStateNormal];
                 [_ setTitle:title forState:UIControlStateNormal];
                 _.layer.cornerRadius = 5;
-                _.adjustsImageWhenHighlighted = YES;
                 buttonBlock(_, title);
                 _.highlightedBackgroundColor = [_.backgroundColor darkenByPercentage:0.2];
                 if (lastView) {
@@ -98,7 +97,7 @@
                 } else {
                     _.make.top.equalTo(lastView);
                     _.make.left.equalTo(lastView.mas_right).with.offset(10);
-                    _.make.right.equalTo(superview).with.offset(-10);
+                    _.make.right.equalTo(superview.superview).with.offset(-10);
                 }
             };
             lastView = button;
@@ -107,9 +106,9 @@
     return lastView;
 }
 
-- (UIView *)buildRowWithLastView:(UIView *)lastVieww titles:(NSArray<NSString *> *)titles buttonBlock:(void (^)(UIButton *b, NSString *title))buttonBlock {
+- (UIView *)buildRowInView:(UIView *)superview withLastView:(UIView *)lastVieww titles:(NSArray<NSString *> *)titles buttonBlock:(void (^)(UIButton *b, NSString *title))buttonBlock {
     __block UIView *lastView = lastVieww;
-    build_subviews(self.view) {
+    build_subviews(superview) {
         [titles enumerateObjectsUsingBlock:^(NSString *title, NSUInteger idx, BOOL *stop) {
             UIButton *add_subview(button) {
                 [_ setTitleColor:FlatWhiteDark forState:UIControlStateNormal];
@@ -126,7 +125,7 @@
                     _.make.left.equalTo(lastView.mas_right).with.offset(10);
                 }
                 if (idx == titles.count-1) {
-                    _.make.right.equalTo(superview).with.offset(-10);
+                    _.make.right.equalTo(superview.superview).with.offset(-10);
                 }
             };
             lastView = button;
@@ -148,7 +147,7 @@
         __block UIView *add_subview(lastView) {
             _.make.top.equalTo(_.superview).with.offset(30);
         };
-        lastView = [self buildRowWithLastView:lastView titles:@[@"Edit", @"Timeline", @"Reload", @"Save"] buttonBlock:^(UIButton *b, NSString *title) {
+        lastView = [self buildRowInView:_ withLastView:lastView titles:@[@"Edit", @"Timeline", @"Reload", @"Save"] buttonBlock:^(UIButton *b, NSString *title) {
             b.backgroundColor = FlatPlum;
             [b bk_addEventHandler:^(UIButton *sender) {
                 if ([sender.currentTitle isEqualToString:@"Edit"]) {
@@ -176,7 +175,7 @@
             _.make.top.equalTo(lastView.mas_bottom).with.offset(10);
         };
         lastView = spacer;
-        lastView = [self buildGridWithLastView:lastView titles:[SyncManager i].schema.occurrences buttonBlock:^(UIButton *b, NSString *title) {
+        lastView = [self buildGridInView:_ withLastView:lastView titles:[SyncManager i].schema.occurrences buttonBlock:^(UIButton *b, NSString *title) {
             b.backgroundColor = FlatOrangeDark;
             self.occurrenceButtons[title] = b;
             [b bk_addEventHandler:^(id _) {
@@ -188,7 +187,7 @@
             _.make.top.equalTo(lastView.mas_bottom).with.offset(10);
         };
         lastView = spacer2;
-        lastView = [self buildGridWithLastView:lastView titles:[SyncManager i].schema.states buttonBlock:^(UIButton *b, NSString *title) {
+        lastView = [self buildGridInView:_ withLastView:lastView titles:[SyncManager i].schema.states buttonBlock:^(UIButton *b, NSString *title) {
             self.stateButtons[title] = b;
             [b bk_addEventHandler:^(id _) {
                 [self selectedState:title];
