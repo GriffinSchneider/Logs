@@ -104,6 +104,15 @@ Event *eventNamed(NSSet<Event *> *events, NSString *eventName) {
     return [self.events objectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(idx + 1, self.events.count - idx - 1)]];
 }
 
+- (void)sortedInsertState:(State *)state intoStates:(NSMutableArray<State *> *)states {
+    NSInteger idxToInsert = [states indexOfObjectPassingTest:^BOOL(State *obj, NSUInteger idx, BOOL *stop) {
+        return [obj.start compare:state.start] == NSOrderedDescending;
+    }];
+    if (idxToInsert == NSNotFound) idxToInsert = states.count;
+    
+    [states insertObject:state atIndex:idxToInsert];
+}
+
 - (NSArray<State *> *)allStates {
     NSMutableSet<Event *> *currentlyOn = [NSMutableSet new];
     NSMutableArray<State *> *retVal = [NSMutableArray new];
@@ -129,14 +138,14 @@ Event *eventNamed(NSSet<Event *> *events, NSString *eventName) {
             }
             [currentlyOn removeObject:foundCurrentlyOn];
             
-            NSInteger idxToInsert = [retVal indexOfObjectPassingTest:^BOOL(State *obj, NSUInteger idx, BOOL *stop) {
-                return [obj.start compare:foundCurrentlyOn.date] == NSOrderedDescending;
-            }];
-            if (idxToInsert == NSNotFound) idxToInsert = retVal.count;
-            
-            [retVal insertObject:[[State alloc] initWithName:e.name start:foundCurrentlyOn.date end:e.date events:@[foundCurrentlyOn, e]] atIndex:idxToInsert];
+            [self sortedInsertState:[[State alloc] initWithName:e.name start:foundCurrentlyOn.date end:e.date events:@[foundCurrentlyOn, e]] intoStates:retVal];
         }
     }];
+    
+    [currentlyOn enumerateObjectsUsingBlock:^(Event *e, BOOL *stop) {
+        [self sortedInsertState:[[State alloc] initWithName:e.name start:e.date end:nil events:@[e]] intoStates:retVal];
+    }];
+    
     return retVal;
 }
 

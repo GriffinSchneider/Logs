@@ -19,6 +19,7 @@
 #import "ListViewController.h"
 #import "TimelineViewController.h"
 #import "SyncManager.h"
+#import "Utils.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -244,12 +245,7 @@
         Event *e = eventNamed(activeStates, eventName);
         if (e) {
             b.backgroundColor = FlatGreenDark;
-            NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:e.date];
-            NSDate *date = [NSDate dateWithTimeIntervalSince1970:interval];
-            NSDateFormatter *dateFormatter = [NSDateFormatter new];
-            [dateFormatter setDateFormat:@"HH:mm:ss"];
-            [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
-            [b setTitle:[NSString stringWithFormat:@"%@ (%@)", e.name, [dateFormatter stringFromDate:date]] forState:UIControlStateNormal];
+            [b setTitle:[NSString stringWithFormat:@"%@ (%@)", e.name, formatDuration([[NSDate date] timeIntervalSinceDate:e.date])] forState:UIControlStateNormal];
         } else {
             b.backgroundColor = FlatRedDark;
             [b setTitle:eventName forState:UIControlStateNormal];

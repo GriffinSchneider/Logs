@@ -10,6 +10,7 @@
 #import <DRYUI/DRYUI.h>
 #import <ChameleonFramework/Chameleon.h>
 #import "SyncManager.h"
+#import "Utils.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -20,7 +21,7 @@
 @end
 @implementation StateSlotInfo
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<StateSlotInfo idx:%u #:%u %@>", self.slotIndex, self.numberOfActiveSlots, self.state];
+    return [NSString stringWithFormat:@"<StateSlotInfo idx:%lu #:%lu %@>", (unsigned long)self.slotIndex, (unsigned long)self.numberOfActiveSlots, self.state];
 }
 @end
 
@@ -82,22 +83,11 @@ static NSMutableDictionary<NSString *, UIColor *> *colorMap;
     return retVal;
 }
 
-- (NSUInteger)getNumberOfOverlappingStatesAndUpdateNumberOfActiveSlotsForThoseStatesForState:(State *)s inSlots:(NSMutableArray<NSMutableArray<StateSlotInfo *> *> *)slots {
-    // TODO: Actually figure out the numberOfActiveSlots.
-    [slots enumerateObjectsUsingBlock:^(NSArray<StateSlotInfo *> *slotArray, NSUInteger slot, BOOL *stop) {
-        [slotArray enumerateObjectsUsingBlock:^(StateSlotInfo *s, NSUInteger idx, BOOL * _Nonnull stop) {
-            s.numberOfActiveSlots = 4;
-        }];
-    }];
-    return 4;
-}
-
 - (void)putState:(State *)s inSlot:(NSUInteger)slot ofSlots:(NSMutableArray<NSMutableArray<StateSlotInfo *> *> *)slots {
     StateSlotInfo *slotInfo = [StateSlotInfo new];
     slotInfo.state = s;
     slotInfo.slotIndex = slot;
-    // +1 because of this state.
-    slotInfo.numberOfActiveSlots = [self getNumberOfOverlappingStatesAndUpdateNumberOfActiveSlotsForThoseStatesForState:s inSlots:slots] + 1;
+    slotInfo.numberOfActiveSlots = 4; // TODO: this.
     if (slots.count <= slot) {
         [slots addObject:[NSMutableArray new]];
     }
@@ -123,7 +113,6 @@ static NSMutableDictionary<NSString *, UIColor *> *colorMap;
 
 - (NSArray<NSArray<StateSlotInfo *> *> *)fullSlotInfo {
     NSArray<State *> *states = [SyncManager i].data.allStates;
-    NSLog(@"%@", states);
     NSMutableArray<NSMutableArray<StateSlotInfo *> *> *retVal = [NSMutableArray new];
     [states enumerateObjectsUsingBlock:^(State *s, NSUInteger idx, BOOL *stop) {
         [self insertState:s intoSlots:retVal];
@@ -138,8 +127,6 @@ static NSMutableDictionary<NSString *, UIColor *> *colorMap;
 - (void)loadView {
     NSArray<NSArray<StateSlotInfo *> *> *slots = [self fullSlotInfo];
     NSDate *start = slots[0][0].state.start;
-    
-    NSLog(@"%@", slots);
     
     self.view = [UIView new];
     
@@ -156,24 +143,23 @@ static NSMutableDictionary<NSString *, UIColor *> *colorMap;
             [slots enumerateObjectsUsingBlock:^(NSArray<StateSlotInfo *> *slotArray, NSUInteger slot, BOOL *stop) {
                 [slotArray enumerateObjectsUsingBlock:^(StateSlotInfo *s, NSUInteger idx, BOOL * _Nonnull stop) {
                     UILabel *add_subview(v) {
-                        _.text = s.state.name;
+                        _.text = [NSString stringWithFormat:@"%@ %@", s.state.name, formatDuration([(s.state.end ?: [NSDate date]) timeIntervalSinceDate:s.state.start])];
                         _.textAlignment = NSTextAlignmentCenter;
-                        _.minimumScaleFactor = 0.1;
-                        _.font = [UIFont systemFontOfSize:12 weight:UIFontWeightBold];
+                        _.minimumScaleFactor = 0;
+                        _.adjustsFontSizeToFitWidth = YES;
+                        _.font = [UIFont systemFontOfSize:12 weight:UIFontWeightBlack];
                         _.numberOfLines = 0;
-                        _.clipsToBounds = YES;
                         _.backgroundColor = [self getColor:s.state.name];
-                        _.textColor = [_.backgroundColor darkenByPercentage:0.9];
-                        _.layer.borderWidth = 1.0;
-                        _.layer.cornerRadius = 1.0;
-                        _.layer.shadowOffset = CGSizeMake(-3, -3);
-                        _.layer.shadowOpacity = 0.3;
-                        _.layer.shadowColor = [_.backgroundColor darkenByPercentage:0.9].CGColor;
+                        _.textColor = FlatWhiteDark;
                         _.layer.borderColor = [_.backgroundColor darkenByPercentage:0.1].CGColor;
                         CGFloat w = [UIScreen mainScreen].bounds.size.width;
                         _.make.left.equalTo(superview.superview).with.offset((w/s.numberOfActiveSlots)*s.slotIndex);
                         _.make.width.equalTo(@((w/s.numberOfActiveSlots)));
-                        _.make.height.equalTo(@([self scale:[s.state.end timeIntervalSinceDate:s.state.start]]));
+                        if (s.state.end) {
+                            _.make.height.equalTo(@([self scale:[s.state.end timeIntervalSinceDate:s.state.start]]));
+                        } else {
+                            _.make.bottom.equalTo(superview);
+                        }
                         if (idx == 0) {
                             _.make.top.equalTo(superview);
                         } else {
