@@ -32,6 +32,9 @@
 
 @property (nonatomic, strong) NSTimer *updateTimer;
 
+@property (nonatomic, strong) UIView *scrollViewWrapper;
+@property (nonatomic, strong) UIScrollView *scrollView;
+
 @end
 
 
@@ -51,11 +54,42 @@
     return self;
 }
 
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [UIView setAnimationsEnabled:NO];
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+        self.scrollViewWrapper.layer.affineTransform = CGAffineTransformInvert(context.targetTransform);
+        CGFloat rotation = atan2f(context.targetTransform.b, context.targetTransform.a);
+        if (!CGAffineTransformIsIdentity(context.targetTransform) &&
+            fabs(rotation - M_PI) > 0.0001 && fabs(rotation + M_PI) > 0.0001) {
+            [self.scrollViewWrapper mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.height.equalTo(self.view.mas_width);
+                make.width.equalTo(self.view.mas_height);
+                make.center.equalTo(self.view);
+            }];
+        }
+    } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+        [UIView setAnimationsEnabled:YES];
+        [self.view layoutIfNeeded];
+        [UIView animateWithDuration:0.3 animations:^{
+            [self.scrollViewWrapper mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.width.equalTo(self.view);
+                make.height.equalTo(self.view);
+                make.center.equalTo(self.view);
+            }];
+            self.scrollViewWrapper.layer.affineTransform = CGAffineTransformIdentity;
+            [self.view layoutIfNeeded];
+        }];
+    }];
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+}
+
+
 - (UIStatusBarStyle)preferredStatusBarStyle {
     return UIStatusBarStyleLightContent;
 }
 
 - (void)loadView {
+    
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.view = [UIView new];
     
@@ -72,9 +106,9 @@
 }
 
 - (void)rebuildView {
-    [self.view.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        [obj removeFromSuperview];
-    }];
+    [self.scrollViewWrapper removeFromSuperview];
+    self.scrollView = nil;
+    self.scrollViewWrapper = nil;
     [self buildView];
 }
 
@@ -135,15 +169,21 @@
 }
 
 - (void)buildView {
-    __block UIScrollView *scrollView;
     build_subviews(self.view) {
-        add_subview(scrollView) {
-            _.make.edges.equalTo(superview);
+        _.backgroundColor = FlatNavyBlueDark;
+        add_subview(self.scrollViewWrapper) {
+            _.backgroundColor = FlatNavyBlueDark;
+            _.make.width.and.height.equalTo(superview);
+            _.make.center.equalTo(superview);
+            add_subview(self.scrollView) {
+                _.backgroundColor = FlatNavyBlueDark;
+                _.make.width.and.height.equalTo(superview);
+                _.make.center.equalTo(superview);
+            };
         };
     };
     
-    build_subviews(scrollView) {
-        _.backgroundColor = FlatNavyBlueDark;
+    build_subviews(self.scrollView) {
         __block UIView *add_subview(lastView) {
             _.make.top.equalTo(_.superview).with.offset(30);
         };
@@ -222,7 +262,7 @@
             lastView = slider;
         }];
         [lastView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.equalTo(scrollView.mas_bottom).with.offset(-15);
+            make.bottom.equalTo(self.scrollView.mas_bottom).with.offset(-15);
         }];
     };
     

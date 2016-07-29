@@ -62,8 +62,8 @@
     [DBRequest setNetworkRequestDelegate:self];
     
     self.window = [UIWindow new];
-    [self.window makeKeyAndVisible];
     self.window.rootViewController = [ViewController new];
+    [self.window makeKeyAndVisible];
     
     if ([[DBSession sharedSession] isLinked]) {
         [[SyncManager i] loadFromDisk];
