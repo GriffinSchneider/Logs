@@ -12,6 +12,7 @@
 
 
 Event *eventNamed(NSSet<Event *> *events, NSString *eventName);
+NSArray <State *> *statesFromEvents(NSArray<Event *> *events);
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -27,9 +28,7 @@ Event *eventNamed(NSSet<Event *> *events, NSString *eventName);
 - (NSSet<Event *> *)activeStates;
 - (NSDictionary<NSString *, Event *> *)lastReadings;
 - (NSSet<NSString *> *)recentOccurrences;
-- (NSArray<Event *> *)eventsToday;
 
-- (NSArray<State *> *)allStates;
-
+- (NSArray<Event *> *)eventsForDay:(NSDate *)date;
 
 @end

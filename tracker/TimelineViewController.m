@@ -116,7 +116,7 @@ static NSMutableDictionary<NSString *, UIColor *> *colorMap;
 }
 
 - (NSArray<NSArray<StateSlotInfo *> *> *)fullSlotInfo {
-    NSArray<State *> *states = [SyncManager i].data.allStates;
+    NSArray<State *> *states = statesFromEvents([SyncManager i].data.events);
     NSMutableArray<NSMutableArray<StateSlotInfo *> *> *retVal = [NSMutableArray new];
     [states enumerateObjectsUsingBlock:^(State *s, NSUInteger idx, BOOL *stop) {
         [self insertState:s intoSlots:retVal];
@@ -165,7 +165,7 @@ static NSMutableDictionary<NSString *, UIColor *> *colorMap;
                         } else {
                             _.make.bottom.equalTo(superview);
                         }
-                        if (idx == 0) {
+                        if (idx == 0 && slot == 0) {
                             _.make.top.equalTo(superview);
                         } else {
                             _.make.top.equalTo(@([self scale:[s.state.start timeIntervalSinceDate:start]]));

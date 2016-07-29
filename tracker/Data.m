@@ -11,7 +11,52 @@
 
 Event *eventNamed(NSSet<Event *> *events, NSString *eventName) {
     return [[events filteredSetUsingPredicate:[NSPredicate predicateWithFormat:@"name = %@", eventName]] anyObject];
-};
+}
+
+void sortedInsert(State *state, NSMutableArray<State *> *states) {
+    NSInteger idxToInsert = [states indexOfObjectPassingTest:^BOOL(State *obj, NSUInteger idx, BOOL *stop) {
+        return [obj.start compare:state.start] == NSOrderedDescending;
+    }];
+    if (idxToInsert == NSNotFound) idxToInsert = states.count;
+    
+    [states insertObject:state atIndex:idxToInsert];
+}
+
+NSArray <State *> *statesFromEvents(NSArray<Event *> *events) {
+    NSMutableSet<Event *> *currentlyOn = [NSMutableSet new];
+    NSMutableArray<State *> *retVal = [NSMutableArray new];
+    
+    [events enumerateObjectsUsingBlock:^(Event *e, NSUInteger idx, BOOL *stop) {
+        if (e.type != EventTypeStartState && e.type != EventTypeEndState) return;
+        
+        Event *foundCurrentlyOn = [[currentlyOn objectsPassingTest:^BOOL(Event *ie, BOOL *stop) {
+            return [ie.name isEqualToString:e.name];
+        }] anyObject];
+        
+        if (e.type == EventTypeStartState)  {
+            if (foundCurrentlyOn) {
+                NSLog(@"Weird case. Found an event already on. This event: %@ \nThe one that was already on: %@", e, foundCurrentlyOn);
+                return;
+            }
+            [currentlyOn addObject:e];
+        }
+        
+        if (e.type == EventTypeEndState) {
+            if (!foundCurrentlyOn) {
+                NSLog(@"Weird case. Found an end to an event that didn't start. This event: %@", e);
+                return;
+            }
+            [currentlyOn removeObject:foundCurrentlyOn];
+            sortedInsert([[State alloc] initWithName:e.name start:foundCurrentlyOn.date end:e.date events:@[foundCurrentlyOn, e]], retVal);
+        }
+    }];
+    
+    [currentlyOn enumerateObjectsUsingBlock:^(Event *e, BOOL *stop) {
+        sortedInsert([[State alloc] initWithName:e.name start:e.date end:nil events:@[e]], retVal);
+    }];
+    
+    return retVal;
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -96,55 +141,45 @@ Event *eventNamed(NSSet<Event *> *events, NSString *eventName) {
     [self.events sortUsingSelector:@selector(compare:)];
 }
 
-- (NSArray<Event *> *)eventsToday {
-    NSInteger idx = [self.events indexOfObjectWithOptions:NSEnumerationReverse passingTest:^BOOL(Event *obj, NSUInteger idx, BOOL *stop) {
+- (NSArray<Event *> *)eventsForDay:(NSDate *)date {
+    NSCalendar *cal = [NSCalendar currentCalendar];
+    
+    NSInteger wakeupIndex = [self.events indexOfObjectWithOptions:NSEnumerationReverse passingTest:^BOOL(Event *obj, NSUInteger idx, BOOL *stop) {
+        return
+        obj.type == EventTypeEndState &&
+        [obj.name isEqualToString:EVENT_SLEEP] &&
+        [cal isDate:obj.date inSameDayAsDate:date];
+    }];
+    
+    if (wakeupIndex == NSNotFound) {
+        return @[];
+    }
+    
+    NSInteger firstSleepIndex = [self.events indexOfObjectAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, wakeupIndex)] options:NSEnumerationReverse passingTest:^BOOL(Event *obj, NSUInteger idx, BOOL *stop) {
+        return obj.type == EventTypeStartState && [obj.name isEqualToString:EVENT_SLEEP];
+    }];
+    
+    if (firstSleepIndex == NSNotFound) {
+        NSAssert(NO, @"I'm confused");
+    }
+    
+    NSInteger secondSleepIndex = [self.events indexOfObjectAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(wakeupIndex, self.events.count - wakeupIndex - 1)] options:0 passingTest:^BOOL(Event *obj, NSUInteger idx, BOOL *stop) {
+        return obj.type == EventTypeStartState && [obj.name isEqualToString:EVENT_SLEEP];
+    }];
+    if (secondSleepIndex == NSNotFound) {
+        secondSleepIndex = self.events.count - 1;
+    }
+    NSInteger nextDayWakeupIndex = [self.events indexOfObjectAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(secondSleepIndex, self.events.count - secondSleepIndex - 1)] options:0 passingTest:^BOOL(Event *obj, NSUInteger idx, BOOL *stop) {
         return obj.type == EventTypeEndState && [obj.name isEqualToString:EVENT_SLEEP];
     }];
-    if (idx == NSNotFound) idx = -1;
-    return [self.events objectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(idx + 1, self.events.count - idx - 1)]];
-}
-
-- (void)sortedInsertState:(State *)state intoStates:(NSMutableArray<State *> *)states {
-    NSInteger idxToInsert = [states indexOfObjectPassingTest:^BOOL(State *obj, NSUInteger idx, BOOL *stop) {
-        return [obj.start compare:state.start] == NSOrderedDescending;
-    }];
-    if (idxToInsert == NSNotFound) idxToInsert = states.count;
     
-    [states insertObject:state atIndex:idxToInsert];
-}
-
-- (NSArray<State *> *)allStates {
-    NSMutableSet<Event *> *currentlyOn = [NSMutableSet new];
-    NSMutableArray<State *> *retVal = [NSMutableArray new];
-    [self.events enumerateObjectsUsingBlock:^(Event *e, NSUInteger idx, BOOL *stop) {
-        if (e.type != EventTypeStartState && e.type != EventTypeEndState) return;
-        
-        Event *foundCurrentlyOn = [[currentlyOn objectsPassingTest:^BOOL(Event *ie, BOOL *stop) {
-            return [ie.name isEqualToString:e.name];
-        }] anyObject];
-        
-        if (e.type == EventTypeStartState)  {
-            if (foundCurrentlyOn) {
-                NSLog(@"Weird case. Found an event already on. This event: %@ \nThe one that was already on: %@", e, foundCurrentlyOn);
-                return;
-            }
-            [currentlyOn addObject:e];
-        }
-        
-        if (e.type == EventTypeEndState) {
-            if (!foundCurrentlyOn) {
-                NSLog(@"Weird case. Found an end to an event that didn't start. This event: %@", e);
-                return;
-            }
-            [currentlyOn removeObject:foundCurrentlyOn];
-            
-            [self sortedInsertState:[[State alloc] initWithName:e.name start:foundCurrentlyOn.date end:e.date events:@[foundCurrentlyOn, e]] intoStates:retVal];
-        }
-    }];
+    NSMutableArray<Event *> *retVal = [NSMutableArray new];
     
-    [currentlyOn enumerateObjectsUsingBlock:^(Event *e, BOOL *stop) {
-        [self sortedInsertState:[[State alloc] initWithName:e.name start:e.date end:nil events:@[e]] intoStates:retVal];
-    }];
+    [retVal addObject:self.events[firstSleepIndex]];
+    [retVal addObjectsFromArray:[self.events objectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(wakeupIndex, secondSleepIndex - wakeupIndex + 1)]]];
+    if (nextDayWakeupIndex != NSNotFound ) {
+        [retVal addObject:self.events[nextDayWakeupIndex]];
+    }
     
     return retVal;
 }
