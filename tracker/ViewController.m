@@ -59,8 +59,7 @@
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
         self.scrollViewWrapper.layer.affineTransform = CGAffineTransformInvert(context.targetTransform);
         CGFloat rotation = atan2f(context.targetTransform.b, context.targetTransform.a);
-        if (!CGAffineTransformIsIdentity(context.targetTransform) &&
-            fabs(rotation - M_PI) > 0.0001 && fabs(rotation + M_PI) > 0.0001) {
+        if (fabs(rotation - M_PI) > 0.0001 && fabs(rotation + M_PI) > 0.0001) {
             [self.scrollViewWrapper mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.height.equalTo(self.view.mas_width);
                 make.width.equalTo(self.view.mas_height);
@@ -302,15 +301,6 @@
 }
 
 - (void)addEvent:(Event *)e {
-    NSSet<Event *> *activeStates = [SyncManager i].data.activeStates;
-    // If we're in sleep state but an event is added, we must not be asleep anymore.
-    if (eventNamed(activeStates, EVENT_SLEEP)) {
-        Event *e = [Event new];
-        e.type = EventTypeEndState;
-        e.name = EVENT_SLEEP;
-        e.date = [NSDate date];
-        [[SyncManager i].data addEvent:e];
-    }
     [[SyncManager i].data addEvent:e];
     [self updateViews];
 }
