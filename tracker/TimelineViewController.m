@@ -9,8 +9,12 @@
 #import "TimelineViewController.h"
 #import <DRYUI/DRYUI.h>
 #import <ChameleonFramework/Chameleon.h>
+#import <BlocksKit/BlocksKit+UIKit.h>
+#import "UIButton+ANDYHighlighted.h"
+
 #import "SyncManager.h"
 #import "Utils.h"
+#import "EventViewController.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -142,16 +146,17 @@ static NSMutableDictionary<NSString *, UIColor *> *colorMap;
             _.make.edges.equalTo(superview);
             [slots enumerateObjectsUsingBlock:^(NSArray<StateSlotInfo *> *slotArray, NSUInteger slot, BOOL *stop) {
                 [slotArray enumerateObjectsUsingBlock:^(StateSlotInfo *s, NSUInteger idx, BOOL * _Nonnull stop) {
-                    UILabel *add_subview(v) {
-                        _.text = [NSString stringWithFormat:@"%@ %@", s.state.name, formatDuration([(s.state.end ?: [NSDate date]) timeIntervalSinceDate:s.state.start])];
-                        _.textAlignment = NSTextAlignmentCenter;
-                        _.minimumScaleFactor = 0;
-                        _.adjustsFontSizeToFitWidth = YES;
-                        _.font = [UIFont systemFontOfSize:12 weight:UIFontWeightBlack];
-                        _.numberOfLines = 0;
+                    UIButton *add_subview(v) {
+                        [_ setTitle:[NSString stringWithFormat:@"%@ %@", s.state.name, formatDuration([(s.state.end ?: [NSDate date]) timeIntervalSinceDate:s.state.start])] forState:UIControlStateNormal];
+                        [_ setTitleColor:FlatWhiteDark forState:UIControlStateNormal];
                         _.backgroundColor = [self getColor:s.state.name];
-                        _.textColor = FlatWhiteDark;
+                        _.highlightedBackgroundColor = [_.backgroundColor darkenByPercentage:0.3];
                         _.layer.borderColor = [_.backgroundColor darkenByPercentage:0.1].CGColor;
+                        _.titleLabel.font = [UIFont systemFontOfSize:12 weight:UIFontWeightBlack];
+                        _.titleLabel.numberOfLines = 0;
+                        _.titleLabel.adjustsFontSizeToFitWidth = YES;
+                        _.titleLabel.minimumScaleFactor = 0;
+                        _.titleLabel.lineBreakMode = NSLineBreakByClipping;
                         CGFloat w = [UIScreen mainScreen].bounds.size.width;
                         _.make.left.equalTo(superview.superview).with.offset((w/s.numberOfActiveSlots)*s.slotIndex);
                         _.make.width.equalTo(@((w/s.numberOfActiveSlots)));
@@ -165,7 +170,11 @@ static NSMutableDictionary<NSString *, UIColor *> *colorMap;
                         } else {
                             _.make.top.equalTo(@([self scale:[s.state.start timeIntervalSinceDate:start]]));
                         }
-                    }
+                    };
+                    [v bk_addEventHandler:^(id sender) {
+                        [self selectedState:s.state];
+                    } forControlEvents:UIControlEventTouchUpInside];
+                    
                 }];
             }];
             UIView *add_subview(nowSpacer) {
@@ -175,6 +184,10 @@ static NSMutableDictionary<NSString *, UIColor *> *colorMap;
             };
         }
     }
+}
+
+- (void)selectedState:(State *)state {
+    NSLog(@"%@", state);
 }
 
 - (void)doneButtonPressed:(id)sender {
