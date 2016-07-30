@@ -25,6 +25,7 @@
 
 @property (nonatomic, strong) UIView *scrollViewWrapper;
 @property (nonatomic, strong) UIScrollView *horizontalScrollView;
+@property (nonatomic, strong) UIScrollView *verticalScrollView;
 @property (nonatomic, strong) NSArray <TimelineColumnView *> *columns;
 
 @property (nonatomic, assign) CGPoint lastPortraitHorizontalContentOffset;
@@ -47,7 +48,10 @@
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [UIView setAnimationsEnabled:NO];
     CGPoint horizontalContentOffset = self.horizontalScrollView.contentOffset;
+    CGPoint verticalContentOffset = self.verticalScrollView.contentOffset;
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+        self.horizontalScrollView.contentOffset = horizontalContentOffset;
+        self.verticalScrollView.contentOffset = verticalContentOffset;
         self.scrollViewWrapper.layer.affineTransform = CGAffineTransformInvert(context.targetTransform);
         CGFloat rotation = atan2f(context.targetTransform.b, context.targetTransform.a);
         if (fabs(rotation - M_PI) > 0.0001 && fabs(rotation + M_PI) > 0.0001) {
@@ -147,7 +151,7 @@
         _.backgroundColor = FlatNavyBlueDark;
         add_subview(self.scrollViewWrapper) {
             _.clipsToBounds = NO;
-            UIScrollView *add_subview(verticalScrollView) {
+            add_subview(self.verticalScrollView) {
                 _.clipsToBounds = NO;
                 _.make.width.height.left.and.top.equalTo(superview);
                 add_subview(self.horizontalScrollView) {
