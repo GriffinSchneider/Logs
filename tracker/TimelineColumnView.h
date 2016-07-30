@@ -13,6 +13,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 @interface TimelineColumnView : UIView
 
-- (instancetype)initWithEvents:(NSArray<Event *> *)events startTime:(NSDate *)startTime;
+- (instancetype)initWithEvents:(NSArray<Event *> *)events startTime:(NSDate *)startTime endTime:(NSDate *)endTime;
 
 @end

@@ -36,6 +36,7 @@
 
 @property (nonatomic, strong) NSArray<Event *> *events;
 @property (nonatomic, strong) NSDate *startTime;
+@property (nonatomic, strong) NSDate *endTime;
 
 @end
 
@@ -43,10 +44,11 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 @implementation TimelineColumnView
 
-- (instancetype)initWithEvents:(NSArray<Event *> *)events startTime:(NSDate *)startTime {
+- (instancetype)initWithEvents:(NSArray<Event *> *)events startTime:(NSDate *)startTime endTime:(NSDate *)endTime {
     if ((self = [super init])) {
         self.events = events;
         self.startTime = startTime;
+        self.endTime = endTime;
         [self buildSubviews];
     }
     return self;
@@ -74,13 +76,8 @@
                         _.make.leading.equalTo(superview.mas_trailing).multipliedBy((CGFloat)s.slotIndex/s.numberOfActiveSlots);
                     }
                     _.make.width.equalTo(superview).multipliedBy(1.0/s.numberOfActiveSlots);
-                    if (s.state.end) {
-                        _.make.height.equalTo(@([self scale:[s.state.end timeIntervalSinceDate:s.state.start]]));
-                    } else {
-                        _.make.bottom.equalTo(superview);
-                    }
-                    _.make.top.equalTo(@([self scale:[s.state.start timeIntervalSinceDate:self.startTime]]));
-                    _.make.bottom.lessThanOrEqualTo(superview);
+                    _.make.height.equalTo(superview).multipliedBy([self scale:[s.state.end ?: [NSDate date] timeIntervalSinceDate:s.state.start]]);
+                    _.make.top.equalTo(superview.mas_bottom).multipliedBy([self scale:[s.state.start timeIntervalSinceDate:self.startTime]]);
                 };
                 [v bk_addEventHandler:^(id sender) {
                     [self selectedState:s.state];
@@ -107,7 +104,7 @@
     StateSlotInfo *slotInfo = [StateSlotInfo new];
     slotInfo.state = s;
     slotInfo.slotIndex = slot;
-    slotInfo.numberOfActiveSlots = 4; // TODO: this.
+    slotInfo.numberOfActiveSlots = 3; // TODO: this.
     if (slots.count <= slot) {
         [slots addObject:[NSMutableArray new]];
     }
@@ -141,7 +138,7 @@
 }
 
 - (CGFloat)scale:(NSTimeInterval)interval {
-    return roundf(interval/40.0);
+    return MAX(0.0001, (CGFloat)interval/[self.endTime timeIntervalSinceDate:self.startTime]);
 }
 
 - (void)selectedState:(State *)state {
