@@ -302,6 +302,7 @@
 
 - (void)addEvent:(Event *)e {
     [[SyncManager i].data addEvent:e];
+    [[SyncManager i] writeToDisk];
     [self updateViews];
 }
 
