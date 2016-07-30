@@ -147,6 +147,7 @@
     [self createColumns];
     
     build_subviews(self.view) {
+        _.clipsToBounds = YES;
         _.backgroundColor = FlatNavyBlueDark;
         add_subview(self.scrollViewWrapper) {
             _.clipsToBounds = NO;
