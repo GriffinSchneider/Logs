@@ -134,7 +134,6 @@ DBRestClientDelegate
     if (!self.data) {
         return;
     }
-    NSLog(@"Writing data:\n%@", PRETTY_PRINT(self.data));
     NSData *nsData = [self.data toJSONData];
     [nsData writeToFile:self.localDataPath atomically:YES];
 }
