@@ -19,9 +19,7 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-@interface TimelineViewController () <
-UIGestureRecognizerDelegate
->
+@interface TimelineViewController ()
 
 @property (nonatomic, strong) TimelineViewControllerDoneBlock done;
 
@@ -36,7 +34,7 @@ UIGestureRecognizerDelegate
 @property (nonatomic, strong) NSMutableArray <MASConstraint *> *landscapeConstraints;
 
 @property (nonatomic, strong) UIPinchGestureRecognizer *pinchGesture;
-@property (nonatomic, assign) CGFloat initialZoom;
+
 @property (nonatomic, assign) CGFloat currentZoom;
 
 @property (nonatomic, assign) CGPoint lastPortraitHorizontalContentOffset;
@@ -53,23 +51,19 @@ UIGestureRecognizerDelegate
         self.edgesForExtendedLayout = UIRectEdgeNone;
         self.done = done;
         self.currentZoom = 1.0;
-        self.initialZoom = 1.0;
     }
     return self;
 }
 
 
 - (void)handlePinch:(UIPinchGestureRecognizer *)gesture {
-    self.currentZoom = self.initialZoom * (gesture.scale ?: 1.0f);
-    [self.view layoutIfNeeded];
-    for (NSLayoutConstraint *constraint in self.columnHeightConstraints) {
-        constraint.constant = self.view.frame.size.height * self.currentZoom;
+    CGFloat zoom = self.currentZoom * (gesture.scale ?: 1.0f);
+    if (gesture.state == UIGestureRecognizerStateEnded) {
+        self.currentZoom = zoom;
     }
-}
-
-- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
-    self.initialZoom = self.currentZoom;
-    return YES;
+    for (NSLayoutConstraint *constraint in self.columnHeightConstraints) {
+        constraint.constant = self.view.frame.size.height * zoom;
+    }
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
@@ -95,6 +89,7 @@ UIGestureRecognizerDelegate
         [UIView animateWithDuration:0.5 animations:^{
             [self updateConstraintsForOrientation];
             self.scrollViewWrapper.layer.affineTransform = CGAffineTransformIdentity;
+            [self handlePinch:nil];
             [self.view layoutIfNeeded];
             if (UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation])) {
                 self.horizontalScrollView.contentOffset = self.lastPortraitHorizontalContentOffset;
@@ -193,8 +188,6 @@ UIGestureRecognizerDelegate
 - (void)loadView {
     self.view = [UIView new];
     self.pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinch:)];
-    self.pinchGesture.delegate = self;
-    
     
     self.rotationStartWrapperConstraints = [NSMutableArray new];
     self.rotationEndWrapperConstraints = [NSMutableArray new];
