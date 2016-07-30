@@ -55,9 +55,11 @@
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    CGPoint contentOffset = self.scrollView.contentOffset;
     [UIView setAnimationsEnabled:NO];
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
         self.scrollViewWrapper.layer.affineTransform = CGAffineTransformInvert(context.targetTransform);
+        self.scrollView.contentOffset = contentOffset;
         CGFloat rotation = atan2f(context.targetTransform.b, context.targetTransform.a);
         if (fabs(rotation - M_PI) > 0.0001 && fabs(rotation + M_PI) > 0.0001) {
             [self.scrollViewWrapper mas_remakeConstraints:^(MASConstraintMaker *make) {
