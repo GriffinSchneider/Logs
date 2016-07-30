@@ -143,7 +143,6 @@
 
 - (void)loadView {
     self.view = [UIView new];
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]  initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed:)];
     
     [self createColumns];
     
@@ -161,6 +160,17 @@
                     for (__strong TimelineColumnView *col in self.columns) { add_subview(col){}; }
                 };
             };
+            
+            UIButton *add_subview(closeButton) {
+                [_ setTitle:@"×" forState:UIControlStateNormal];
+                _.backgroundColor = [UIColor clearColor];
+                _.titleLabel.font = [UIFont systemFontOfSize:20 weight:UIFontWeightBold];
+                _.titleColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.3];
+                _.make.right.and.bottom.equalTo(superview).with.insets(UIEdgeInsetsMake(0, 0, 8, 8));
+            };
+            [closeButton bk_addEventHandler:^(id sender) {
+                self.done();
+            } forControlEvents:UIControlEventTouchUpInside];
         }
     }
     
@@ -175,10 +185,6 @@
 
 - (void)selectedState:(State *)state {
     NSLog(@"%@", state);
-}
-
-- (void)doneButtonPressed:(id)sender {
-    self.done();
 }
 
 @end
