@@ -10,6 +10,7 @@
 #import "Event.h"
 #import "State.h"
 
+BOOL doStatesOverlap(State *s1, State *s2);
 
 Event *eventNamed(NSSet<Event *> *events, NSString *eventName);
 NSArray <State *> *statesFromEvents(NSArray<Event *> *events);

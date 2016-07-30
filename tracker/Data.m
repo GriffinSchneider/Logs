@@ -8,6 +8,9 @@
 
 #import "Data.h"
 
+BOOL doStatesOverlap(State *s1, State *s2) {
+    return [s1.start compare:s2.end] != NSOrderedDescending && [s2.start compare:s1.end] != NSOrderedDescending;
+}
 
 Event *eventNamed(NSSet<Event *> *events, NSString *eventName) {
     return [[events filteredSetUsingPredicate:[NSPredicate predicateWithFormat:@"name = %@", eventName]] anyObject];

@@ -199,7 +199,7 @@
                     TimelineViewController *vc = [[TimelineViewController alloc] initWithDone:^{
                         [self dismissViewControllerAnimated:YES completion:nil];
                     }];
-                    [self presentViewController:[[UINavigationController alloc] initWithRootViewController:vc] animated:YES completion:^{}];
+                    [self presentViewController:vc animated:YES completion:^{}];
                 }
                 if ([sender.currentTitle isEqualToString:@"Reload"]) {
                     [[SyncManager i] loadFromDropbox];

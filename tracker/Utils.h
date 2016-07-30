@@ -7,8 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 NSString *formatDuration(NSTimeInterval interval);
+UIColor *colorForState(NSString *stateName);
 
 @interface Utils : NSObject
 
