@@ -60,16 +60,11 @@
         [slots enumerateObjectsUsingBlock:^(NSArray<StateSlotInfo *> *slotArray, NSUInteger slot, BOOL *stop) {
             [slotArray enumerateObjectsUsingBlock:^(StateSlotInfo *s, NSUInteger idx, BOOL * _Nonnull stop) {
                 UIButton *add_subview(v) {
-                    [_ setTitle:[NSString stringWithFormat:@"%@ %@", s.state.name, formatDuration([(s.state.end ?: [NSDate date]) timeIntervalSinceDate:s.state.start])] forState:UIControlStateNormal];
-                    [_ setTitleColor:FlatWhiteDark forState:UIControlStateNormal];
                     _.backgroundColor = colorForState(s.state.name);
                     _.highlightedBackgroundColor = [_.backgroundColor darkenByPercentage:0.3];
                     _.layer.borderColor = [_.backgroundColor darkenByPercentage:0.1].CGColor;
-                    _.titleLabel.font = [UIFont systemFontOfSize:12 weight:UIFontWeightBlack];
-                    _.titleLabel.numberOfLines = 0;
-                    _.titleLabel.adjustsFontSizeToFitWidth = YES;
-                    _.titleLabel.minimumScaleFactor = 0;
-                    _.titleLabel.lineBreakMode = NSLineBreakByClipping;
+                    _.clipsToBounds = NO;
+                    
                     if (s.slotIndex == 0) {
                         _.make.leading.equalTo(@0);
                     } else {
@@ -78,7 +73,27 @@
                     _.make.width.equalTo(superview).multipliedBy(1.0/s.numberOfActiveSlots);
                     _.make.height.equalTo(superview).multipliedBy([self scale:[s.state.end ?: [NSDate date] timeIntervalSinceDate:s.state.start]]);
                     _.make.top.equalTo(superview.mas_bottom).multipliedBy([self scale:[s.state.start timeIntervalSinceDate:self.startTime]]);
-                };
+                    
+                    UILabel *add_subview(label) {
+                        _.text = [NSString stringWithFormat:@"%@ %@", s.state.name, formatDuration([(s.state.end ?: [NSDate date]) timeIntervalSinceDate:s.state.start])];
+                        _.textColor = FlatWhiteDark;
+                        _.font = [UIFont systemFontOfSize:12 weight:UIFontWeightBlack];
+                        _.numberOfLines = 0;
+                        _.adjustsFontSizeToFitWidth = YES;
+                        _.minimumScaleFactor = 0;
+                        _.lineBreakMode = NSLineBreakByCharWrapping;
+                        _.textAlignment = NSTextAlignmentCenter;
+                        if ([s.state.start compare:self.startTime] == NSOrderedAscending) {
+                            _.make.left.and.right.equalTo(superview);
+                            _.make.bottom.equalTo(superview).with.offset(-5);
+                        } else if ([s.state.end compare:self.endTime] == NSOrderedDescending) {
+                            _.make.left.and.right.equalTo(superview);
+                            _.make.top.equalTo(superview).with.offset(5);
+                        } else {
+                            _.make.edges.equalTo(superview);
+                        }
+                    }
+                }
                 [v bk_addEventHandler:^(id sender) {
                     [self selectedState:s.state];
                 } forControlEvents:UIControlEventTouchUpInside];
@@ -138,7 +153,9 @@
 }
 
 - (CGFloat)scale:(NSTimeInterval)interval {
-    return MAX(0.0001, (CGFloat)interval/[self.endTime timeIntervalSinceDate:self.startTime]);
+    CGFloat retVal = (CGFloat)interval/[self.endTime timeIntervalSinceDate:self.startTime];
+    if (retVal == 0.0) retVal = 0.000001;
+    return retVal;
 }
 
 - (void)selectedState:(State *)state {

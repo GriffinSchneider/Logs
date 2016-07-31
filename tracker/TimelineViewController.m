@@ -146,31 +146,45 @@
     
     for (int i = 0; i < 7; i++) {
         NSArray<Event *> *events = [[SyncManager i].data eventsForDay:dateIdx];
+        
+        comps.day = -1;
+        dateIdx = [cal dateByAddingComponents:comps toDate:dateIdx options:0];
+        comps.day = 0;
+        
         [eventsByDay addObject:events];
         if (!events.count) {
             continue ;
         }
-        comps.day = i;
         
-        NSDate *scaledStartDate = [cal dateByAddingComponents:comps toDate:events[0].date options:0];
-        if ([scaledStartDate compare:minDate] == NSOrderedAscending) {
-            minDate = scaledStartDate;
-        }
-        
+        NSDate *dayMinDate = [NSDate date];
         NSDate *dayMaxDate = [NSDate dateWithTimeIntervalSince1970:0];
+        
         for (Event *e in events) {
-            if ([e.date compare:dayMaxDate] == NSOrderedDescending) {
+            if (e.type == EventTypeStartState &&
+                [e.name isEqualToString:EVENT_SLEEP] &&
+                [e.date compare:dayMaxDate] == NSOrderedDescending) {
                 dayMaxDate = e.date;
             }
-        }
-        NSDate *scaledDayMaxDate = [cal dateByAddingComponents:comps toDate:dayMaxDate options:0];
-        if ([scaledDayMaxDate compare:maxDate] == NSOrderedDescending) {
-            maxDate = scaledDayMaxDate;
+            if (e.type == EventTypeEndState &&
+                [e.name isEqualToString:EVENT_SLEEP] &&
+                [e.date compare:dayMinDate] == NSOrderedAscending) {
+                dayMinDate = e.date;
+            }
         }
         
-        comps.day = -1;
-        dateIdx = [cal dateByAddingComponents:comps toDate:dateIdx options:0];
+        comps.day = i;
+        NSDate *scaledDayMaxDate = [cal dateByAddingComponents:comps toDate:dayMaxDate options:0];
+        NSDate *scaledDayMinDate = [cal dateByAddingComponents:comps toDate:dayMinDate options:0];
+        if ([scaledDayMaxDate compare:maxDate] == NSOrderedDescending) maxDate = scaledDayMaxDate;
+        if ([scaledDayMinDate compare:minDate] == NSOrderedAscending) minDate = scaledDayMinDate;
+        comps.day = 0;
     }
+    
+    comps.hour = -1;
+    minDate = [cal dateByAddingComponents:comps toDate:minDate options:0];
+    comps.hour = 1;
+    maxDate = [cal dateByAddingComponents:comps toDate:maxDate options:0];
+    comps.hour = 0;
     
     NSMutableArray<TimelineColumnView *> *columns = [NSMutableArray new];
     for (int i = 0; i < 7; i++) {
