@@ -64,6 +64,16 @@
                     _.highlightedBackgroundColor = [_.backgroundColor darkenByPercentage:0.3];
                     _.layer.borderColor = [_.backgroundColor darkenByPercentage:0.1].CGColor;
                     _.clipsToBounds = NO;
+                    _.imageView.contentMode = UIViewContentModeScaleAspectFit;
+                    [_ setImage: iconForState(s.state.name) forState:UIControlStateNormal];
+                    
+                    if ([s.state.start compare:self.startTime] == NSOrderedAscending) {
+                        _.contentVerticalAlignment = UIControlContentVerticalAlignmentBottom;
+                    } else if ([s.state.end compare:self.endTime] == NSOrderedDescending) {
+                        _.contentVerticalAlignment = UIControlContentVerticalAlignmentTop;
+                    } else {
+                        _.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+                    }
                     
                     if (s.slotIndex == 0) {
                         _.make.leading.equalTo(@0);
@@ -73,26 +83,6 @@
                     _.make.width.equalTo(superview).multipliedBy(1.0/s.numberOfActiveSlots);
                     _.make.height.equalTo(superview).multipliedBy([self scale:[s.state.end ?: [NSDate date] timeIntervalSinceDate:s.state.start]]);
                     _.make.top.equalTo(superview.mas_bottom).multipliedBy([self scale:[s.state.start timeIntervalSinceDate:self.startTime]]);
-                    
-                    UILabel *add_subview(label) {
-                        _.text = [NSString stringWithFormat:@"%@ %@", s.state.name, formatDuration([(s.state.end ?: [NSDate date]) timeIntervalSinceDate:s.state.start])];
-                        _.textColor = FlatWhiteDark;
-                        _.font = [UIFont systemFontOfSize:12 weight:UIFontWeightBlack];
-                        _.numberOfLines = 0;
-                        _.adjustsFontSizeToFitWidth = YES;
-                        _.minimumScaleFactor = 0;
-                        _.lineBreakMode = NSLineBreakByCharWrapping;
-                        _.textAlignment = NSTextAlignmentCenter;
-                        if ([s.state.start compare:self.startTime] == NSOrderedAscending) {
-                            _.make.left.and.right.equalTo(superview);
-                            _.make.bottom.equalTo(superview).with.offset(-5);
-                        } else if ([s.state.end compare:self.endTime] == NSOrderedDescending) {
-                            _.make.left.and.right.equalTo(superview);
-                            _.make.top.equalTo(superview).with.offset(5);
-                        } else {
-                            _.make.edges.equalTo(superview);
-                        }
-                    }
                 }
                 [v bk_addEventHandler:^(id sender) {
                     [self selectedState:s.state];

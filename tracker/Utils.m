@@ -8,6 +8,7 @@
 
 #import "Utils.h"
 #import <ChameleonFramework/Chameleon.h>
+#import "SyncManager.h"
 
 NSString *formatDuration(NSTimeInterval interval) {
     int sec = (int)interval % 60;
@@ -35,10 +36,33 @@ UIColor *colorForState(NSString *stateName) {
     UIColor *retVal = colorMap[stateName];
     if (!retVal) {
         colorIndex = (colorIndex + 1) % colors.count;
-        retVal = colors[colorIndex];
+        retVal = [colors[colorIndex] darkenByPercentage:0.2];
         colorMap[stateName] = retVal;
     }
     return retVal;
+}
+
+UIImage *imageWithSize(NSString *string) {
+    NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:string attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:32]}];
+    CGSize imageSize = [attributedString size];
+    UIGraphicsBeginImageContextWithOptions(imageSize, NO, 0.0);
+    [attributedString drawInRect:CGRectMake(0, 0, imageSize.width, imageSize.height)];
+    UIImage *iconImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return iconImage;
+}
+
+static NSMutableDictionary<NSString *, UIImage *> *iconMap;
+UIImage *iconForState(NSString *stateName) {
+    if (!iconMap) {
+        iconMap = [NSMutableDictionary new];
+    }
+    UIImage *icon = iconMap[stateName];
+    if (!icon) {
+        NSString *iconString = [[SyncManager i].schema schemaForStateNamed:stateName].icon ?: @"";
+        iconMap[stateName] = icon = imageWithSize(iconString);
+    }
+    return icon;
 }
 
 

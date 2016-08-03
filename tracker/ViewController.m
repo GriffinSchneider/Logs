@@ -228,7 +228,9 @@
             _.make.top.equalTo(lastView.mas_bottom).with.offset(10);
         };
         lastView = spacer2;
-        lastView = [self buildGridInView:_ withLastView:lastView titles:[SyncManager i].schema.states buttonBlock:^(UIButton *b, NSString *title) {
+        NSMutableArray *titles = [NSMutableArray new];
+        for (StateSchema *s in [SyncManager i].schema.states) [titles addObject:s.name];
+        lastView = [self buildGridInView:_ withLastView:lastView titles:titles buttonBlock:^(UIButton *b, NSString *title) {
             self.stateButtons[title] = b;
             [b bk_addEventHandler:^(id _) {
                 [self selectedState:title];

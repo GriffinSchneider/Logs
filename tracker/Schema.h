@@ -8,11 +8,14 @@
 
 #import <Foundation/Foundation.h>
 #import <JSONModel/JSONModel.h>
+#import "StateSchema.h"
 
 @interface Schema : JSONModel
 
 @property (nonatomic, strong) NSArray<NSString *> *occurrences;
-@property (nonatomic, strong) NSArray<NSString *> *states;
+@property (nonatomic, strong) NSArray<StateSchema> *states;
 @property (nonatomic, strong) NSArray<NSString *> *readings;
+
+- (StateSchema *)schemaForStateNamed:(NSString *)stateName;
 
 @end

@@ -14,10 +14,19 @@
 - (instancetype)init {
     if (self = [super init]) {
         self.occurrences = [NSArray new];
-        self.states = [NSArray new];
+        self.states = [NSArray<StateSchema> new];
         self.readings = [NSArray new];
     }
     return self;
+}
+
+- (StateSchema *)schemaForStateNamed:(NSString *)stateName {
+    for (StateSchema *schema in self.states) {
+        if ([schema.name isEqualToString:stateName]) {
+            return schema;
+        }
+    }
+    return nil;
 }
 
 @end
