@@ -8,10 +8,9 @@
 
 #import "TimelineViewController.h"
 #import <DRYUI/DRYUI.h>
-#import <ChameleonFramework/Chameleon.h>
-#import <BlocksKit/BlocksKit+UIKit.h>
 #import "UIButton+ANDYHighlighted.h"
 
+#import "ChameleonMacros.h"
 #import "SyncManager.h"
 #import "Utils.h"
 #import "EventViewController.h"
@@ -91,7 +90,7 @@
             self.scrollViewWrapper.layer.affineTransform = CGAffineTransformIdentity;
             [self handlePinch:nil];
             [self.view layoutIfNeeded];
-            if (UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation])) {
+            if (self.view.frame.size.height > self.view.frame.size.width) {
                 self.horizontalScrollView.contentOffset = self.lastPortraitHorizontalContentOffset;
             } else {
                 self.lastPortraitHorizontalContentOffset = horizontalContentOffset;
@@ -102,7 +101,7 @@
 }
 
 - (void)updateConstraintsForOrientation {
-    BOOL isPortrait = UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation]);
+    BOOL isPortrait = self.view.bounds.size.height > self.view.bounds.size.width;
     
     for (MASConstraint *constraint in self.rotationStartWrapperConstraints) {
         [constraint uninstall];
@@ -261,20 +260,23 @@
                 _.titleColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.3];
                 _.make.right.and.bottom.equalTo(superview).with.insets(UIEdgeInsetsMake(0, 0, 8, 8));
             };
-            [closeButton bk_addEventHandler:^(id sender) {
+            @weakify(self);
+            [[closeButton rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
+                @strongify(self);
                 self.done();
-            } forControlEvents:UIControlEventTouchUpInside];
+            }];
         }
     }
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self updateConstraintsForOrientation];
-    });
-    
+    [self updateConstraintsForOrientation];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    // Dispatch so that the view has a size :(
     dispatch_async(dispatch_get_main_queue(), ^{
+        [self updateConstraintsForOrientation];
+        [self.view setNeedsLayout];
+        [self.view layoutIfNeeded];
         [self.horizontalScrollView setContentOffset:CGPointMake(self.horizontalScrollView.contentSize.width - self.horizontalScrollView.bounds.size.width, 0) animated:NO];
         [self handlePinch:nil];
     });

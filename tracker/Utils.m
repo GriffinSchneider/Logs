@@ -7,7 +7,7 @@
 //
 
 #import "Utils.h"
-#import <ChameleonFramework/Chameleon.h>
+#import "ChameleonMacros.h"
 #import "SyncManager.h"
 
 NSString *formatDuration(NSTimeInterval interval) {

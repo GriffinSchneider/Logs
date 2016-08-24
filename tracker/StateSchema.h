@@ -12,7 +12,7 @@
 
 @end
 
-@interface StateSchema : JSONModel
+@interface StateSchema : JSONModel <StateSchema>
 
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSString *icon;

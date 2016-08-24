@@ -16,6 +16,22 @@
 		854F17B91D28372D0051BE48 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 854F17B81D28372D0051BE48 /* QuartzCore.framework */; };
 		854F17BE1D284E440051BE48 /* debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 854F17BC1D284E440051BE48 /* debug.xcconfig */; };
 		854F17BF1D284E440051BE48 /* release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 854F17BD1D284E440051BE48 /* release.xcconfig */; };
+		85555F911D5D23F2003047BC /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85555F901D5D23F2003047BC /* NotificationCenter.framework */; };
+		85555F951D5D23F2003047BC /* TodayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 85555F941D5D23F2003047BC /* TodayViewController.m */; };
+		85555F981D5D23F2003047BC /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 85555F961D5D23F2003047BC /* MainInterface.storyboard */; };
+		85555F9C1D5D23F2003047BC /* TrackerToday.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 85555F8F1D5D23F2003047BC /* TrackerToday.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		85555FA11D5D2436003047BC /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 85F299571D4AAA32007BA84A /* Utils.m */; };
+		85555FA21D5D2436003047BC /* SyncManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 85F1BA041D2F026500C2A7E3 /* SyncManager.m */; };
+		85555FA31D5D2436003047BC /* Schema.m in Sources */ = {isa = PBXBuildFile; fileRef = 85B833F71D09169E009D6D42 /* Schema.m */; };
+		85555FA41D5D2436003047BC /* State.m in Sources */ = {isa = PBXBuildFile; fileRef = 851B5F581D41531A00A3AFFD /* State.m */; };
+		85555FA51D5D2436003047BC /* Data.m in Sources */ = {isa = PBXBuildFile; fileRef = 854C75AE1D09185800DD4CEF /* Data.m */; };
+		85555FA61D5D2436003047BC /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = 85B833F41D090D02009D6D42 /* Event.m */; };
+		85555FA81D5D2436003047BC /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 857DA4B81D090C7B00497E60 /* ViewController.m */; };
+		85555FA91D5D2436003047BC /* ListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 858607271D2B4D46003D39FA /* ListViewController.m */; };
+		85555FAA1D5D2436003047BC /* TimelineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 851B5F551D414F0D00A3AFFD /* TimelineViewController.m */; };
+		85555FAB1D5D2436003047BC /* TimelineColumnView.m in Sources */ = {isa = PBXBuildFile; fileRef = 85F2995A1D4BFEED007BA84A /* TimelineColumnView.m */; };
+		85555FAC1D5D2436003047BC /* EventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8586072A1D2B57A4003D39FA /* EventViewController.m */; };
+		85555FAD1D5D267A003047BC /* DropboxSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 854F17B41D28371A0051BE48 /* DropboxSDK.framework */; };
 		857DA4B31D090C7B00497E60 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 857DA4B21D090C7B00497E60 /* main.m */; };
 		857DA4B61D090C7B00497E60 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 857DA4B51D090C7B00497E60 /* AppDelegate.m */; };
 		857DA4B91D090C7B00497E60 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 857DA4B81D090C7B00497E60 /* ViewController.m */; };
@@ -24,15 +40,47 @@
 		858607281D2B4D46003D39FA /* ListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 858607271D2B4D46003D39FA /* ListViewController.m */; };
 		8586072B1D2B57A4003D39FA /* EventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8586072A1D2B57A4003D39FA /* EventViewController.m */; };
 		858B2AEA1D5251750027C439 /* StateSchema.m in Sources */ = {isa = PBXBuildFile; fileRef = 858B2AE91D5251750027C439 /* StateSchema.m */; };
+		85AC34C21D6E407900EBFC12 /* UIColor+Chameleon.m in Sources */ = {isa = PBXBuildFile; fileRef = 85AC34BF1D6E407900EBFC12 /* UIColor+Chameleon.m */; };
+		85AC34C31D6E407900EBFC12 /* UIColor+Chameleon.m in Sources */ = {isa = PBXBuildFile; fileRef = 85AC34BF1D6E407900EBFC12 /* UIColor+Chameleon.m */; };
+		85AC34C41D6E407900EBFC12 /* UIColor+ChameleonPrivate.m in Sources */ = {isa = PBXBuildFile; fileRef = 85AC34C11D6E407900EBFC12 /* UIColor+ChameleonPrivate.m */; };
+		85AC34C51D6E407900EBFC12 /* UIColor+ChameleonPrivate.m in Sources */ = {isa = PBXBuildFile; fileRef = 85AC34C11D6E407900EBFC12 /* UIColor+ChameleonPrivate.m */; };
+		85B081AD1D6D5E8E0008B256 /* StateSchema.m in Sources */ = {isa = PBXBuildFile; fileRef = 858B2AE91D5251750027C439 /* StateSchema.m */; };
+		85B081B01D6D60380008B256 /* DropboxSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 85B081AF1D6D60380008B256 /* DropboxSessionManager.m */; };
 		85B833F51D090D02009D6D42 /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = 85B833F41D090D02009D6D42 /* Event.m */; };
 		85B833F81D09169E009D6D42 /* Schema.m in Sources */ = {isa = PBXBuildFile; fileRef = 85B833F71D09169E009D6D42 /* Schema.m */; };
 		85CEEB9B1D2C0442008A3F6F /* secrets.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 85CEEB9A1D2C0442008A3F6F /* secrets.xcconfig */; };
 		85F1BA051D2F026500C2A7E3 /* SyncManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 85F1BA041D2F026500C2A7E3 /* SyncManager.m */; };
 		85F299581D4AAA32007BA84A /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 85F299571D4AAA32007BA84A /* Utils.m */; };
 		85F2995B1D4BFEED007BA84A /* TimelineColumnView.m in Sources */ = {isa = PBXBuildFile; fileRef = 85F2995A1D4BFEED007BA84A /* TimelineColumnView.m */; };
+		F6BE50AABEAC895BA361A031 /* Pods_TrackerToday.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B52C20B1681CFD3D6586731B /* Pods_TrackerToday.framework */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		85555F9A1D5D23F2003047BC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 857DA4A61D090C7B00497E60 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 85555F8E1D5D23F2003047BC;
+			remoteInfo = TrackerToday;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		85555FA01D5D23F2003047BC /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				85555F9C1D5D23F2003047BC /* TrackerToday.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		0C901195876F0D179525B7CF /* Pods-TrackerToday.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TrackerToday.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TrackerToday/Pods-TrackerToday.debug.xcconfig"; sourceTree = "<group>"; };
 		4376796216BAE32BD89DC4AF /* Pods-tracker.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tracker.debug.xcconfig"; path = "Pods/Target Support Files/Pods-tracker/Pods-tracker.debug.xcconfig"; sourceTree = "<group>"; };
 		851B5F541D414F0D00A3AFFD /* TimelineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimelineViewController.h; sourceTree = "<group>"; };
 		851B5F551D414F0D00A3AFFD /* TimelineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimelineViewController.m; sourceTree = "<group>"; };
@@ -45,6 +93,14 @@
 		854F17B81D28372D0051BE48 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		854F17BC1D284E440051BE48 /* debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = debug.xcconfig; sourceTree = SOURCE_ROOT; };
 		854F17BD1D284E440051BE48 /* release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = release.xcconfig; sourceTree = SOURCE_ROOT; };
+		85555F8F1D5D23F2003047BC /* TrackerToday.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = TrackerToday.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		85555F901D5D23F2003047BC /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
+		85555F931D5D23F2003047BC /* TodayViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TodayViewController.h; sourceTree = "<group>"; };
+		85555F941D5D23F2003047BC /* TodayViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TodayViewController.m; sourceTree = "<group>"; };
+		85555F971D5D23F2003047BC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		85555F991D5D23F2003047BC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		85555FAE1D5D699F003047BC /* TrackerToday.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = TrackerToday.entitlements; sourceTree = "<group>"; };
+		85555FAF1D5D69AA003047BC /* tracker.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = tracker.entitlements; sourceTree = "<group>"; };
 		857DA4AE1D090C7B00497E60 /* tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		857DA4B21D090C7B00497E60 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		857DA4B41D090C7B00497E60 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -60,6 +116,13 @@
 		8586072A1D2B57A4003D39FA /* EventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventViewController.m; sourceTree = "<group>"; };
 		858B2AE81D5251750027C439 /* StateSchema.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StateSchema.h; sourceTree = "<group>"; };
 		858B2AE91D5251750027C439 /* StateSchema.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StateSchema.m; sourceTree = "<group>"; };
+		85AC34BE1D6E407900EBFC12 /* UIColor+Chameleon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Chameleon.h"; sourceTree = "<group>"; };
+		85AC34BF1D6E407900EBFC12 /* UIColor+Chameleon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Chameleon.m"; sourceTree = "<group>"; };
+		85AC34C01D6E407900EBFC12 /* UIColor+ChameleonPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+ChameleonPrivate.h"; sourceTree = "<group>"; };
+		85AC34C11D6E407900EBFC12 /* UIColor+ChameleonPrivate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+ChameleonPrivate.m"; sourceTree = "<group>"; };
+		85AC34C61D6E409B00EBFC12 /* ChameleonMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChameleonMacros.h; sourceTree = "<group>"; };
+		85B081AE1D6D60380008B256 /* DropboxSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DropboxSessionManager.h; sourceTree = "<group>"; };
+		85B081AF1D6D60380008B256 /* DropboxSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DropboxSessionManager.m; sourceTree = "<group>"; };
 		85B833F31D090D02009D6D42 /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
 		85B833F41D090D02009D6D42 /* Event.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Event.m; sourceTree = "<group>"; };
 		85B833F61D09169E009D6D42 /* Schema.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Schema.h; sourceTree = "<group>"; };
@@ -73,9 +136,21 @@
 		85F2995A1D4BFEED007BA84A /* TimelineColumnView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimelineColumnView.m; sourceTree = "<group>"; };
 		9966693FBD0AEE9D859492DE /* Pods-tracker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tracker.release.xcconfig"; path = "Pods/Target Support Files/Pods-tracker/Pods-tracker.release.xcconfig"; sourceTree = "<group>"; };
 		AF11449F2EFACA3CE0CA70BB /* Pods_tracker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_tracker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B52C20B1681CFD3D6586731B /* Pods_TrackerToday.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TrackerToday.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3C2606702D4CF66700E59C1 /* Pods-TrackerToday.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TrackerToday.release.xcconfig"; path = "Pods/Target Support Files/Pods-TrackerToday/Pods-TrackerToday.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		85555F8C1D5D23F2003047BC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				85555F911D5D23F2003047BC /* NotificationCenter.framework in Frameworks */,
+				85555FAD1D5D267A003047BC /* DropboxSDK.framework in Frameworks */,
+				F6BE50AABEAC895BA361A031 /* Pods_TrackerToday.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		857DA4AB1D090C7B00497E60 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -97,6 +172,8 @@
 				854F17B61D2837290051BE48 /* Security.framework */,
 				854F17B41D28371A0051BE48 /* DropboxSDK.framework */,
 				AF11449F2EFACA3CE0CA70BB /* Pods_tracker.framework */,
+				85555F901D5D23F2003047BC /* NotificationCenter.framework */,
+				B52C20B1681CFD3D6586731B /* Pods_TrackerToday.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -106,14 +183,29 @@
 			children = (
 				4376796216BAE32BD89DC4AF /* Pods-tracker.debug.xcconfig */,
 				9966693FBD0AEE9D859492DE /* Pods-tracker.release.xcconfig */,
+				0C901195876F0D179525B7CF /* Pods-TrackerToday.debug.xcconfig */,
+				D3C2606702D4CF66700E59C1 /* Pods-TrackerToday.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		85555F921D5D23F2003047BC /* TrackerToday */ = {
+			isa = PBXGroup;
+			children = (
+				85555FAE1D5D699F003047BC /* TrackerToday.entitlements */,
+				85555F931D5D23F2003047BC /* TodayViewController.h */,
+				85555F941D5D23F2003047BC /* TodayViewController.m */,
+				85555F961D5D23F2003047BC /* MainInterface.storyboard */,
+				85555F991D5D23F2003047BC /* Info.plist */,
+			);
+			path = TrackerToday;
 			sourceTree = "<group>";
 		};
 		857DA4A51D090C7B00497E60 = {
 			isa = PBXGroup;
 			children = (
 				857DA4B01D090C7B00497E60 /* tracker */,
+				85555F921D5D23F2003047BC /* TrackerToday */,
 				857DA4AF1D090C7B00497E60 /* Products */,
 				260A27DE51E16B2152F14DA5 /* Pods */,
 				19361570CE402AADC59B0A76 /* Frameworks */,
@@ -124,6 +216,7 @@
 			isa = PBXGroup;
 			children = (
 				857DA4AE1D090C7B00497E60 /* tracker.app */,
+				85555F8F1D5D23F2003047BC /* TrackerToday.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -131,10 +224,14 @@
 		857DA4B01D090C7B00497E60 /* tracker */ = {
 			isa = PBXGroup;
 			children = (
+				85AC34BD1D6E407900EBFC12 /* Chameleon */,
+				85555FAF1D5D69AA003047BC /* tracker.entitlements */,
 				85F299561D4AAA32007BA84A /* Utils.h */,
 				85F299571D4AAA32007BA84A /* Utils.m */,
 				85F1BA031D2F026500C2A7E3 /* SyncManager.h */,
 				85F1BA041D2F026500C2A7E3 /* SyncManager.m */,
+				85B081AE1D6D60380008B256 /* DropboxSessionManager.h */,
+				85B081AF1D6D60380008B256 /* DropboxSessionManager.m */,
 				85B833F61D09169E009D6D42 /* Schema.h */,
 				85B833F71D09169E009D6D42 /* Schema.m */,
 				858B2AE81D5251750027C439 /* StateSchema.h */,
@@ -176,9 +273,41 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		85AC34BD1D6E407900EBFC12 /* Chameleon */ = {
+			isa = PBXGroup;
+			children = (
+				85AC34C61D6E409B00EBFC12 /* ChameleonMacros.h */,
+				85AC34BE1D6E407900EBFC12 /* UIColor+Chameleon.h */,
+				85AC34BF1D6E407900EBFC12 /* UIColor+Chameleon.m */,
+				85AC34C01D6E407900EBFC12 /* UIColor+ChameleonPrivate.h */,
+				85AC34C11D6E407900EBFC12 /* UIColor+ChameleonPrivate.m */,
+			);
+			path = Chameleon;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		85555F8E1D5D23F2003047BC /* TrackerToday */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 85555F9F1D5D23F2003047BC /* Build configuration list for PBXNativeTarget "TrackerToday" */;
+			buildPhases = (
+				B27346F36BDB17D3F42B46B2 /* [CP] Check Pods Manifest.lock */,
+				85555F8B1D5D23F2003047BC /* Sources */,
+				85555F8C1D5D23F2003047BC /* Frameworks */,
+				85555F8D1D5D23F2003047BC /* Resources */,
+				7B695528656B1E3182DE3E79 /* [CP] Embed Pods Frameworks */,
+				ED7BE42315F084DEAA5121FD /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TrackerToday;
+			productName = TrackerToday;
+			productReference = 85555F8F1D5D23F2003047BC /* TrackerToday.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		857DA4AD1D090C7B00497E60 /* tracker */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 857DA4C51D090C7B00497E60 /* Build configuration list for PBXNativeTarget "tracker" */;
@@ -189,10 +318,12 @@
 				857DA4AC1D090C7B00497E60 /* Resources */,
 				37076A5F158964F433EF8B24 /* [CP] Embed Pods Frameworks */,
 				9078CD50F75193C0069397BC /* [CP] Copy Pods Resources */,
+				85555FA01D5D23F2003047BC /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				85555F9B1D5D23F2003047BC /* PBXTargetDependency */,
 			);
 			name = tracker;
 			productName = tracker;
@@ -208,9 +339,23 @@
 				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = griff.zone;
 				TargetAttributes = {
+					85555F8E1D5D23F2003047BC = {
+						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = ANDFM73HPR;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
+					};
 					857DA4AD1D090C7B00497E60 = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = ANDFM73HPR;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -228,11 +373,20 @@
 			projectRoot = "";
 			targets = (
 				857DA4AD1D090C7B00497E60 /* tracker */,
+				85555F8E1D5D23F2003047BC /* TrackerToday */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		85555F8D1D5D23F2003047BC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				85555F981D5D23F2003047BC /* MainInterface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		857DA4AC1D090C7B00497E60 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -278,6 +432,21 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-tracker/Pods-tracker-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		7B695528656B1E3182DE3E79 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TrackerToday/Pods-TrackerToday-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		9078CD50F75193C0069397BC /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -293,15 +462,68 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-tracker/Pods-tracker-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		B27346F36BDB17D3F42B46B2 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		ED7BE42315F084DEAA5121FD /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TrackerToday/Pods-TrackerToday-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		85555F8B1D5D23F2003047BC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				85AC34C51D6E407900EBFC12 /* UIColor+ChameleonPrivate.m in Sources */,
+				85555FA91D5D2436003047BC /* ListViewController.m in Sources */,
+				85555FA81D5D2436003047BC /* ViewController.m in Sources */,
+				85555FA31D5D2436003047BC /* Schema.m in Sources */,
+				85555FAC1D5D2436003047BC /* EventViewController.m in Sources */,
+				85B081AD1D6D5E8E0008B256 /* StateSchema.m in Sources */,
+				85555FAB1D5D2436003047BC /* TimelineColumnView.m in Sources */,
+				85555FA41D5D2436003047BC /* State.m in Sources */,
+				85555F951D5D23F2003047BC /* TodayViewController.m in Sources */,
+				85AC34C31D6E407900EBFC12 /* UIColor+Chameleon.m in Sources */,
+				85555FA11D5D2436003047BC /* Utils.m in Sources */,
+				85555FA21D5D2436003047BC /* SyncManager.m in Sources */,
+				85555FA51D5D2436003047BC /* Data.m in Sources */,
+				85555FA61D5D2436003047BC /* Event.m in Sources */,
+				85555FAA1D5D2436003047BC /* TimelineViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		857DA4AA1D090C7B00497E60 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				85B833F51D090D02009D6D42 /* Event.m in Sources */,
 				8586072B1D2B57A4003D39FA /* EventViewController.m in Sources */,
+				85AC34C21D6E407900EBFC12 /* UIColor+Chameleon.m in Sources */,
 				85F1BA051D2F026500C2A7E3 /* SyncManager.m in Sources */,
 				85F299581D4AAA32007BA84A /* Utils.m in Sources */,
 				851B5F591D41531A00A3AFFD /* State.m in Sources */,
@@ -313,13 +535,31 @@
 				857DA4B31D090C7B00497E60 /* main.m in Sources */,
 				854C75AF1D09185800DD4CEF /* Data.m in Sources */,
 				851B5F561D414F0D00A3AFFD /* TimelineViewController.m in Sources */,
+				85B081B01D6D60380008B256 /* DropboxSessionManager.m in Sources */,
 				85F2995B1D4BFEED007BA84A /* TimelineColumnView.m in Sources */,
+				85AC34C41D6E407900EBFC12 /* UIColor+ChameleonPrivate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		85555F9B1D5D23F2003047BC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 85555F8E1D5D23F2003047BC /* TrackerToday */;
+			targetProxy = 85555F9A1D5D23F2003047BC /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
+		85555F961D5D23F2003047BC /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				85555F971D5D23F2003047BC /* Base */,
+			);
+			name = MainInterface.storyboard;
+			sourceTree = "<group>";
+		};
 		857DA4BF1D090C7B00497E60 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -331,6 +571,48 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		85555F9D1D5D23F2003047BC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0C901195876F0D179525B7CF /* Pods-TrackerToday.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = TrackerToday/TrackerToday.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = TrackerToday/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = zone.griff.tracker.TrackerToday;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		85555F9E1D5D23F2003047BC /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = D3C2606702D4CF66700E59C1 /* Pods-TrackerToday.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = TrackerToday/TrackerToday.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				INFOPLIST_FILE = TrackerToday/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = zone.griff.tracker.TrackerToday;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 		857DA4C31D090C7B00497E60 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -422,6 +704,7 @@
 			baseConfigurationReference = 854F17BC1D284E440051BE48 /* debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = tracker/tracker.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -441,6 +724,7 @@
 			baseConfigurationReference = 854F17BD1D284E440051BE48 /* release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = tracker/tracker.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -458,6 +742,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		85555F9F1D5D23F2003047BC /* Build configuration list for PBXNativeTarget "TrackerToday" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				85555F9D1D5D23F2003047BC /* Debug */,
+				85555F9E1D5D23F2003047BC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		857DA4A91D090C7B00497E60 /* Build configuration list for PBXProject "tracker" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

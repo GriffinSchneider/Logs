@@ -8,12 +8,11 @@
 
 #import "ViewController.h"
 #import <DRYUI/DRYUI.h>
-#import <BlocksKit/BlocksKit+UIKit.h>
-#import <ChameleonFramework/Chameleon.h>
 #import <DropboxSDK/DropboxSDK.h>
 #import "UIButton+ANDYHighlighted.h"
 #import <Toast/UIView+Toast.h>
 
+#import "ChameleonMacros.h"
 #import "Schema.h"
 #import "Data.h"
 #import "ListViewController.h"
@@ -50,8 +49,14 @@
         self.readingSliders = [NSMutableDictionary new];
         self.readingButtons = [NSMutableDictionary new];
         [[UINavigationBar appearance] setBarTintColor:FlatGrayDark];
+        self.preferredContentSize = CGSizeMake(0, 2000);
     }
     return self;
+}
+
+
+- (UIEdgeInsets)widgetMarginInsetsForProposedMarginInsets:(UIEdgeInsets)defaultMarginInsets {
+    return UIEdgeInsetsZero;
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
@@ -90,9 +95,14 @@
 }
 
 - (void)loadView {
-    
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.view = [UIView new];
+    
+    
+    if ([[DBSession sharedSession] isLinked]) {
+        [[SyncManager i] loadFromDisk];
+    }
+    
     
     [RACObserve([SyncManager i], data) subscribeNext:^(id x) {
         [self rebuildView];
@@ -169,7 +179,30 @@
     return lastView;
 }
 
+
+- (UIView *)buildSmallGridInView:(UIView *)superview withLastView:(UIView *)lastView titles:(NSArray<NSString *> *)titles buttonBlock:(void (^)(UIButton *b, NSString *title))buttonBlock {
+    NSMutableArray<NSString *> *iter = [NSMutableArray new];
+    for (NSString *title in titles) {
+        [iter addObject:title];
+        if (iter.count >= 5) {
+            lastView = [self buildRowInView:superview withLastView:lastView titles:iter buttonBlock:buttonBlock];
+            UIView *spacer;
+            build_subviews(superview) {
+                add_subview(spacer) {
+                    _.make.height.equalTo(@0);
+                    _.make.top.equalTo(lastView.mas_bottom).with.offset(3);
+                };
+            };
+            lastView = spacer;
+            [iter removeAllObjects];
+        }
+    }
+    return lastView;
+}
+
 - (void)buildView {
+    @weakify(self);
+    
     build_subviews(self.view) {
         _.backgroundColor = FlatNavyBlueDark;
         add_subview(self.scrollViewWrapper) {
@@ -190,26 +223,30 @@
         };
         lastView = [self buildRowInView:_ withLastView:lastView titles:@[@"Edit", @"Timeline", @"Reload", @"Save"] buttonBlock:^(UIButton *b, NSString *title) {
             b.backgroundColor = FlatPlum;
-            [b bk_addEventHandler:^(UIButton *sender) {
-                if ([sender.currentTitle isEqualToString:@"Edit"]) {
+            @weakify(b);
+            [[b rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
+                @strongify(self);
+                @strongify(b);
+                if ([b.currentTitle isEqualToString:@"Edit"]) {
                     ListViewController *lvc = [[ListViewController alloc] initWithDone:^{
                         [self dismissViewControllerAnimated:YES completion:nil];
                     }];
                     [self presentViewController:[[UINavigationController alloc] initWithRootViewController:lvc] animated:YES completion:^{}];
                 }
-                if ([sender.currentTitle isEqualToString:@"Timeline"]) {
+                if ([b.currentTitle isEqualToString:@"Timeline"]) {
                     TimelineViewController *vc = [[TimelineViewController alloc] initWithDone:^{
                         [self dismissViewControllerAnimated:YES completion:nil];
                     }];
                     [self presentViewController:vc animated:YES completion:^{}];
                 }
-                if ([sender.currentTitle isEqualToString:@"Reload"]) {
-                    [[SyncManager i] loadFromDropbox];
+                if ([b.currentTitle isEqualToString:@"Reload"]) {
+                    [[SyncManager i] loadFromDisk];
+                    [self rebuildView];
                 }
-                if ([sender.currentTitle isEqualToString:@"Save"]) {
+                if ([b.currentTitle isEqualToString:@"Save"]) {
                     [[SyncManager i] saveImmediately];
                 }
-            } forControlEvents:UIControlEventTouchUpInside];
+            }];
         }];
         UIView *add_subview(spacer) {
             _.make.height.equalTo(@0);
@@ -219,9 +256,10 @@
         lastView = [self buildGridInView:_ withLastView:lastView titles:[SyncManager i].schema.occurrences buttonBlock:^(UIButton *b, NSString *title) {
             b.backgroundColor = FlatOrangeDark;
             self.occurrenceButtons[title] = b;
-            [b bk_addEventHandler:^(id _) {
+            [[b rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
+                @strongify(self);
                 [self selectedOccurrence:title];
-            } forControlEvents:UIControlEventTouchUpInside];
+            }];
         }];
         UIView *add_subview(spacer2) {
             _.make.height.equalTo(@0);
@@ -232,9 +270,10 @@
         for (StateSchema *s in [SyncManager i].schema.states) [titles addObject:s.name];
         lastView = [self buildGridInView:_ withLastView:lastView titles:titles buttonBlock:^(UIButton *b, NSString *title) {
             self.stateButtons[title] = b;
-            [b bk_addEventHandler:^(id _) {
+            [[b rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
+                @strongify(self);
                 [self selectedState:title];
-            } forControlEvents:UIControlEventTouchUpInside];
+            }];
         }];
         UIView *add_subview(spacer3) {
             _.make.height.equalTo(@0);
@@ -260,8 +299,14 @@
                 _.make.right.equalTo(superview.superview).with.offset(-10);
                 _.make.left.equalTo(slider.mas_right).with.offset(10);
             };
-            [button bk_addEventHandler:^(id _) { [self madeReading:reading withSlider:slider]; } forControlEvents:UIControlEventTouchUpInside];
-            [slider bk_addEventHandler:^(id _) { [self sliderChanged:slider forReading:reading withButton:button]; } forControlEvents:UIControlEventAllEvents];
+            [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
+                @strongify(self);
+                [self madeReading:reading withSlider:slider];
+            }];
+            [[slider rac_signalForControlEvents:UIControlEventAllEvents] subscribeNext:^(id x) {
+                @strongify(self);
+                [self sliderChanged:slider forReading:reading withButton:button];
+            }];
             lastView = slider;
         }];
         [lastView mas_updateConstraints:^(MASConstraintMaker *make) {

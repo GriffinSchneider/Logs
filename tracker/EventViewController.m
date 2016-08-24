@@ -8,10 +8,9 @@
 
 #import "EventViewController.h"
 #import <DRYUI/DRYUI.h>
-#import <ChameleonFramework/Chameleon.h>
-#import <BlocksKit/BlocksKit+UIKit.h>
 #import <MoveViewUpForKeyboardKit/MVUFKKView.h>
 #import <ReactiveCocoa/ReactiveCocoa.h>
+#import "ChameleonMacros.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -50,7 +49,7 @@
     self.view.backgroundColor = FlatNavyBlueDark;
     build_subviews(self.view) {
         MVUFKKView *add_subview(keyboardView){};
-         add_subview(self.dateTextField) {
+        add_subview(self.dateTextField) {
             _.text = [self.dateFormatter stringFromDate:self.editingEvent.date];
             _.textColor = FlatWhiteDark;
             _.backgroundColor = FlatNavyBlue;
@@ -69,12 +68,14 @@
             
             UIBarButtonItem* doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(dateDoneButtonPressed:)];
             [keyboardDoneButtonView setItems:@[doneButton]];
-            _.inputAccessoryView = keyboardDoneButtonView;
+             _.inputAccessoryView = keyboardDoneButtonView;
             
-            [pickerView bk_addEventHandler:^(id sender) {
+            @weakify(self);
+            [[pickerView rac_signalForControlEvents:UIControlEventValueChanged] subscribeNext:^(id x) {
+                @strongify(self);
                 self.editingEvent.date = pickerView.date;
                 _.text = [self.dateFormatter stringFromDate:self.editingEvent.date];
-            } forControlEvents:UIControlEventValueChanged];
+            }];
             
             _.make.left.and.right.equalTo(superview);
             _.make.bottom.equalTo(keyboardView.mas_top).with.offset(-10);

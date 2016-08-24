@@ -42,6 +42,7 @@ DBRestClientDelegate
 
 + (instancetype)i {
     static dispatch_once_t once;
+    
     static id sharedInstance;
     dispatch_once(&once, ^{
         sharedInstance = [[self alloc] init];
@@ -51,8 +52,10 @@ DBRestClientDelegate
 
 - (instancetype)init {
     if ((self = [super init])) {
-        self.restClient = [[DBRestClient alloc] initWithSession:[DBSession sharedSession]];
-        self.restClient.delegate = self;
+        if ([DBSession sharedSession]) {
+            self.restClient = [[DBRestClient alloc] initWithSession:[DBSession sharedSession]];
+            self.restClient.delegate = self;
+        }
     }
     return self;
 }
@@ -61,31 +64,29 @@ DBRestClientDelegate
 #pragma mark - Toasts
 
 - (void)toast:(NSString *)text {
-    [[[UIApplication sharedApplication] keyWindow] hideToastActivity];
-    [[[UIApplication sharedApplication] keyWindow] makeToast:text];
+//    [[[UIApplication sharedApplication] keyWindow] hideToastActivity];
+//    [[[UIApplication sharedApplication] keyWindow] makeToast:text];
 }
 
 - (void)showActivity {
-    [[[UIApplication sharedApplication] keyWindow] makeToastActivity:CSToastPositionCenter];
+//    [[[UIApplication sharedApplication] keyWindow] makeToastActivity:CSToastPositionCenter];
 }
 
 - (void)hideActivity {
-    [[[UIApplication sharedApplication] keyWindow] hideToastActivity];
+//    [[[UIApplication sharedApplication] keyWindow] hideToastActivity];
 }
 
 
 #pragma mark - Paths
 
 - (NSString *)localDataPath {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    return [documentsDirectory stringByAppendingPathComponent:@"data.json"];
+    NSURL *containerDirectory = [[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier: @"group.zone.griff.tracker"];
+    return [containerDirectory URLByAppendingPathComponent:@"data.json"].path;
 }
 
 - (NSString *)localSchemaPath {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    return [documentsDirectory stringByAppendingPathComponent:@"schema.json"];
+    NSURL *containerDirectory = [[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier: @"group.zone.griff.tracker"];
+    return [containerDirectory URLByAppendingPathComponent:@"schema.json"].path;
 }
 
 
@@ -104,6 +105,9 @@ DBRestClientDelegate
 
 
 - (void)loadFromDropbox {
+    if (!self.restClient) {
+        NSAssert(NO, @"Trying to load from Dropbox with no Dropbox client!");
+    }
     [self showActivity];
     self.currentlyLoadingFile = self.localSchemaPath;
     [self.restClient loadFile:@"/schema.json" intoPath:self.localSchemaPath];
@@ -139,6 +143,9 @@ DBRestClientDelegate
 }
 
 - (void)writeToDropbox {
+    if (!self.restClient) {
+        NSAssert(NO, @"Trying to write to Dropbox with no Dropbox client!");
+    }
     [self writeToDisk];
     [self.saveTimer invalidate];
     self.saveTimer = [NSTimer timerWithTimeInterval:3.0 target:self selector:@selector(saveImmediately) userInfo:nil repeats:NO];
@@ -180,6 +187,7 @@ DBRestClientDelegate
         [self.restClient loadMetadata:@"/data.json"];
     } else {
         [self toast:@"✅Loaded Data✅"];
+        [self loadFromDisk];
     }
     [self hideActivity];
 }

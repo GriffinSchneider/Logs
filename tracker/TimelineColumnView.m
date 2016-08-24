@@ -8,8 +8,7 @@
 
 #import "TimelineColumnView.h"
 #import <DRYUI/DRYUI.h>
-#import <ChameleonFramework/Chameleon.h>
-#import <BlocksKit/BlocksKit+UIKit.h>
+#import "ChameleonMacros.h"
 #import "UIButton+ANDYHighlighted.h"
 #import "State.h"
 #import "Data.h"
@@ -84,9 +83,12 @@
                     _.make.height.equalTo(superview).multipliedBy([self scale:[s.state.end ?: [NSDate date] timeIntervalSinceDate:s.state.start]]);
                     _.make.top.equalTo(superview.mas_bottom).multipliedBy([self scale:[s.state.start timeIntervalSinceDate:self.startTime]]);
                 }
-                [v bk_addEventHandler:^(id sender) {
+                @weakify(self);
+                v.rac_command = [[RACCommand alloc] initWithSignalBlock:^RACSignal *(id input) {
+                    @strongify(self);
                     [self selectedState:s.state];
-                } forControlEvents:UIControlEventTouchUpInside];
+                    return nil;
+                }];
             }];
         }];
     }

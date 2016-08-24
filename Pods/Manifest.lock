@@ -1,22 +1,4 @@
 PODS:
-  - BlocksKit (2.2.5):
-    - BlocksKit/All (= 2.2.5)
-  - BlocksKit/All (2.2.5):
-    - BlocksKit/Core
-    - BlocksKit/DynamicDelegate
-    - BlocksKit/MessageUI
-    - BlocksKit/UIKit
-  - BlocksKit/Core (2.2.5)
-  - BlocksKit/DynamicDelegate (2.2.5)
-  - BlocksKit/MessageUI (2.2.5):
-    - BlocksKit/Core
-    - BlocksKit/DynamicDelegate
-  - BlocksKit/UIKit (2.2.5):
-    - BlocksKit/Core
-    - BlocksKit/DynamicDelegate
-  - ChameleonFramework (2.1.0):
-    - ChameleonFramework/Default (= 2.1.0)
-  - ChameleonFramework/Default (2.1.0)
   - DRYUI (0.8.0):
     - Masonry
   - JSONModel (1.2.0)
@@ -38,8 +20,6 @@ PODS:
   - UIButton-ANDYHighlighted (0.2.1)
 
 DEPENDENCIES:
-  - BlocksKit
-  - ChameleonFramework
   - DRYUI
   - JSONModel
   - MoveViewUpForKeyboardKit
@@ -48,8 +28,6 @@ DEPENDENCIES:
   - UIButton-ANDYHighlighted
 
 SPEC CHECKSUMS:
-  BlocksKit: 7f422b971407001178d181a43b99014ea2591fe6
-  ChameleonFramework: d21a3cc247abfe5e37609a283a8238b03575cf64
   DRYUI: 53e2afe831500d17a12f6c9e3e7f137a15ff4061
   JSONModel: 12523685c4b623553ccf844bbbf7007624317b2c
   Masonry: b529bb169217897b6354d4b56b1fada6d475b13d
@@ -59,6 +37,6 @@ SPEC CHECKSUMS:
   Toast: 32c59229abfcf41850162b83bb9259dc84372473
   UIButton-ANDYHighlighted: 3f5e9fb68fb3425bd9fddc030af452d3ac9d1613
 
-PODFILE CHECKSUM: b43cf064d482965c66d6097ca69536e1f992f92e
+PODFILE CHECKSUM: f1dee924bbc53eb39329eb04475d328e09795f90
 
 COCOAPODS: 1.0.1

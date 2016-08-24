@@ -4,16 +4,6 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>BlocksKit.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>ChameleonFramework.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>DRYUI.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -30,6 +20,11 @@
 			<false/>
 		</dict>
 		<key>MoveViewUpForKeyboardKit.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-TrackerToday.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -67,17 +62,22 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>121251FEDA0288CE1651F7DCEF2A14EC</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>15D5D97F512A6AF50D8BD418FE7668F1</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>76E7CCFE3B87EAB57D34B1483E506EC5</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>7A9557F7CFC0A76656228765962E537F</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>8AF0EAD6F1352B8F0BF4CCF4A7EE4F23</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>8F77427D19EB46ACFE1839F4B25142B9</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -87,22 +87,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>993873D0B5A72018C078B68756896F1F</key>
+		<key>942FB142125CACC1E34D8F6F20003F1F</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>9B57F4EE4746045CEAE2D933A3C8EC9E</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>C5A3F338A06641A2E02C891CA91370C9</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>CCB23497F7112E00241CD17555524CDA</key>
+		<key>CFC509DBEEA5272D342175AA34F6B5DF</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -112,7 +102,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>F2554FBA8DF8151FC3FA9196953932DE</key>
+		<key>DBD2908959FA509F3BDB64D503DF7E10</key>
 		<dict>
 			<key>primary</key>
 			<true/>

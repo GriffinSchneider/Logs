@@ -8,7 +8,7 @@
 
 #import "ListViewController.h"
 #import <DRYUI/DRYUI.h>
-#import <ChameleonFramework/Chameleon.h>
+#import "ChameleonMacros.h"
 
 #import "Event.h"
 #import "EventViewController.h"
@@ -96,7 +96,10 @@ UITableViewDataSource
     cell.detailTextLabel.highlightedTextColor = FlatNavyBlue;
     
     Event *e = [self eventForRow:indexPath.row];
-    cell.textLabel.text = [NSString stringWithFormat:@"%@: %@", EventType_toString(e.type), e.name];
+    
+    NSString *icon = [[SyncManager i].schema schemaForStateNamed:e.name].icon;
+    icon = icon ? [NSString stringWithFormat:@"%@ ", icon] : @"";
+    cell.textLabel.text = [NSString stringWithFormat:@"%@%@: %@", icon, EventType_toString(e.type), e.name];
     cell.detailTextLabel.text = [self.dateFormatter stringFromDate:e.date];
     return cell;
 }
