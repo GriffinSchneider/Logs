@@ -12,6 +12,7 @@
 #import <Toast/UIView+Toast.h>
 #import "SyncManager.h"
 #import "DropboxSessionManager.h"
+#import "tracker-Swift.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -24,7 +25,7 @@
     [[DropboxSessionManager i] setupSession];
     
     self.window = [UIWindow new];
-    self.window.rootViewController = [ViewController new];
+    self.window.rootViewController = [[SwiftViewController alloc] init];
     [self.window makeKeyAndVisible];
     
     return YES;
