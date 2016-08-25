@@ -8,6 +8,8 @@ target 'tracker' do
   pod 'UIButton-ANDYHighlighted'
   pod 'Toast'
   pod 'ReactiveCocoa'
+  pod 'RxSwift'
+  pod 'RxCocoa'
 end
 
 
@@ -18,4 +20,6 @@ target 'TrackerToday' do
   pod 'UIButton-ANDYHighlighted'
   pod 'Toast'
   pod 'ReactiveCocoa'
+  pod 'RxSwift'
+  pod 'RxCocoa'
 end

@@ -44,6 +44,21 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>RxCocoa.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>RxSwift.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>SnapKit.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Toast.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -57,22 +72,37 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>0BF8569A1D17D47E1A86EB020383E8D1</key>
+		<key>191B688575ABB3F520D2051D670C312A</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>121251FEDA0288CE1651F7DCEF2A14EC</key>
+		<key>1F9D12E79805EEA619F1120B27B1783A</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>15D5D97F512A6AF50D8BD418FE7668F1</key>
+		<key>2203A428FEB33DC8A5788929759B1EAB</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>76E7CCFE3B87EAB57D34B1483E506EC5</key>
+		<key>34577753D1D0C95A13DFB2801C69A854</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>497C4A39BF2C763596BBF1F840C41696</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>4ED63ECAEA763698F4BFBE48EB6F1283</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>6B06CA74AB3AB6121A92273C92221B55</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -82,27 +112,27 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>9010A9D55B9FC20ACA306B2ED7689078</key>
+		<key>90444044113FF60A421D4E223952049A</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>942FB142125CACC1E34D8F6F20003F1F</key>
+		<key>AF21780C841830BE5AD3F34076925612</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>CFC509DBEEA5272D342175AA34F6B5DF</key>
+		<key>B974D2421737BB0D4E5B6CFF3C8DBBE7</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>D51441E827E03C2FFD4A64324FF9F3FE</key>
+		<key>D87B74D15803F094C5B714F013ADACFD</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>DBD2908959FA509F3BDB64D503DF7E10</key>
+		<key>E82FC5B119F4EE4D91190632DF6CC397</key>
 		<dict>
 			<key>primary</key>
 			<true/>

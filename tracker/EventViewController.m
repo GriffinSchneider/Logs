@@ -8,7 +8,7 @@
 
 #import "EventViewController.h"
 #import <DRYUI/DRYUI.h>
-#import <MoveViewUpForKeyboardKit/MVUFKKView.h>
+#import <MoveViewUpForKeyboardKit/MVUFKView.h>
 #import <ReactiveCocoa/ReactiveCocoa.h>
 #import "ChameleonMacros.h"
 
@@ -48,7 +48,7 @@
     self.view = [UIView new];
     self.view.backgroundColor = FlatNavyBlueDark;
     build_subviews(self.view) {
-        MVUFKKView *add_subview(keyboardView){};
+        MVUFKView *add_subview(keyboardView){};
         add_subview(self.dateTextField) {
             _.text = [self.dateFormatter stringFromDate:self.editingEvent.date];
             _.textColor = FlatWhiteDark;
@@ -77,17 +77,17 @@
                 _.text = [self.dateFormatter stringFromDate:self.editingEvent.date];
             }];
             
-            _.make.left.and.right.equalTo(superview);
-            _.make.bottom.equalTo(keyboardView.mas_top).with.offset(-10);
-            _.make.height.equalTo(@50);
+            make.left.and.right.equalTo(superview);
+            make.bottom.equalTo(keyboardView.mas_top).with.offset(-10);
+            make.height.equalTo(@50);
         };
         UITextField *add_subview(name) {
             _.text = self.editingEvent.name;
             _.backgroundColor = FlatNavyBlue;
             _.textColor = FlatWhiteDark;
-            _.make.left.and.right.equalTo(superview);
-            _.make.bottom.equalTo(self.dateTextField.mas_top).with.offset(-10);
-            _.make.height.equalTo(@50);
+            make.left.and.right.equalTo(superview);
+            make.bottom.equalTo(self.dateTextField.mas_top).with.offset(-10);
+            make.height.equalTo(@50);
             [_.rac_textSignal subscribeNext:^(id x) {
                 self.editingEvent.name = _.text;
             }];

@@ -51,7 +51,7 @@ UITableViewDataSource
             _.delegate = self;
             _.dataSource = self;
             _.backgroundColor = FlatNavyBlueDark;
-            _.make.edges.equalTo(superview);
+            make.edges.equalTo(superview);
         };
     };
 }

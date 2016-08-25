@@ -215,38 +215,38 @@
         _.backgroundColor = FlatNavyBlueDark;
         add_subview(self.scrollViewWrapper) {
             _.clipsToBounds = NO;
-            _.make.center.equalTo(self.view);
+            make.center.equalTo(self.view);
             [self.rotationStartWrapperConstraints addObjectsFromArray:
-             @[_.make.height.equalTo(self.view.mas_width),
-               _.make.width.equalTo(self.view.mas_height)]];
+             @[make.height.equalTo(self.view.mas_width),
+               make.width.equalTo(self.view.mas_height)]];
             [self.rotationEndWrapperConstraints addObjectsFromArray:
-             @[_.make.width.equalTo(self.view),
-               _.make.height.equalTo(self.view)]];
+             @[make.width.equalTo(self.view),
+               make.height.equalTo(self.view)]];
             add_subview(self.verticalScrollView) {
                 _.clipsToBounds = NO;
-                _.make.width.height.left.and.top.equalTo(superview);
+                make.width.height.left.and.top.equalTo(superview);
                 add_subview(self.horizontalScrollView) {
                     _.clipsToBounds = NO;
                     _.pagingEnabled = YES;
                     _.showsHorizontalScrollIndicator = NO;
                     _.bounces = NO;
-                    _.make.top.left.and.right.equalTo(superview);
-                    _.make.width.equalTo(superview.superview);
-                    _.make.bottom.equalTo(superview);
+                    make.top.left.and.right.equalTo(superview);
+                    make.width.equalTo(superview.superview);
+                    make.bottom.equalTo(superview);
                     [self.columns enumerateObjectsUsingBlock:^(TimelineColumnView *column, NSUInteger idx, BOOL *stop) {
-                        _.make.height.greaterThanOrEqualTo(column);
+                        make.height.greaterThanOrEqualTo(column);
                     }];
                     TimelineColumnView *lastColumn = nil;
                     for (__strong TimelineColumnView *col in self.columns.reverseObjectEnumerator) {
                         add_subview(col) {
                             [self.portraitConstraints addObjectsFromArray:
-                             @[_.make.width.equalTo(superview.superview)]];
+                             @[make.width.equalTo(superview.superview)]];
                             [self.landscapeConstraints addObjectsFromArray:
-                             @[_.make.width.equalTo(superview.superview).multipliedBy(1.0/self.columns.count)]];
-                            _.make.top.equalTo(superview);
-                            _.make.bottom.lessThanOrEqualTo(superview);
-                            _.make.left.equalTo(lastColumn.mas_right ?: superview);
-                            _.make.right.lessThanOrEqualTo(superview);
+                             @[make.width.equalTo(superview.superview).multipliedBy(1.0/self.columns.count)]];
+                            make.top.equalTo(superview);
+                            make.bottom.lessThanOrEqualTo(superview);
+                            make.left.equalTo(lastColumn.mas_right ?: superview);
+                            make.right.lessThanOrEqualTo(superview);
                         }
                         lastColumn = col;
                     }
@@ -258,7 +258,7 @@
                 _.backgroundColor = [UIColor clearColor];
                 _.titleLabel.font = [UIFont systemFontOfSize:20 weight:UIFontWeightBold];
                 _.titleColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.3];
-                _.make.right.and.bottom.equalTo(superview).with.insets(UIEdgeInsetsMake(0, 0, 8, 8));
+                make.right.and.bottom.equalTo(superview).with.insets(UIEdgeInsetsMake(0, 0, 8, 8));
             };
             @weakify(self);
             [[closeButton rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {

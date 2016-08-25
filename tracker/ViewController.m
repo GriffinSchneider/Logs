@@ -134,15 +134,15 @@
                 buttonBlock(_, title);
                 _.highlightedBackgroundColor = [_.backgroundColor darkenByPercentage:0.2];
                 if (lastView) {
-                    _.make.width.equalTo(lastView);
+                    make.width.equalTo(lastView);
                 }
                 if (idx % 2 == 0) {
-                    _.make.left.equalTo(superview).with.offset(10);
-                    _.make.top.equalTo(lastView.mas_bottom ?: superview).with.offset(10);
+                    make.left.equalTo(superview).with.offset(10);
+                    make.top.equalTo(lastView.mas_bottom ?: superview).with.offset(10);
                 } else {
-                    _.make.top.equalTo(lastView);
-                    _.make.left.equalTo(lastView.mas_right).with.offset(10);
-                    _.make.right.equalTo(superview.superview).with.offset(-10);
+                    make.top.equalTo(lastView);
+                    make.left.equalTo(lastView.mas_right).with.offset(10);
+                    make.right.equalTo(superview.superview).with.offset(-10);
                 }
             };
             lastView = button;
@@ -160,17 +160,17 @@
                 [_ setTitle:title forState:UIControlStateNormal];
                 _.layer.cornerRadius = 5;
                 _.adjustsImageWhenHighlighted = YES;
-                _.make.top.equalTo(lastView);
+                make.top.equalTo(lastView);
                 buttonBlock(_, title);
                 _.highlightedBackgroundColor = [_.backgroundColor darkenByPercentage:0.2];
                 if (idx == 0) {
-                    _.make.left.equalTo(superview).with.offset(10);
+                    make.left.equalTo(superview).with.offset(10);
                 } else {
-                    _.make.width.equalTo(lastView);
-                    _.make.left.equalTo(lastView.mas_right).with.offset(10);
+                    make.width.equalTo(lastView);
+                    make.left.equalTo(lastView.mas_right).with.offset(10);
                 }
                 if (idx == titles.count-1) {
-                    _.make.right.equalTo(superview.superview).with.offset(-10);
+                    make.right.equalTo(superview.superview).with.offset(-10);
                 }
             };
             lastView = button;
@@ -189,8 +189,8 @@
             UIView *spacer;
             build_subviews(superview) {
                 add_subview(spacer) {
-                    _.make.height.equalTo(@0);
-                    _.make.top.equalTo(lastView.mas_bottom).with.offset(3);
+                    make.height.equalTo(@0);
+                    make.top.equalTo(lastView.mas_bottom).with.offset(3);
                 };
             };
             lastView = spacer;
@@ -207,19 +207,19 @@
         _.backgroundColor = FlatNavyBlueDark;
         add_subview(self.scrollViewWrapper) {
             _.backgroundColor = FlatNavyBlueDark;
-            _.make.width.and.height.equalTo(superview);
-            _.make.center.equalTo(superview);
+            make.width.and.height.equalTo(superview);
+            make.center.equalTo(superview);
             add_subview(self.scrollView) {
                 _.backgroundColor = FlatNavyBlueDark;
-                _.make.width.and.height.equalTo(superview);
-                _.make.center.equalTo(superview);
+                make.width.and.height.equalTo(superview);
+                make.center.equalTo(superview);
             };
         };
     };
     
     build_subviews(self.scrollView) {
         __block UIView *add_subview(lastView) {
-            _.make.top.equalTo(_.superview).with.offset(30);
+            make.top.equalTo(_.superview).with.offset(30);
         };
         lastView = [self buildRowInView:_ withLastView:lastView titles:@[@"Edit", @"Timeline", @"Reload", @"Save"] buttonBlock:^(UIButton *b, NSString *title) {
             b.backgroundColor = FlatPlum;
@@ -249,8 +249,8 @@
             }];
         }];
         UIView *add_subview(spacer) {
-            _.make.height.equalTo(@0);
-            _.make.top.equalTo(lastView.mas_bottom).with.offset(10);
+            make.height.equalTo(@0);
+            make.top.equalTo(lastView.mas_bottom).with.offset(10);
         };
         lastView = spacer;
         lastView = [self buildGridInView:_ withLastView:lastView titles:[SyncManager i].schema.occurrences buttonBlock:^(UIButton *b, NSString *title) {
@@ -262,8 +262,8 @@
             }];
         }];
         UIView *add_subview(spacer2) {
-            _.make.height.equalTo(@0);
-            _.make.top.equalTo(lastView.mas_bottom).with.offset(10);
+            make.height.equalTo(@0);
+            make.top.equalTo(lastView.mas_bottom).with.offset(10);
         };
         lastView = spacer2;
         NSMutableArray *titles = [NSMutableArray new];
@@ -276,8 +276,8 @@
             }];
         }];
         UIView *add_subview(spacer3) {
-            _.make.height.equalTo(@0);
-            _.make.top.equalTo(lastView.mas_bottom).with.offset(10);
+            make.height.equalTo(@0);
+            make.top.equalTo(lastView.mas_bottom).with.offset(10);
         };
         lastView = spacer3;
         [[SyncManager i].schema.readings enumerateObjectsUsingBlock:^(NSString *reading, NSUInteger idx, BOOL *stop) {
@@ -286,18 +286,18 @@
                 _.minimumTrackTintColor = FlatGreenDark;
                 _.maximumTrackTintColor = FlatRedDark;
                 self.readingSliders[reading] = _;
-                _.make.left.equalTo(superview).with.offset(10);
-                _.make.top.equalTo(lastView.mas_bottom).with.offset(15);
-                if (idx > 0) { _.make.width.equalTo(lastView); }
+                make.left.equalTo(superview).with.offset(10);
+                make.top.equalTo(lastView.mas_bottom).with.offset(15);
+                if (idx > 0) { make.width.equalTo(lastView); }
             };
             UIButton *add_subview(button) {
                 [_ setTitleColor:FlatWhiteDark forState:UIControlStateNormal];
                 _.backgroundColor = FlatBlueDark;
                 _.layer.cornerRadius = 5;
                 self.readingButtons[reading] = _;
-                _.make.top.and.bottom.equalTo(slider);
-                _.make.right.equalTo(superview.superview).with.offset(-10);
-                _.make.left.equalTo(slider.mas_right).with.offset(10);
+                make.top.and.bottom.equalTo(slider);
+                make.right.equalTo(superview.superview).with.offset(-10);
+                make.left.equalTo(slider.mas_right).with.offset(10);
             };
             [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
                 @strongify(self);

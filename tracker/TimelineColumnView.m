@@ -75,13 +75,13 @@
                     }
                     
                     if (s.slotIndex == 0) {
-                        _.make.leading.equalTo(@0);
+                        make.leading.equalTo(@0);
                     } else {
-                        _.make.leading.equalTo(superview.mas_trailing).multipliedBy((CGFloat)s.slotIndex/s.numberOfActiveSlots);
+                        make.leading.equalTo(superview.mas_trailing).multipliedBy((CGFloat)s.slotIndex/s.numberOfActiveSlots);
                     }
-                    _.make.width.equalTo(superview).multipliedBy(1.0/s.numberOfActiveSlots);
-                    _.make.height.equalTo(superview).multipliedBy([self scale:[s.state.end ?: [NSDate date] timeIntervalSinceDate:s.state.start]]);
-                    _.make.top.equalTo(superview.mas_bottom).multipliedBy([self scale:[s.state.start timeIntervalSinceDate:self.startTime]]);
+                    make.width.equalTo(superview).multipliedBy(1.0/s.numberOfActiveSlots);
+                    make.height.equalTo(superview).multipliedBy([self scale:[s.state.end ?: [NSDate date] timeIntervalSinceDate:s.state.start]]);
+                    make.top.equalTo(superview.mas_bottom).multipliedBy([self scale:[s.state.start timeIntervalSinceDate:self.startTime]]);
                 }
                 @weakify(self);
                 v.rac_command = [[RACCommand alloc] initWithSignalBlock:^RACSignal *(id input) {
