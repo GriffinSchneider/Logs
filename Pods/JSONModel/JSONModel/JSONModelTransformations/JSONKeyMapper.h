@@ -1,7 +1,7 @@
 //
 //  JSONKeyMapper.h
 //
-//  @version 1.4
+//  @version 1.3
 //  @author Marin Todorov (http://www.underplot.com) and contributors
 //
 
@@ -53,9 +53,7 @@ typedef NSString *(^JSONModelKeyMapBlock)(NSString *keyName);
 // deprecated
 @property (readonly, nonatomic) JSONModelKeyMapBlock JSONToModelKeyBlock DEPRECATED_ATTRIBUTE;
 - (NSString *)convertValue:(NSString *)value isImportingToModel:(BOOL)importing DEPRECATED_MSG_ATTRIBUTE("use convertValue:");
-- (instancetype)initWithDictionary:(NSDictionary *)map DEPRECATED_MSG_ATTRIBUTE("use initWithModelToJSONDictionary:");
 - (instancetype)initWithJSONToModelBlock:(JSONModelKeyMapBlock)toModel modelToJSONBlock:(JSONModelKeyMapBlock)toJSON DEPRECATED_MSG_ATTRIBUTE("use initWithModelToJSONBlock:");
-+ (instancetype)mapper:(JSONKeyMapper *)baseKeyMapper withExceptions:(NSDictionary *)exceptions DEPRECATED_MSG_ATTRIBUTE("use baseMapper:withModelToJSONExceptions:");
 
 /** @name Name converters */
 /** Block, which takes in a property name and converts it to the corresponding JSON key name */
@@ -63,6 +61,7 @@ typedef NSString *(^JSONModelKeyMapBlock)(NSString *keyName);
 
 /** Combined converter method
  * @param value the source name
+ * @param importing YES invokes JSONToModelKeyBlock, NO - modelToJSONKeyBlock
  * @return JSONKeyMapper instance
  */
 - (NSString *)convertValue:(NSString *)value;
@@ -70,7 +69,7 @@ typedef NSString *(^JSONModelKeyMapBlock)(NSString *keyName);
 /** @name Creating a key mapper */
 
 /**
- * Creates a JSONKeyMapper instance, based on the block you provide this initializer.
+ * Creates a JSONKeyMapper instance, based on the two blocks you provide this initializer.
  * The parameter takes in a JSONModelKeyMapBlock block:
  * <pre>NSString *(^JSONModelKeyMapBlock)(NSString *keyName)</pre>
  * The block takes in a string and returns the transformed (if at all) string.
@@ -79,12 +78,13 @@ typedef NSString *(^JSONModelKeyMapBlock)(NSString *keyName);
 - (instancetype)initWithModelToJSONBlock:(JSONModelKeyMapBlock)toJSON;
 
 /**
- * Creates a JSONKeyMapper instance, based on the mapping you provide.
- * Use your JSONModel property names as keys, and the JSON key names as values.
- * @param toJSON map dictionary, in the format: <pre>@{@"myCamelCaseName":@"crazy_JSON_name"}</pre>
+ * Creates a JSONKeyMapper instance, based on the mapping you provide
+ * in the map parameter. Use the JSON key names as keys, your JSONModel
+ * property names as values.
+ * @param map map dictionary, in the format: <pre>@{@"crazy_JSON_name":@"myCamelCaseName"}</pre>
  * @return JSONKeyMapper instance
  */
-- (instancetype)initWithModelToJSONDictionary:(NSDictionary *)toJSON;
+- (instancetype)initWithDictionary:(NSDictionary *)map;
 
 /**
  * Creates a JSONKeyMapper, which converts underscore_case to camelCase and vice versa.
@@ -95,8 +95,8 @@ typedef NSString *(^JSONModelKeyMapBlock)(NSString *keyName);
 
 /**
  * Creates a JSONKeyMapper based on a built-in JSONKeyMapper, with specific exceptions.
- * Use your JSONModel property names as keys, and the JSON key names as values.
+ * Use the original JSON key names as keys, and your JSONModel property names as values.
  */
-+ (instancetype)baseMapper:(JSONKeyMapper *)baseKeyMapper withModelToJSONExceptions:(NSDictionary *)toJSON;
++ (instancetype)mapper:(JSONKeyMapper *)baseKeyMapper withExceptions:(NSDictionary *)exceptions;
 
 @end

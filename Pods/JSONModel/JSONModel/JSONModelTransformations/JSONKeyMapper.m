@@ -1,7 +1,7 @@
 //
 //  JSONKeyMapper.m
 //
-//  @version 1.4
+//  @version 1.3
 //  @author Marin Todorov (http://www.underplot.com) and contributors
 //
 
@@ -73,32 +73,33 @@
     return self;
 }
 
-- (instancetype)initWithDictionary:(NSDictionary *)map
+-(instancetype)initWithDictionary:(NSDictionary *)map
 {
-    NSDictionary *toJSON  = [JSONKeyMapper swapKeysAndValuesInDictionary:map];
+    self = [super init];
+    if (self) {
 
-    return [self initWithModelToJSONDictionary:toJSON];
-}
+        NSDictionary *userToJSONMap  = [self swapKeysAndValuesInDictionary:map];
 
-- (instancetype)initWithModelToJSONDictionary:(NSDictionary *)toJSON
-{
-    if (!(self = [super init]))
-        return nil;
-
-    _modelToJSONKeyBlock = ^NSString *(NSString *keyName)
-    {
-        return [toJSON valueForKeyPath:keyName] ?: keyName;
-    };
+        _modelToJSONKeyBlock = ^NSString *(NSString *keyName) {
+            NSString *result = [userToJSONMap valueForKeyPath:keyName];
+            return result ? result : keyName;
+        };
+    }
 
     return self;
 }
 
-+ (NSDictionary *)swapKeysAndValuesInDictionary:(NSDictionary *)dictionary
+- (NSDictionary *)swapKeysAndValuesInDictionary:(NSDictionary *)dictionary
 {
-    NSArray *keys = dictionary.allKeys;
-    NSArray *values = [dictionary objectsForKeys:keys notFoundMarker:[NSNull null]];
+    NSMutableDictionary *swapped = [NSMutableDictionary new];
 
-    return [NSDictionary dictionaryWithObjects:keys forKeys:values];
+    [dictionary enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *value, BOOL *stop) {
+        NSAssert([value isKindOfClass:[NSString class]], @"Expect keys and values to be NSString");
+        NSAssert([key isKindOfClass:[NSString class]], @"Expect keys and values to be NSString");
+        swapped[value] = key;
+    }];
+
+    return swapped;
 }
 
 -(NSString*)convertValue:(NSString*)value isImportingToModel:(BOOL)importing
@@ -166,23 +167,22 @@
 
 + (instancetype)mapper:(JSONKeyMapper *)baseKeyMapper withExceptions:(NSDictionary *)exceptions
 {
-    NSDictionary *toJSON  = [JSONKeyMapper swapKeysAndValuesInDictionary:exceptions];
+    NSArray *keys = exceptions.allKeys;
+    NSArray *values = [exceptions objectsForKeys:keys notFoundMarker:[NSNull null]];
 
-    return [self baseMapper:baseKeyMapper withModelToJSONExceptions:toJSON];
-}
+    NSDictionary *toJsonMap = [NSDictionary dictionaryWithObjects:keys forKeys:values];
 
-+ (instancetype)baseMapper:(JSONKeyMapper *)baseKeyMapper withModelToJSONExceptions:(NSDictionary *)toJSON
-{
-    return [[self alloc] initWithModelToJSONBlock:^NSString *(NSString *keyName)
-    {
+    JSONModelKeyMapBlock toJson = ^NSString *(NSString *keyName) {
         if (!keyName)
             return nil;
 
-        if (toJSON[keyName])
-            return toJSON[keyName];
+        if (toJsonMap[keyName])
+            return toJsonMap[keyName];
 
         return baseKeyMapper.modelToJSONKeyBlock(keyName);
-    }];
+    };
+
+    return [[self alloc] initWithModelToJSONBlock:toJson];
 }
 
 @end
