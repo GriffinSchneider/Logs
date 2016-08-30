@@ -31,12 +31,12 @@ class SwiftViewController: UIViewController {
         view.backgroundColor = UIColor.flatNavyBlueColorDark()
         
         let occurrences = SyncManager.i().schema().occurrences
-        let activeStates = SyncManager.i().data().activeStates()
         let states = SyncManager.i().schema().states as! [StateSchema]
-        
+        let activeStateEvents = SyncManager.i().data().activeStates()
+        let readings = SyncManager.i().schema().readings
+        let activeStates = states.filter { s in activeStateEvents.contains { a in a.name == s.name } }
         
         var lastView = spacer(nil)
-        
         occurrences.stride(by: 4) { occurrences in
             lastView = buildRow(lastView, data: occurrences) {b, d in
                 b.setTitle(d, forState: .Normal)
@@ -45,21 +45,25 @@ class SwiftViewController: UIViewController {
         }
         
         lastView = spacer(lastView)
-        
-        states.filter { s in activeStates.contains { a in a.name == s.name } }.stride(by: 4) { states in
+        activeStates.stride(by: 4) { states in
             lastView = buildRow(lastView, data: states) {b, d in
                 b.setTitle(d.name, forState: .Normal)
-                b.setTitleColor(UIColor.flatWhiteColorDark(), forState: .Normal)
-                b.backgroundColor = UIColor.flatRedColor()
+                b.backgroundColor = UIColor.flatGreenColor()
             }
         }
         
         lastView = spacer(lastView)
-        
         states.stride(by: 4) { states in
             lastView = buildRow(lastView, data: states) {b, d in
                 b.setTitle(d.icon, forState: .Normal)
-                b.setTitleColor(UIColor.flatWhiteColorDark(), forState: .Normal)
+                b.backgroundColor = activeStates.contains(d) ? UIColor.flatGreenColor() : UIColor.flatRedColor()
+            }
+        }
+        
+        lastView = spacer(lastView)
+        readings.stride(by: 4) { readings in
+            lastView = buildRow(lastView, data: readings) {b, d in
+                b.setTitle(d, forState: .Normal)
                 b.backgroundColor = UIColor.flatRedColor()
             }
         }
@@ -72,10 +76,10 @@ class SwiftViewController: UIViewController {
         }
     }
     
-    func buildRow<T>(lastView: UIView, data: ArraySlice<T>, buttonBlock: (b: UIButton, d: T)->Void) -> UIView {
+    func buildRow<T>(lastView: UIView, data: ArraySlice<T>, @noescape buttonBlock: (UIButton, T) -> Void) -> UIView {
         let lastButton = data.reduce(lastView) { lastView, idx, d in
             return view.addSubview(Style.Button) {b, make in
-                buttonBlock(b: b, d: d)
+                buttonBlock(b, d)
                 b.highlightedBackgroundColor = b.backgroundColor?.darkenByPercentage(0.2)
                 make.top.equalTo(lastView)
                 if idx == 0 {

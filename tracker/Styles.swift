@@ -12,6 +12,7 @@ import Foundation
 class Style {
     
     static func Button(b: UIButton) {
+        b.setTitleColor(UIColor.flatWhiteColor(), forState: .Normal)
         b.layer.cornerRadius = 5
     }
     

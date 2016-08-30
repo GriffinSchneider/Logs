@@ -10,7 +10,7 @@ import Foundation
 
 
 extension Array {
-    func stride(by by: Int, @noescape block: (e: ArraySlice<Element>) -> ()) {
+    func stride(by by: Int, @noescape block: (e: ArraySlice<Element>) -> Void) {
         0.stride(to: count, by: by).forEach {idx in
             let endIdx = idx.advancedBy(by, limit: count)
             let thing = self[idx ..< endIdx]
@@ -25,5 +25,4 @@ extension SequenceType {
             return try combine(t, tuple.index, tuple.element)
         }
     }
-    
 }
