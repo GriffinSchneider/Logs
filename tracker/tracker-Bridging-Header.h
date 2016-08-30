@@ -6,5 +6,6 @@
 #import "SyncManager.h"
 #import "UIColor+Chameleon.h"
 
+#import <DropboxSDK/DropboxSDK.h>
 @import UIButton_ANDYHighlighted;
 

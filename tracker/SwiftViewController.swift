@@ -12,82 +12,85 @@ import RxSwift
 import DRYUI
 
 
-
 class SwiftViewController: UIViewController {
-    
-    let sm = SyncManager.i()
-    
-    
-//  - (UIView *)buildRowInView:(UIView *)superview withLastView:(UIView *)lastVieww titles:(NSArray<NSString *> *)titles buttonBlock:(void (^)(UIButton *b, NSString *title))buttonBlock {
-//      __block UIView *lastView = lastVieww;
-//      build_subviews(superview) {
-//          [titles enumerateObjectsUsingBlock:^(NSString *title, NSUInteger idx, BOOL *stop) {
-//              UIButton *add_subview(button) {
-//                  [_ setTitleColor:FlatWhiteDark forState:UIControlStateNormal];
-//                  [_ setTitle:title forState:UIControlStateNormal];
-//                  _.layer.cornerRadius = 5;
-//                  _.adjustsImageWhenHighlighted = YES;
-//                  make.top.equalTo(lastView);
-//                  buttonBlock(_, title);
-//                  _.highlightedBackgroundColor = [_.backgroundColor darkenByPercentage:0.2];
-//                  if (idx == 0) {
-//                      make.left.equalTo(superview).with.offset(10);
-//                  } else {
-//                      make.width.equalTo(lastView);
-//                      make.left.equalTo(lastView.mas_right).with.offset(10);
-//                  }
-//                  if (idx == titles.count-1) {
-//                      make.right.equalTo(superview.superview).with.offset(-10);
-//                  }
-//              };
-//              lastView = button;
-//          }];
-//      }
-//      return lastView;
-//  }
-    
     
     override func loadView() {
         view = UIView()
         
-        if DBCl
+        if DBSession.sharedSession().isLinked() {
+            SyncManager.i().loadFromDisk()
+        }
+    }
+    
+    override func viewDidLoad() {
+        guard DBSession.sharedSession().isLinked() else {
+            DBSession.sharedSession().linkFromController(self)
+            return
+        }
         
         view.backgroundColor = UIColor.flatNavyBlueColorDark()
-        let a = sm.schema()
         
-        let states = sm.schema().states as! [StateSchema]
-        var lastView = view.addSubview {v, make in }
+        let occurrences = SyncManager.i().schema().occurrences
+        let activeStates = SyncManager.i().data().activeStates()
+        let states = SyncManager.i().schema().states as! [StateSchema]
         
-        0.stride(to: states.count, by: 4).forEach { idx in
-            let endIdx = idx.advancedBy(4, limit: states.count)
-            let titles: [String] = Array(states[idx ..< endIdx]).map { $0.name }
-            lastView = buildRow(superview: view, lastView: lastView, titles: titles) {b, title in
+        
+        var lastView = spacer(nil)
+        
+        occurrences.stride(by: 4) { occurrences in
+            lastView = buildRow(lastView, data: occurrences) {b, d in
+                b.setTitle(d, forState: .Normal)
+                b.backgroundColor = UIColor.flatRedColor()
+            }
+        }
+        
+        lastView = spacer(lastView)
+        
+        states.filter { s in activeStates.contains { a in a.name == s.name } }.stride(by: 4) { states in
+            lastView = buildRow(lastView, data: states) {b, d in
+                b.setTitle(d.name, forState: .Normal)
+                b.setTitleColor(UIColor.flatWhiteColorDark(), forState: .Normal)
+                b.backgroundColor = UIColor.flatRedColor()
+            }
+        }
+        
+        lastView = spacer(lastView)
+        
+        states.stride(by: 4) { states in
+            lastView = buildRow(lastView, data: states) {b, d in
+                b.setTitle(d.icon, forState: .Normal)
+                b.setTitleColor(UIColor.flatWhiteColorDark(), forState: .Normal)
+                b.backgroundColor = UIColor.flatRedColor()
             }
         }
     }
     
-    func buildRow(superview superview: UIView, lastView: UIView, titles: [String], buttonBlock: (b: UIButton, title: String)->Void) -> UIView {
-        for (idx, t) in titles.enumerate() {
-            view.addSubview(UIButton.self) {b, make in
-                b.setTitleColor(UIColor.flatWhiteColorDark(), forState: .Normal)
-                b.setTitle(title, forState: .Normal)
-                b.layer.cornerRadius = 5
-                b.adjustsImageWhenDisabled = true
-                make.top.equalTo(lastView)
-                buttonBlock(b: b, title: t)
+    func spacer(lastView: UIView?) -> UIView {
+        return view.addSubview {v, make in
+            make.top.equalTo(lastView?.snp_bottom ?? view.snp_top).offset(15)
+            make.height.equalTo(0)
+        }
+    }
+    
+    func buildRow<T>(lastView: UIView, data: ArraySlice<T>, buttonBlock: (b: UIButton, d: T)->Void) -> UIView {
+        let lastButton = data.reduce(lastView) { lastView, idx, d in
+            return view.addSubview(Style.Button) {b, make in
+                buttonBlock(b: b, d: d)
                 b.highlightedBackgroundColor = b.backgroundColor?.darkenByPercentage(0.2)
+                make.top.equalTo(lastView)
                 if idx == 0 {
                     make.left.equalTo(b.superview!).offset(10)
                 } else {
                     make.width.equalTo(lastView)
                     make.left.equalTo(lastView.snp_right).offset(10)
                 }
-                if idx == titles.count - 1 {
-                    make.right.equalTo(b.superview!.superview!).offset(-10)
+                if idx == data.count - 1 {
+                    make.right.equalTo(b.superview!).offset(-10)
                 }
             }
         }
-        return lastView
+        return view.addSubview{v, make in
+             make.top.equalTo(lastButton.snp_bottom).offset(5)
+        }
     }
-    
 }
