@@ -33,7 +33,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 @interface TimelineColumnView ()
 
-@property (nonatomic, strong) NSArray<Event *> *events;
+@property (nonatomic, strong) NSArray<EEvent *> *events;
 @property (nonatomic, strong) NSDate *startTime;
 @property (nonatomic, strong) NSDate *endTime;
 
@@ -43,7 +43,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 @implementation TimelineColumnView
 
-- (instancetype)initWithEvents:(NSArray<Event *> *)events startTime:(NSDate *)startTime endTime:(NSDate *)endTime {
+- (instancetype)initWithEvents:(NSArray<EEvent *> *)events startTime:(NSDate *)startTime endTime:(NSDate *)endTime {
     if ((self = [super init])) {
         self.events = events;
         self.startTime = startTime;
@@ -83,12 +83,12 @@
                     make.height.equalTo(superview).multipliedBy([self scale:[s.state.end ?: [NSDate date] timeIntervalSinceDate:s.state.start]]);
                     make.top.equalTo(superview.mas_bottom).multipliedBy([self scale:[s.state.start timeIntervalSinceDate:self.startTime]]);
                 }
-                @weakify(self);
-                v.rac_command = [[RACCommand alloc] initWithSignalBlock:^RACSignal *(id input) {
-                    @strongify(self);
-                    [self selectedState:s.state];
-                    return nil;
-                }];
+//                @weakify(self);
+//                v.rac_command = [[RACCommand alloc] initWithSignalBlock:^RACSignal *(id input) {
+//                    @strongify(self);
+//                    [self selectedState:s.state];
+//                    return nil;
+//                }];
             }];
         }];
     }

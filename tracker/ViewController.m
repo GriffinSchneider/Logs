@@ -104,9 +104,9 @@
     }
     
     
-    [RACObserve([SyncManager i], data) subscribeNext:^(id x) {
-        [self rebuildView];
-    }];
+//    [RACObserve([SyncManager i], data) subscribeNext:^(id x) {
+//        [self rebuildView];
+//    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -201,7 +201,7 @@
 }
 
 - (void)buildView {
-    @weakify(self);
+//    @weakify(self);
     
     build_subviews(self.view) {
         _.backgroundColor = FlatNavyBlueDark;
@@ -223,30 +223,30 @@
         };
         lastView = [self buildRowInView:_ withLastView:lastView titles:@[@"Edit", @"Timeline", @"Reload", @"Save"] buttonBlock:^(UIButton *b, NSString *title) {
             b.backgroundColor = FlatPlum;
-            @weakify(b);
-            [[b rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
-                @strongify(self);
-                @strongify(b);
-                if ([b.currentTitle isEqualToString:@"Edit"]) {
-                    ListViewController *lvc = [[ListViewController alloc] initWithDone:^{
-                        [self dismissViewControllerAnimated:YES completion:nil];
-                    }];
-                    [self presentViewController:[[UINavigationController alloc] initWithRootViewController:lvc] animated:YES completion:^{}];
-                }
-                if ([b.currentTitle isEqualToString:@"Timeline"]) {
-                    TimelineViewController *vc = [[TimelineViewController alloc] initWithDone:^{
-                        [self dismissViewControllerAnimated:YES completion:nil];
-                    }];
-                    [self presentViewController:vc animated:YES completion:^{}];
-                }
-                if ([b.currentTitle isEqualToString:@"Reload"]) {
-                    [[SyncManager i] loadFromDisk];
-                    [self rebuildView];
-                }
-                if ([b.currentTitle isEqualToString:@"Save"]) {
-                    [[SyncManager i] saveImmediately];
-                }
-            }];
+//            @weakify(b);
+//            [[b rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
+//                @strongify(self);
+//                @strongify(b);
+//                if ([b.currentTitle isEqualToString:@"Edit"]) {
+//                    ListViewController *lvc = [[ListViewController alloc] initWithDone:^{
+//                        [self dismissViewControllerAnimated:YES completion:nil];
+//                    }];
+//                    [self presentViewController:[[UINavigationController alloc] initWithRootViewController:lvc] animated:YES completion:^{}];
+//                }
+//                if ([b.currentTitle isEqualToString:@"Timeline"]) {
+//                    TimelineViewController *vc = [[TimelineViewController alloc] initWithDone:^{
+//                        [self dismissViewControllerAnimated:YES completion:nil];
+//                    }];
+//                    [self presentViewController:vc animated:YES completion:^{}];
+//                }
+//                if ([b.currentTitle isEqualToString:@"Reload"]) {
+//                    [[SyncManager i] loadFromDisk];
+//                    [self rebuildView];
+//                }
+//                if ([b.currentTitle isEqualToString:@"Save"]) {
+//                    [[SyncManager i] saveImmediately];
+//                }
+//            }];
         }];
         UIView *add_subview(spacer) {
             make.height.equalTo(@0);
@@ -256,10 +256,10 @@
         lastView = [self buildGridInView:_ withLastView:lastView titles:[SyncManager i].schema.occurrences buttonBlock:^(UIButton *b, NSString *title) {
             b.backgroundColor = FlatOrangeDark;
             self.occurrenceButtons[title] = b;
-            [[b rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
-                @strongify(self);
-                [self selectedOccurrence:title];
-            }];
+//            [[b rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
+//                @strongify(self);
+//                [self selectedOccurrence:title];
+//            }];
         }];
         UIView *add_subview(spacer2) {
             make.height.equalTo(@0);
@@ -270,10 +270,10 @@
         for (StateSchema *s in [SyncManager i].schema.states) [titles addObject:s.name];
         lastView = [self buildGridInView:_ withLastView:lastView titles:titles buttonBlock:^(UIButton *b, NSString *title) {
             self.stateButtons[title] = b;
-            [[b rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
-                @strongify(self);
-                [self selectedState:title];
-            }];
+//            [[b rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
+//                @strongify(self);
+//                [self selectedState:title];
+//            }];
         }];
         UIView *add_subview(spacer3) {
             make.height.equalTo(@0);
@@ -299,14 +299,14 @@
                 make.right.equalTo(superview.superview).with.offset(-10);
                 make.left.equalTo(slider.mas_right).with.offset(10);
             };
-            [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
-                @strongify(self);
-                [self madeReading:reading withSlider:slider];
-            }];
-            [[slider rac_signalForControlEvents:UIControlEventAllEvents] subscribeNext:^(id x) {
-                @strongify(self);
-                [self sliderChanged:slider forReading:reading withButton:button];
-            }];
+//            [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
+//                @strongify(self);
+//                [self madeReading:reading withSlider:slider];
+//            }];
+//            [[slider rac_signalForControlEvents:UIControlEventAllEvents] subscribeNext:^(id x) {
+//                @strongify(self);
+//                [self sliderChanged:slider forReading:reading withButton:button];
+//            }];
             lastView = slider;
         }];
         [lastView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -319,7 +319,7 @@
 
 - (void)updateViews {
     [self updateStateButtons];
-    NSDictionary<NSString *, Event *> *lastReadings = [SyncManager i].data.lastReadings;
+    NSDictionary<NSString *, EEvent *> *lastReadings = [SyncManager i].data.lastReadings;
     [self.readingSliders enumerateKeysAndObjectsUsingBlock:^(NSString *eventName, UISlider *slider, BOOL *stop) {
         slider.value = lastReadings[eventName].reading.floatValue;
         [self sliderChanged:slider forReading:eventName withButton:self.readingButtons[eventName]];
@@ -327,9 +327,9 @@
 }
 
 - (void)updateStateButtons {
-    NSSet<Event *> *activeStates = [SyncManager i].data.activeStates;
+    NSSet<EEvent *> *activeStates = [SyncManager i].data.activeStates;
     [self.stateButtons enumerateKeysAndObjectsUsingBlock:^(NSString *eventName, UIButton *b, BOOL *stop) {
-        Event *e = eventNamed(activeStates, eventName);
+        EEvent *e = eventNamed(activeStates, eventName);
         if (e) {
             b.backgroundColor = FlatGreenDark;
             [b setTitle:[NSString stringWithFormat:@"%@ (%@)", e.name, formatDuration([[NSDate date] timeIntervalSinceDate:e.date])] forState:UIControlStateNormal];
@@ -349,14 +349,14 @@
     }];
 }
 
-- (void)addEvent:(Event *)e {
+- (void)addEvent:(EEvent *)e {
     [[SyncManager i].data addEvent:e];
     [[SyncManager i] writeToDisk];
     [self updateViews];
 }
 
 - (void)selectedOccurrence:(NSString *)occurrence {
-    Event *e = [Event new];
+    EEvent *e = [EEvent new];
     e.type = EventTypeOccurrence;
     e.name = occurrence;
     e.date = [NSDate date];
@@ -365,8 +365,8 @@
 }
 
 - (void)selectedState:(NSString *)state {
-    NSSet<Event *> *activeStates = [SyncManager i].data.activeStates;
-    Event *e = [Event new];
+    NSSet<EEvent *> *activeStates = [SyncManager i].data.activeStates;
+    EEvent *e = [EEvent new];
     e.type = eventNamed(activeStates, state) ? EventTypeEndState : EventTypeStartState;
     e.name = state;
     e.date = [NSDate date];
@@ -378,7 +378,7 @@
 }
 
 - (void)madeReading:(NSString *)reading withSlider:(UISlider *)slider {
-    Event *e = [Event new];
+    EEvent *e = [EEvent new];
     e.type = EventTypeReading;
     e.name = reading;
     e.date = [NSDate date];

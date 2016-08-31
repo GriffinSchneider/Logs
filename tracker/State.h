@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "Event.h"
+#import "EEvent.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -16,8 +16,8 @@
 @property (nonatomic, strong, readonly) NSString *name;
 @property (nonatomic, strong, readonly) NSDate *start;
 @property (nonatomic, strong, readonly) NSDate *end;
-@property (nonatomic, strong, readonly) NSArray<Event *> *events;
+@property (nonatomic, strong, readonly) NSArray<EEvent *> *events;
 
-- (instancetype)initWithName:(NSString *)name start:(NSDate *)start end:(NSDate *)end events:(NSArray<Event *> *)events;
+- (instancetype)initWithName:(NSString *)name start:(NSDate *)start end:(NSDate *)end events:(NSArray<EEvent *> *)events;
 
 @end

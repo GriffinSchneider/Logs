@@ -7,9 +7,9 @@ target 'tracker' do
   pod 'JSONModel'
   pod 'UIButton-ANDYHighlighted'
   pod 'Toast'
-  pod 'ReactiveCocoa'
   pod 'RxSwift'
   pod 'RxCocoa'
+  pod 'RxDataSources'
 end
 
 
@@ -19,7 +19,7 @@ target 'TrackerToday' do
   pod 'JSONModel'
   pod 'UIButton-ANDYHighlighted'
   pod 'Toast'
-  pod 'ReactiveCocoa'
   pod 'RxSwift'
   pod 'RxCocoa'
+  pod 'RxDataSources'
 end

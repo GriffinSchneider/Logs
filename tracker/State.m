@@ -12,7 +12,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 @implementation State
 
-- (instancetype)initWithName:(NSString *)name start:(NSDate *)start end:(NSDate *)end events:(NSArray<Event *> *)events {
+- (instancetype)initWithName:(NSString *)name start:(NSDate *)start end:(NSDate *)end events:(NSArray<EEvent *> *)events {
     if ((self = [super init])) {
         _name = name;
         _start = start;

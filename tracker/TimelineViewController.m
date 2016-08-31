@@ -141,10 +141,10 @@
     NSDate *dateIdx = [NSDate date];
     NSDate *minDate = [NSDate date];
     NSDate *maxDate = [NSDate dateWithTimeIntervalSince1970:0];
-    NSMutableArray<NSArray<Event *> *> *eventsByDay = [NSMutableArray new];
+    NSMutableArray<NSArray<EEvent *> *> *eventsByDay = [NSMutableArray new];
     
     for (int i = 0; i < 7; i++) {
-        NSArray<Event *> *events = [[SyncManager i].data eventsForDay:dateIdx];
+        NSArray<EEvent *> *events = [[SyncManager i].data eventsForDay:dateIdx];
         
         comps.day = -1;
         dateIdx = [cal dateByAddingComponents:comps toDate:dateIdx options:0];
@@ -158,7 +158,7 @@
         NSDate *dayMinDate = [NSDate date];
         NSDate *dayMaxDate = [NSDate dateWithTimeIntervalSince1970:0];
         
-        for (Event *e in events) {
+        for (EEvent *e in events) {
             if (e.type == EventTypeStartState &&
                 [e.name isEqualToString:EVENT_SLEEP] &&
                 [e.date compare:dayMaxDate] == NSOrderedDescending) {
@@ -187,7 +187,7 @@
     
     NSMutableArray<TimelineColumnView *> *columns = [NSMutableArray new];
     for (int i = 0; i < 7; i++) {
-        NSArray<Event *> *day = eventsByDay[i];
+        NSArray<EEvent *> *day = eventsByDay[i];
         comps.day = -i;
         NSDate *scaledMinDate = [cal dateByAddingComponents:comps toDate:minDate options:0];
         NSDate *scaledMaxDate = [cal dateByAddingComponents:comps toDate:maxDate options:0];
@@ -260,11 +260,11 @@
                 _.titleColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.3];
                 make.right.and.bottom.equalTo(superview).with.insets(UIEdgeInsetsMake(0, 0, 8, 8));
             };
-            @weakify(self);
-            [[closeButton rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
-                @strongify(self);
-                self.done();
-            }];
+//            @weakify(self);
+//            [[closeButton rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
+//                @strongify(self);
+//                self.done();
+//            }];
         }
     }
     

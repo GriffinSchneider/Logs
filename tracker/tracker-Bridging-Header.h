@@ -9,6 +9,6 @@
 
 #import "SyncManager.h"
 #import "Utils.h"
-
+#import "EEvent.h"
 
 
