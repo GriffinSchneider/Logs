@@ -16,12 +16,10 @@ class TrackerLabel: UILabel {
 }
 
 class Style {
-    
     static func ButtonLabel(l: TrackerLabel) {
         l.textColor = UIColor.flatWhiteColor()
         l.layer.cornerRadius = 5
         l.clipsToBounds = true
         l.textAlignment = .Center
     }
-    
 }

@@ -12,7 +12,6 @@ import RxSwift
 import RxCocoa
 import RxDataSources
 import DRYUI
-import SnapKit
 
 let SPACING: CGFloat = 5.0
 let SECTION_INSETS = UIEdgeInsets(top: 30, left: 10, bottom: 0, right: 10)
@@ -28,6 +27,7 @@ enum SectionValue {
 struct SectionOfCustomData {
     var items: [Item]
 }
+
 extension SectionOfCustomData: SectionModelType {
     typealias Item = SectionValue
     
@@ -39,18 +39,7 @@ extension SectionOfCustomData: SectionModelType {
 
 class SwiftViewController: UIViewController {
     
-    override func loadView() {
-        view = UIView()
-    }
-    
     override func viewDidLoad() {
-//        guard DBSession.sharedSession().isLinked() else {
-//            dispatch_async(dispatch_get_main_queue()) {
-//                DBSession.sharedSession().linkFromController(self)
-//            }
-//            return
-//        }
-        
         let schema = SSyncManager.loadFromDisk()
         let data = SSyncManager.loadData()
         
@@ -91,29 +80,8 @@ class SwiftViewController: UIViewController {
     }
 }
 
-extension ButtonCollectionViewCell {
-    
-    func update(v: SectionValue) {
-        switch v {
-        case .occurrence(let o):
-            label.text = o
-            label.backgroundColor = UIColor.flatOrangeColorDark()
-        case .activeState(let s):
-            label.text = "\(s.name) \(formatDuration(NSDate().timeIntervalSinceDate(s.date)))"
-            label.backgroundColor = UIColor.flatGreenColorDark()
-        case .state(let s):
-            label.text = s.icon
-            label.backgroundColor = UIColor.flatRedColorDark()
-        case .reading(let r):
-            label.text = r
-            label.backgroundColor = UIColor.flatBlueColorDark()
-        }
-        
-    }
-}
 
 class ButtonCollectionViewCell: UICollectionViewCell {
-    
     private var label: UILabel!
     private var hasBeenSetup = false
     func setup(superBounds: CGRect) {
@@ -132,5 +100,25 @@ class ButtonCollectionViewCell: UICollectionViewCell {
             super.highlighted = newValue
             label?.backgroundColor = UIColor.randomFlatColor()
         }
+    }
+}
+
+extension ButtonCollectionViewCell {
+    func update(v: SectionValue) {
+        switch v {
+        case .occurrence(let o):
+            label.text = o
+            label.backgroundColor = UIColor.flatOrangeColorDark()
+        case .activeState(let s):
+            label.text = "\(s.name) \(formatDuration(NSDate().timeIntervalSinceDate(s.date)))"
+            label.backgroundColor = UIColor.flatGreenColorDark()
+        case .state(let s):
+            label.text = s.icon
+            label.backgroundColor = UIColor.flatRedColorDark()
+        case .reading(let r):
+            label.text = r
+            label.backgroundColor = UIColor.flatBlueColorDark()
+        }
+        
     }
 }
