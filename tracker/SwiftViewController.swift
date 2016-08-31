@@ -70,7 +70,6 @@ extension SwiftViewController: UICollectionViewDataSource {
         default:
             assert(false)
         }
-        
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
@@ -81,15 +80,22 @@ extension SwiftViewController: UICollectionViewDataSource {
             case 0:
                 let occurrence = SyncManager.i().schema().occurrences[indexPath.row]
                 l.text = occurrence
+                l.backgroundColor = UIColor.flatOrangeColorDark()
             case 1:
                 let activeState = SyncManager.i().data().activeStates()[indexPath.row]
                 l.text = "\(activeState.name) \(formatDuration(NSDate().timeIntervalSinceDate(activeState.date)))"
+                l.backgroundColor = UIColor.flatGreenColorDark()
+                l.font = l.font.fontWithSize(12)
             case 2:
                 let state = SyncManager.i().schema().states[indexPath.row] as! StateSchema
                 l.text = state.icon
+                l.backgroundColor = SyncManager.i().data().activeStates().contains { $0.name == state.name } ?
+                    UIColor.flatGreenColorDark() :
+                    UIColor.flatRedColorDark()
             case 3:
                 let reading =  SyncManager.i().schema().readings[indexPath.row]
                 l.text = reading
+                l.backgroundColor = UIColor.flatBlueColorDark()
             default:
                 assert(false)
             }
