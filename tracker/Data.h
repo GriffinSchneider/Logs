@@ -26,7 +26,7 @@ NSArray <State *> *statesFromEvents(NSArray<Event *> *events);
 - (void)removeEvent:(Event *)event;
 - (void)sortEvents;
 
-- (NSSet<Event *> *)activeStates;
+- (NSArray<Event *> *)activeStates;
 - (NSDictionary<NSString *, Event *> *)lastReadings;
 - (NSSet<NSString *> *)recentOccurrences;
 

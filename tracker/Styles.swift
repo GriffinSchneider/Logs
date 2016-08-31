@@ -8,12 +8,21 @@
 
 import Foundation
 
+class TrackerLabel: UILabel {
+    override func intrinsicContentSize() -> CGSize {
+        let s = super.intrinsicContentSize()
+        return CGSizeMake(s.width + 20, s.height + 6)
+    }
+}
 
 class Style {
     
-    static func Button(b: UIButton) {
-        b.setTitleColor(UIColor.flatWhiteColor(), forState: .Normal)
-        b.layer.cornerRadius = 5
+    static func ButtonLabel(l: TrackerLabel) {
+        l.textColor = UIColor.flatWhiteColor()
+        l.layer.cornerRadius = 5
+        l.backgroundColor = UIColor.randomFlatColor()
+        l.clipsToBounds = true
+        l.textAlignment = .Center
     }
     
 }

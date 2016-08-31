@@ -93,8 +93,8 @@ NSArray <State *> *statesFromEvents(NSArray<Event *> *events) {
     [self.events removeObject:event];
 }
 
-- (NSSet<Event *> *)activeStates {
-    NSMutableSet<Event *> *retVal = [NSMutableSet new];
+- (NSArray<Event *> *)activeStates {
+    NSMutableArray<Event *> *retVal = [NSMutableArray new];
     NSMutableSet<NSString *> *endedStates = [NSMutableSet new];
     [self.events enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(Event * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if (obj.type == EventTypeEndState) {
