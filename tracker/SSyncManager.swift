@@ -11,13 +11,15 @@ import ObjectMapper
 
 class SSyncManager {
     
-    private static var schemaPath: NSURL {
-        return NSFileManager.defaultManager()
-            .containerURLForSecurityApplicationGroupIdentifier("group.zone.griff.tracker")!
-            .URLByAppendingPathComponent("schema.json")
-    }
+    private static let containerPath = NSFileManager.defaultManager().containerURLForSecurityApplicationGroupIdentifier("group.zone.griff.tracker")!
+    private static var schemaPath = containerPath.URLByAppendingPathComponent("schema.json")
+    private static var dataPath = containerPath.URLByAppendingPathComponent("data.json")
     
     static func loadFromDisk() -> SSchema {
         return Mapper<SSchema>().map(try! NSString(contentsOfURL: schemaPath, encoding: NSUTF8StringEncoding))!
+    }
+    
+    static func loadData() -> SData {
+        return Mapper<SData>().map(try! NSString(contentsOfURL: dataPath, encoding: NSUTF8StringEncoding))!
     }
 }

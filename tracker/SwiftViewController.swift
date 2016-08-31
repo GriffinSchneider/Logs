@@ -52,6 +52,7 @@ class SwiftViewController: UIViewController {
 //        }
         
         let schema = SSyncManager.loadFromDisk()
+        let data = SSyncManager.loadData()
         
         view.backgroundColor = UIColor.flatNavyBlueColorDark()
         
@@ -79,7 +80,7 @@ class SwiftViewController: UIViewController {
         
         let sections = [
             SectionOfCustomData(items: schema.occurrences.map(SectionValue.occurrence)),
-//            SectionOfCustomData(items: SyncManager.i().data().activeStates().map(SectionValue.activeStates)),
+            SectionOfCustomData(items: data.activeStates().map(SectionValue.activeState)),
             SectionOfCustomData(items: schema.states.map(SectionValue.state)),
             SectionOfCustomData(items: schema.readings.map(SectionValue.reading)),
         ]
@@ -102,10 +103,7 @@ extension ButtonCollectionViewCell {
             label.backgroundColor = UIColor.flatGreenColorDark()
         case .state(let s):
             label.text = s.icon
-            label.backgroundColor =
-//                SyncManager.i().data().activeStates().contains { $0.name == state.name } ?
-//                    UIColor.flatGreenColorDark() :
-                UIColor.flatRedColorDark()
+            label.backgroundColor = UIColor.flatRedColorDark()
         case .reading(let r):
             label.text = r
             label.backgroundColor = UIColor.flatBlueColorDark()

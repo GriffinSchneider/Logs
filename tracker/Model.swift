@@ -22,6 +22,7 @@ struct SSchema: Mappable {
     }
 }
 
+
 struct SStateSchema: Mappable {
     var name: String!
     var icon: String!
@@ -32,6 +33,7 @@ struct SStateSchema: Mappable {
     }
 }
 
+
 struct SData: Mappable {
     var events: [SEvent]!
     init?(_ map: Map) { }
@@ -40,9 +42,14 @@ struct SData: Mappable {
     }
 }
 
-enum SEventType: Int {
-    case IDK = 0
+
+enum SEventType: String {
+    case StartState = "StartState"
+    case EndState = "EndState"
+    case Reading = "Reading"
+    case Occurrence = "Occurrence"
 }
+
 
 struct SEvent: Mappable {
     var name: String!
@@ -53,9 +60,31 @@ struct SEvent: Mappable {
     init?(_ map: Map) { }
     mutating func mapping(map: Map) {
         name <- map["name"]
-        date <- map["map"]
+        date <- (map["date"], StringDateJSONTransform())
         type <- (map["type"], EnumTransform())
         reading <- map["reading"]
         note <- map["note"]
+    }
+}
+
+func ==(lhs:SEvent, rhs:SEvent) -> Bool {
+    return true &&
+        lhs.name == rhs.name &&
+        lhs.date == rhs.name &&
+        lhs.type == rhs.type &&
+        lhs.reading == rhs.reading &&
+        lhs.note == rhs.note
+}
+
+extension SEvent: Hashable {
+    var hashValue: Int {
+        var hash = name.hashValue ^ date.hashValue ^ type.hashValue
+        if let r = reading {
+            hash = hash ^ r.hashValue
+        }
+        if let n = note {
+            hash = hash ^ n.hashValue
+        }
+        return hash
     }
 }
