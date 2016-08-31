@@ -18,11 +18,18 @@ let SPACING: CGFloat = 5.0
 let SECTION_INSETS = UIEdgeInsets(top: 30, left: 10, bottom: 0, right: 10)
 let BUTTON_INSETS = UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2)
 
+enum SectionValue {
+    case occurrence(String)
+    case activeState(SEvent)
+    case state(SStateSchema)
+    case reading(String)
+}
+
 struct SectionOfCustomData {
     var items: [Item]
 }
 extension SectionOfCustomData: SectionModelType {
-    typealias Item = AnyObject
+    typealias Item = SectionValue
     
     init(original: SectionOfCustomData, items: [Item]) {
         self = original
@@ -34,9 +41,6 @@ class SwiftViewController: UIViewController {
     
     override func loadView() {
         view = UIView()
-        if DBSession.sharedSession().isLinked() {
-            SyncManager.i().loadFromDisk()
-        }
     }
     
     override func viewDidLoad() {
@@ -46,6 +50,8 @@ class SwiftViewController: UIViewController {
 //            }
 //            return
 //        }
+        
+        let schema = SSyncManager.loadFromDisk()
         
         view.backgroundColor = UIColor.flatNavyBlueColorDark()
         
@@ -67,28 +73,15 @@ class SwiftViewController: UIViewController {
         dataSource.configureCell = { ds, collectionView, indexPath, item in
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier("id", forIndexPath: indexPath) as! ButtonCollectionViewCell
             cell.setup(UIEdgeInsetsInsetRect(collectionView.bounds, SECTION_INSETS))
-            
-            switch indexPath.section {
-            case 0:
-                cell.update(occurrence: item as! String)
-            case 1:
-                cell.update(activeState: item as! EEvent)
-            case 2:
-                cell.update(state: item as! StateSchema)
-            case 3:
-                cell.update(reading: item as! String)
-            default:
-                assert(false)
-            }
-            
+            cell.update(item)
             return cell
         }
         
         let sections = [
-            SectionOfCustomData(items: SyncManager.i().schema().occurrences),
-            SectionOfCustomData(items: SyncManager.i().data().activeStates()),
-            SectionOfCustomData(items: SyncManager.i().schema().states),
-            SectionOfCustomData(items: SyncManager.i().schema().readings),
+            SectionOfCustomData(items: schema.occurrences.map(SectionValue.occurrence)),
+//            SectionOfCustomData(items: SyncManager.i().data().activeStates().map(SectionValue.activeStates)),
+            SectionOfCustomData(items: schema.states.map(SectionValue.state)),
+            SectionOfCustomData(items: schema.readings.map(SectionValue.reading)),
         ]
         
         _ = Observable.just(sections)
@@ -98,26 +91,26 @@ class SwiftViewController: UIViewController {
 }
 
 extension ButtonCollectionViewCell {
-    func update(occurrence occurrence: String) {
-        label.text = occurrence
-        label.backgroundColor = UIColor.flatOrangeColorDark()
-    }
     
-    func update(activeState activeState: EEvent) {
-        label.text = "\(activeState.name) \(formatDuration(NSDate().timeIntervalSinceDate(activeState.date)))"
-        label.backgroundColor = UIColor.flatGreenColorDark()
-    }
-    
-    func update(state state: StateSchema) {
-        label.text = state.icon
-        label.backgroundColor = SyncManager.i().data().activeStates().contains { $0.name == state.name } ?
-            UIColor.flatGreenColorDark() :
-            UIColor.flatRedColorDark()
-    }
-    
-    func update(reading reading: String) {
-        label.text = reading
-        label.backgroundColor = UIColor.flatBlueColorDark()
+    func update(v: SectionValue) {
+        switch v {
+        case .occurrence(let o):
+            label.text = o
+            label.backgroundColor = UIColor.flatOrangeColorDark()
+        case .activeState(let s):
+            label.text = "\(s.name) \(formatDuration(NSDate().timeIntervalSinceDate(s.date)))"
+            label.backgroundColor = UIColor.flatGreenColorDark()
+        case .state(let s):
+            label.text = s.icon
+            label.backgroundColor =
+//                SyncManager.i().data().activeStates().contains { $0.name == state.name } ?
+//                    UIColor.flatGreenColorDark() :
+                UIColor.flatRedColorDark()
+        case .reading(let r):
+            label.text = r
+            label.backgroundColor = UIColor.flatBlueColorDark()
+        }
+        
     }
 }
 

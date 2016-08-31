@@ -50,6 +50,10 @@
 		85AC34C91D761D7500EBFC12 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85AC34C71D761D7500EBFC12 /* Extensions.swift */; };
 		85AC34CB1D76288B00EBFC12 /* Styles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85AC34CA1D76288B00EBFC12 /* Styles.swift */; };
 		85AC34CC1D76288B00EBFC12 /* Styles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85AC34CA1D76288B00EBFC12 /* Styles.swift */; };
+		85AC34D11D774C4500EBFC12 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85AC34D01D774C4500EBFC12 /* Model.swift */; };
+		85AC34D21D774C4500EBFC12 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85AC34D01D774C4500EBFC12 /* Model.swift */; };
+		85AC34D41D77506000EBFC12 /* SSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85AC34D31D77506000EBFC12 /* SSyncManager.swift */; };
+		85AC34D51D77506000EBFC12 /* SSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85AC34D31D77506000EBFC12 /* SSyncManager.swift */; };
 		85B081AD1D6D5E8E0008B256 /* StateSchema.m in Sources */ = {isa = PBXBuildFile; fileRef = 858B2AE91D5251750027C439 /* StateSchema.m */; };
 		85B081B01D6D60380008B256 /* DropboxSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 85B081AF1D6D60380008B256 /* DropboxSessionManager.m */; };
 		85B833F51D090D02009D6D42 /* EEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 85B833F41D090D02009D6D42 /* EEvent.m */; };
@@ -132,6 +136,8 @@
 		85AC34C61D6E409B00EBFC12 /* ChameleonMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChameleonMacros.h; sourceTree = "<group>"; };
 		85AC34C71D761D7500EBFC12 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		85AC34CA1D76288B00EBFC12 /* Styles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Styles.swift; sourceTree = "<group>"; };
+		85AC34D01D774C4500EBFC12 /* Model.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		85AC34D31D77506000EBFC12 /* SSyncManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSyncManager.swift; sourceTree = "<group>"; };
 		85B081AE1D6D60380008B256 /* DropboxSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DropboxSessionManager.h; sourceTree = "<group>"; };
 		85B081AF1D6D60380008B256 /* DropboxSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DropboxSessionManager.m; sourceTree = "<group>"; };
 		85B833F31D090D02009D6D42 /* EEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EEvent.h; sourceTree = "<group>"; };
@@ -257,6 +263,8 @@
 				857DA4B51D090C7B00497E60 /* AppDelegate.m */,
 				857DA4B71D090C7B00497E60 /* ViewController.h */,
 				857DA4B81D090C7B00497E60 /* ViewController.m */,
+				85AC34D31D77506000EBFC12 /* SSyncManager.swift */,
+				85AC34D01D774C4500EBFC12 /* Model.swift */,
 				853B23D31D6EA77200CD9AE5 /* SwiftViewController.swift */,
 				85AC34CA1D76288B00EBFC12 /* Styles.swift */,
 				858607261D2B4D46003D39FA /* ListViewController.h */,
@@ -515,6 +523,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				85AC34D51D77506000EBFC12 /* SSyncManager.swift in Sources */,
 				853B23D51D6EA77200CD9AE5 /* SwiftViewController.swift in Sources */,
 				85AC34C51D6E407900EBFC12 /* UIColor+ChameleonPrivate.m in Sources */,
 				85555FA91D5D2436003047BC /* ListViewController.m in Sources */,
@@ -531,6 +540,7 @@
 				85555FA21D5D2436003047BC /* SyncManager.m in Sources */,
 				85555FA51D5D2436003047BC /* Data.m in Sources */,
 				85AC34C91D761D7500EBFC12 /* Extensions.swift in Sources */,
+				85AC34D21D774C4500EBFC12 /* Model.swift in Sources */,
 				85555FA61D5D2436003047BC /* EEvent.m in Sources */,
 				85555FAA1D5D2436003047BC /* TimelineViewController.m in Sources */,
 			);
@@ -540,6 +550,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				85AC34D11D774C4500EBFC12 /* Model.swift in Sources */,
 				85B833F51D090D02009D6D42 /* EEvent.m in Sources */,
 				8586072B1D2B57A4003D39FA /* EventViewController.m in Sources */,
 				85AC34C21D6E407900EBFC12 /* UIColor+Chameleon.m in Sources */,
@@ -555,6 +566,7 @@
 				857DA4B61D090C7B00497E60 /* AppDelegate.m in Sources */,
 				857DA4B31D090C7B00497E60 /* main.m in Sources */,
 				853B23D41D6EA77200CD9AE5 /* SwiftViewController.swift in Sources */,
+				85AC34D41D77506000EBFC12 /* SSyncManager.swift in Sources */,
 				854C75AF1D09185800DD4CEF /* Data.m in Sources */,
 				851B5F561D414F0D00A3AFFD /* TimelineViewController.m in Sources */,
 				85B081B01D6D60380008B256 /* DropboxSessionManager.m in Sources */,

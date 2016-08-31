@@ -11,7 +11,7 @@ import Foundation
 class TrackerLabel: UILabel {
     override func intrinsicContentSize() -> CGSize {
         let s = super.intrinsicContentSize()
-        return CGSizeMake(max(60, s.width + 10), s.height + 6)
+        return CGSizeMake(max(60, s.width + 10), s.height + 10)
     }
 }
 

@@ -10,6 +10,7 @@ target 'tracker' do
   pod 'RxSwift'
   pod 'RxCocoa'
   pod 'RxDataSources'
+  pod 'ObjectMapper'
 end
 
 
@@ -22,4 +23,5 @@ target 'TrackerToday' do
   pod 'RxSwift'
   pod 'RxCocoa'
   pod 'RxDataSources'
+  pod 'ObjectMapper'
 end
