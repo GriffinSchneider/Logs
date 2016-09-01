@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RxSwift
 
 
 extension Array {
@@ -16,6 +17,19 @@ extension Array {
             let thing = self[idx ..< endIdx]
             block(e: thing)
         }
+    }
+}
+
+extension Array where Element: Comparable {
+    mutating func sortedAppend(toInsert: Generator.Element) {
+        let rd: ReverseRandomAccessCollection<Array<Element>> = reverse()
+        for (idx, element) in rd.enumerate() {
+            if element < toInsert {
+                insert(toInsert, atIndex: idx + 1)
+                return
+            }
+        }
+        insert(toInsert, atIndex: 0)
     }
 }
 

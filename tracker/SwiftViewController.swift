@@ -24,13 +24,12 @@ enum SectionValue {
     case reading(String)
 }
 
-struct SectionOfCustomData {
+struct SectionOfCustomData: SectionModelType {
     var items: [Item]
-}
-
-extension SectionOfCustomData: SectionModelType {
     typealias Item = SectionValue
-    
+    init(items: [Item]) {
+        self.items = items
+    }
     init(original: SectionOfCustomData, items: [Item]) {
         self = original
         self.items = items
@@ -38,9 +37,9 @@ extension SectionOfCustomData: SectionModelType {
 }
 
 class SwiftViewController: UIViewController {
+    let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
-        
         view.backgroundColor = UIColor.flatNavyBlueColorDark()
         
         let fl = UICollectionViewFlowLayout()
@@ -49,7 +48,10 @@ class SwiftViewController: UIViewController {
         fl.scrollDirection = .Vertical;
         fl.minimumInteritemSpacing = SPACING
         fl.minimumLineSpacing = 5
-        let cv = view.addSubview(UICollectionView(frame: CGRectZero, collectionViewLayout: fl)) { v, make in
+        
+        let collectionView = view.addSubview(
+            UICollectionView(frame: CGRectZero, collectionViewLayout: fl)
+        ) { v, make in
             v.delaysContentTouches = false
             v.backgroundColor = UIColor.flatNavyBlueColorDark()
             v.registerClass(ButtonCollectionViewCell.self, forCellWithReuseIdentifier: "id")
@@ -65,8 +67,8 @@ class SwiftViewController: UIViewController {
             return cell
         }
         
-        _ = Observable.combineLatest(SSyncManager.data, SSyncManager.schema) { ($0, $1) }
-            .takeUntil(rx_deallocated)
+        Observable
+            .combineLatest(SSyncManager.data.asObservable(), SSyncManager.schema.asObservable()) { ($0, $1) }
             .map { t -> [SectionOfCustomData] in
                 let data = t.0, schema = t.1
                 return [
@@ -76,7 +78,31 @@ class SwiftViewController: UIViewController {
                     SectionOfCustomData(items: schema.readings.map(SectionValue.reading)),
                 ]
             }
-            .bindTo(cv.rx_itemsWithDataSource(dataSource))
+            .bindTo(collectionView.rx_itemsWithDataSource(dataSource))
+            .addDisposableTo(disposeBag)
+        
+        collectionView
+            .rx_modelSelected(SectionValue)
+            .map { v -> SEvent in
+                let todo = SEvent(
+                    name: "TODO",
+                    date: NSDate(),
+                    type: SEventType.StartState
+                )
+                switch v {
+                case .occurrence(let o):
+                    return SEvent(
+                        name: o,
+                        date: NSDate(),
+                        type: .Occurrence
+                    )
+                case .activeState(let s): return todo
+                case .state(let s): return todo
+                case .reading(let r): return todo
+                }
+            }
+            .subscribeNext { SSyncManager.data.value.events.sortedAppend($0) }
+            .addDisposableTo(disposeBag)
     }
 }
 
@@ -101,9 +127,7 @@ class ButtonCollectionViewCell: UICollectionViewCell {
             label?.backgroundColor = UIColor.randomFlatColor()
         }
     }
-}
-
-extension ButtonCollectionViewCell {
+    
     func update(v: SectionValue) {
         switch v {
         case .occurrence(let o):
@@ -119,6 +143,5 @@ extension ButtonCollectionViewCell {
             label.text = r
             label.backgroundColor = UIColor.flatBlueColorDark()
         }
-        
     }
 }

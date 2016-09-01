@@ -58,6 +58,19 @@ struct SEvent: Mappable {
     var reading: Float?
     var note: String?
     init?(_ map: Map) { }
+    init(
+        name: String,
+        date: NSDate,
+        type: SEventType,
+        reading: Float? = nil,
+        note: String? = nil
+        ) {
+        self.name = name
+        self.date = date
+        self.type = type
+        self.reading = reading
+        self.note = note
+    }
     mutating func mapping(map: Map) {
         name <- map["name"]
         date <- (map["date"], StringDateJSONTransform())
@@ -70,11 +83,17 @@ struct SEvent: Mappable {
 func ==(lhs:SEvent, rhs:SEvent) -> Bool {
     return true &&
         lhs.name == rhs.name &&
-        lhs.date == rhs.name &&
+        lhs.date == rhs.date &&
         lhs.type == rhs.type &&
         lhs.reading == rhs.reading &&
         lhs.note == rhs.note
 }
+
+func <(lhs:SEvent, rhs:SEvent) -> Bool {
+    return lhs.date.compare(rhs.date) == .OrderedAscending
+}
+
+extension SEvent: Comparable { }
 
 extension SEvent: Hashable {
     var hashValue: Int {
