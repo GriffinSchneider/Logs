@@ -40,8 +40,6 @@ extension SectionOfCustomData: SectionModelType {
 class SwiftViewController: UIViewController {
     
     override func viewDidLoad() {
-        let schema = SSyncManager.loadFromDisk()
-        let data = SSyncManager.loadData()
         
         view.backgroundColor = UIColor.flatNavyBlueColorDark()
         
@@ -67,15 +65,17 @@ class SwiftViewController: UIViewController {
             return cell
         }
         
-        let sections = [
-            SectionOfCustomData(items: schema.occurrences.map(SectionValue.occurrence)),
-            SectionOfCustomData(items: data.activeStates().map(SectionValue.activeState)),
-            SectionOfCustomData(items: schema.states.map(SectionValue.state)),
-            SectionOfCustomData(items: schema.readings.map(SectionValue.reading)),
-        ]
-        
-        _ = Observable.just(sections)
+        _ = Observable.combineLatest(SSyncManager.data, SSyncManager.schema) { ($0, $1) }
             .takeUntil(rx_deallocated)
+            .map { t -> [SectionOfCustomData] in
+                let data = t.0, schema = t.1
+                return [
+                    SectionOfCustomData(items: schema.occurrences.map(SectionValue.occurrence)),
+                    SectionOfCustomData(items: data.activeStates().map(SectionValue.activeState)),
+                    SectionOfCustomData(items: schema.states.map(SectionValue.state)),
+                    SectionOfCustomData(items: schema.readings.map(SectionValue.reading)),
+                ]
+            }
             .bindTo(cv.rx_itemsWithDataSource(dataSource))
     }
 }
