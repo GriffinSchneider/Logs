@@ -22,8 +22,8 @@ extension Array {
 
 extension Array where Element: Comparable {
     mutating func sortedAppend(toInsert: Generator.Element) {
-        let rd: ReverseRandomAccessCollection<Array<Element>> = reverse()
-        for (idx, element) in rd.enumerate() {
+        for idx in (0...(count-1)).reverse() {
+            let element = self[idx]
             if element < toInsert {
                 insert(toInsert, atIndex: idx + 1)
                 return
