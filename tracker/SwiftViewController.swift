@@ -20,7 +20,7 @@ let BUTTON_INSETS = UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2)
 enum SectionValue {
     case occurrence(String)
     case activeState(SEvent)
-    case state(SStateSchema)
+    case state(SStateSchema, isActive: Bool)
     case reading(String)
 }
 
@@ -71,10 +71,15 @@ class SwiftViewController: UIViewController {
             .combineLatest(SSyncManager.data.asObservable(), SSyncManager.schema.asObservable()) { ($0, $1) }
             .map { t -> [SectionOfCustomData] in
                 let data = t.0, schema = t.1
+                let active = data.activeStates()
                 return [
                     SectionOfCustomData(items: schema.occurrences.map(SectionValue.occurrence)),
-                    SectionOfCustomData(items: data.activeStates().map(SectionValue.activeState)),
-                    SectionOfCustomData(items: schema.states.map(SectionValue.state)),
+                    SectionOfCustomData(items: active.map(SectionValue.activeState)),
+                    SectionOfCustomData(items: schema.states.map { s in
+                        SectionValue.state(s, isActive: active.contains { a in
+                            s.name == a.name
+                        })
+                    }),
                     SectionOfCustomData(items: schema.readings.map(SectionValue.reading)),
                 ]
             }
@@ -83,12 +88,7 @@ class SwiftViewController: UIViewController {
         
         collectionView
             .rx_modelSelected(SectionValue)
-            .map { v -> SEvent in
-                let todo = SEvent(
-                    name: "TODO",
-                    date: NSDate(),
-                    type: SEventType.StartState
-                )
+            .map { v in
                 switch v {
                 case .occurrence(let o):
                     return SEvent(
@@ -96,9 +96,24 @@ class SwiftViewController: UIViewController {
                         date: NSDate(),
                         type: .Occurrence
                     )
-                case .activeState(let s): return todo
-                case .state(let s): return todo
-                case .reading(let r): return todo
+                case .activeState(let s):
+                    return SEvent(
+                        name: s.name,
+                        date: NSDate(),
+                        type: .EndState
+                    )
+                case .state(let (s, isActive)):
+                    return SEvent(
+                        name: s.name,
+                        date: NSDate(),
+                        type: isActive ? .EndState : .StartState
+                    )
+                case .reading(let r):
+                    return SEvent(
+                        name: "TODO",
+                        date: NSDate(),
+                        type: SEventType.StartState
+                    )
                 }
             }
             .subscribeNext { SSyncManager.data.value.events.sortedAppend($0) }
@@ -136,9 +151,9 @@ class ButtonCollectionViewCell: UICollectionViewCell {
         case .activeState(let s):
             label.text = "\(s.name) \(formatDuration(NSDate().timeIntervalSinceDate(s.date)))"
             label.backgroundColor = UIColor.flatGreenColorDark()
-        case .state(let s):
+        case .state(let (s, isActive)):
             label.text = s.icon
-            label.backgroundColor = UIColor.flatRedColorDark()
+            label.backgroundColor = isActive ? UIColor.flatGreenColorDark() : UIColor.flatRedColorDark()
         case .reading(let r):
             label.text = r
             label.backgroundColor = UIColor.flatBlueColorDark()
