@@ -33,6 +33,18 @@ struct SStateSchema: Mappable {
     }
 }
 
+extension SStateSchema: Hashable {
+    var hashValue: Int {
+        return name.hashValue ^ icon.hashValue
+    }
+}
+
+func ==(lhs: SStateSchema, rhs: SStateSchema) -> Bool {
+    return true &&
+        lhs.name == rhs.name &&
+        lhs.icon == rhs.icon
+}
+
 
 struct SData: Mappable {
     var events: [SEvent]!

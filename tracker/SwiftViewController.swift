@@ -17,23 +17,53 @@ let SPACING: CGFloat = 5.0
 let SECTION_INSETS = UIEdgeInsets(top: 30, left: 10, bottom: 0, right: 10)
 let BUTTON_INSETS = UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2)
 
-enum SectionValue {
+enum SectionValue: IdentifiableType {
     case occurrence(String)
     case activeState(SEvent)
     case state(SStateSchema, isActive: Bool)
     case reading(String)
+    
+    var identity: Int {
+        switch self {
+        case .occurrence(let o):
+            return o.hashValue
+        case .activeState(let e):
+            return e.hashValue
+        case .state(let (s, isActive)):
+            return s.hashValue // ^ isActive.hashValue
+        case .reading(let r):
+            return r.hashValue
+        }
+    }
 }
+func ==(lhs: SectionValue, rhs: SectionValue) -> Bool {
+    switch (lhs, rhs) {
+    case (.occurrence(let lhs), .occurrence(let rhs)):
+        return lhs == rhs
+    case (.activeState(let lhs), .activeState(let rhs)):
+        return lhs == rhs
+    case (.state(let (lhs, lia)), .state(let (rhs, ria))):
+        return lhs == rhs // && lia == ria
+    case (.reading(let lhs), .reading(let rhs)):
+        return lhs == rhs
+    default:
+        return true
+    }
+}
+extension SectionValue: Equatable { }
 
-struct SectionOfCustomData: SectionModelType {
+struct SectionOfCustomData: AnimatableSectionModelType {
     var items: [Item]
     typealias Item = SectionValue
-    init(items: [Item]) {
+    let identity: Int
+    init(items: [Item], identity: Int) {
+        self.identity = identity
         self.items = items
     }
     init(original: SectionOfCustomData, items: [Item]) {
         self = original
         self.items = items
-    } 
+    }
 }
 
 class SwiftViewController: UIViewController {
@@ -43,7 +73,7 @@ class SwiftViewController: UIViewController {
         view.backgroundColor = UIColor.flatNavyBlueColorDark()
         
         let fl = UICollectionViewFlowLayout()
-        fl.estimatedItemSize = CGSizeMake(10, 10)
+        fl.estimatedItemSize = CGSizeMake(30, 30)
         fl.sectionInset = SECTION_INSETS
         fl.scrollDirection = .Vertical;
         fl.minimumInteritemSpacing = SPACING
@@ -58,7 +88,7 @@ class SwiftViewController: UIViewController {
             make.edges.equalTo(v.superview!)
         }
         
-        let dataSource = RxCollectionViewSectionedReloadDataSource<SectionOfCustomData>()
+        let dataSource = RxCollectionViewSectionedAnimatedDataSource<SectionOfCustomData>()
         
         dataSource.configureCell = { ds, collectionView, indexPath, item in
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier("id", forIndexPath: indexPath) as! ButtonCollectionViewCell
@@ -73,16 +103,17 @@ class SwiftViewController: UIViewController {
                 let data = t.0, schema = t.1
                 let active = data.activeStates()
                 return [
-                    SectionOfCustomData(items: schema.occurrences.map(SectionValue.occurrence)),
-                    SectionOfCustomData(items: active.map(SectionValue.activeState)),
+                    SectionOfCustomData(items: schema.occurrences.map(SectionValue.occurrence), identity: 0),
+                    SectionOfCustomData(items: active.map(SectionValue.activeState), identity: 1),
                     SectionOfCustomData(items: schema.states.map { s in
                         SectionValue.state(s, isActive: active.contains { a in
                             s.name == a.name
                         })
-                    }),
-                    SectionOfCustomData(items: schema.readings.map(SectionValue.reading)),
+                    }, identity: 2),
+                    SectionOfCustomData(items: schema.readings.map(SectionValue.reading), identity: 3),
                 ]
             }
+            .debug("refresh")
             .bindTo(collectionView.rx_itemsWithDataSource(dataSource))
             .addDisposableTo(disposeBag)
         
@@ -128,11 +159,15 @@ class ButtonCollectionViewCell: UICollectionViewCell {
     func setup(superBounds: CGRect) {
         guard !hasBeenSetup else { return }
         hasBeenSetup = true
-        contentView.translatesAutoresizingMaskIntoConstraints = false
+//        self.translatesAutoresizingMaskIntoConstraints = false
+//        contentView.translatesAutoresizingMaskIntoConstraints = false
         label = contentView.addSubview(Style.ButtonLabel) {v, make in
             make.edges.equalTo(v.superview!).inset(BUTTON_INSETS)
             make.width.greaterThanOrEqualTo(40)
         }
+//        self.snp_makeConstraints { make in
+//            make.size.equalTo(contentView)
+//        }
     }
     
     override var highlighted: Bool {
