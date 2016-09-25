@@ -29,6 +29,6 @@ class SSyncManager {
     }()
     
     private static let containerPath = NSFileManager.defaultManager().containerURLForSecurityApplicationGroupIdentifier("group.zone.griff.tracker")!
-    private static let schemaPath = containerPath.URLByAppendingPathComponent("schema.json")
-    private static let dataPath = containerPath.URLByAppendingPathComponent("data.json")
+    private static let schemaPath = containerPath.URLByAppendingPathComponent("schema.json")!
+    private static let dataPath = containerPath.URLByAppendingPathComponent("data.json")!
 }
