@@ -14,7 +14,7 @@ struct SSchema: Mappable {
     var occurrences: [String]!
     var states: [SStateSchema]!
     var readings: [String]!
-    init?(_ map: Map) { }
+    init?(map: Map) { }
     mutating func mapping(map: Map) {
         occurrences <- map["occurrences"]
         states <- map["states"]
@@ -26,7 +26,7 @@ struct SSchema: Mappable {
 struct SStateSchema: Mappable {
     var name: String!
     var icon: String!
-    init?(_ map: Map) { }
+    init?(map: Map) { }
     mutating func mapping(map: Map) {
         name <- map["name"]
         icon <- map["icon"]
@@ -36,7 +36,7 @@ struct SStateSchema: Mappable {
 
 struct SData: Mappable {
     var events: [SEvent]!
-    init?(_ map: Map) { }
+    init?(map: Map) { }
     mutating func mapping(map: Map) {
         events <- map["events"]
     }
@@ -53,14 +53,14 @@ enum SEventType: String {
 
 struct SEvent: Mappable {
     var name: String!
-    var date: NSDate!
+    var date: Date!
     var type: SEventType!
     var reading: Float?
     var note: String?
-    init?(_ map: Map) { }
+    init?(map: Map) { }
     init(
         name: String,
-        date: NSDate,
+        date: Date,
         type: SEventType,
         reading: Float? = nil,
         note: String? = nil
@@ -90,7 +90,7 @@ func ==(lhs:SEvent, rhs:SEvent) -> Bool {
 }
 
 func <(lhs:SEvent, rhs:SEvent) -> Bool {
-    return lhs.date.compare(rhs.date) == .OrderedAscending
+    return lhs.date.compare(rhs.date) == .orderedAscending
 }
 
 extension SEvent: Comparable { }

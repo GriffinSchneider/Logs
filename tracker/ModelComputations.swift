@@ -13,7 +13,7 @@ extension SData {
     func activeStates() -> [SEvent] {
         var retVal = [SEvent]()
         var endedStates = Set<String>()
-        for e in events.reverse() {
+        for e in events.reversed() {
             switch e.type! {
             case .StartState:
                 if !endedStates.contains(e.name) {

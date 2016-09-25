@@ -40,28 +40,32 @@ class SwiftViewController: UIViewController {
     let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
+        
+//        SyncManager.i().loadFromDropbox();
+//        return
+        
         view.backgroundColor = UIColor.flatNavyBlueColorDark()
         
         let fl = UICollectionViewFlowLayout()
-        fl.estimatedItemSize = CGSizeMake(10, 10)
+        fl.estimatedItemSize = CGSize(width: 10, height: 10)
         fl.sectionInset = SECTION_INSETS
-        fl.scrollDirection = .Vertical;
+        fl.scrollDirection = .vertical;
         fl.minimumInteritemSpacing = SPACING
         fl.minimumLineSpacing = 5
         
         let collectionView = view.addSubview(
-            UICollectionView(frame: CGRectZero, collectionViewLayout: fl)
+            UICollectionView(frame: CGRect.zero, collectionViewLayout: fl)
         ) { v, make in
             v.delaysContentTouches = false
             v.backgroundColor = UIColor.flatNavyBlueColorDark()
-            v.registerClass(ButtonCollectionViewCell.self, forCellWithReuseIdentifier: "id")
+            v.register(ButtonCollectionViewCell.self, forCellWithReuseIdentifier: "id")
             make.edges.equalTo(v.superview!)
         }
         
         let dataSource = RxCollectionViewSectionedReloadDataSource<SectionOfCustomData>()
         
         dataSource.configureCell = { ds, collectionView, indexPath, item in
-            let cell = collectionView.dequeueReusableCellWithReuseIdentifier("id", forIndexPath: indexPath) as! ButtonCollectionViewCell
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "id", for: indexPath) as! ButtonCollectionViewCell
             cell.setup(UIEdgeInsetsInsetRect(collectionView.bounds, SECTION_INSETS))
             cell.update(item)
             return cell
@@ -83,35 +87,35 @@ class SwiftViewController: UIViewController {
                     SectionOfCustomData(items: schema.readings.map(SectionValue.reading)),
                 ]
             }
-            .bindTo(collectionView.rx_itemsWithDataSource(dataSource))
+            .bindTo(collectionView.rx.items(dataSource: dataSource))
             .addDisposableTo(disposeBag)
         
         collectionView
-            .rx_modelSelected(SectionValue)
+            .rx.modelSelected(SectionValue.self)
             .map { v in
                 switch v {
                 case .occurrence(let o):
                     return SEvent(
                         name: o,
-                        date: NSDate(),
+                        date: Date(),
                         type: .Occurrence
                     )
                 case .activeState(let s):
                     return SEvent(
                         name: s.name,
-                        date: NSDate(),
+                        date: Date(),
                         type: .EndState
                     )
                 case .state(let (s, isActive)):
                     return SEvent(
                         name: s.name,
-                        date: NSDate(),
+                        date: Date(),
                         type: isActive ? .EndState : .StartState
                     )
                 case .reading(let r):
                     return SEvent(
                         name: "TODO",
-                        date: NSDate(),
+                        date: Date(),
                         type: SEventType.StartState
                     )
                 }
@@ -123,9 +127,9 @@ class SwiftViewController: UIViewController {
 
 
 class ButtonCollectionViewCell: UICollectionViewCell {
-    private var label: UILabel!
-    private var hasBeenSetup = false
-    func setup(superBounds: CGRect) {
+    fileprivate var label: UILabel!
+    fileprivate var hasBeenSetup = false
+    func setup(_ superBounds: CGRect) {
         guard !hasBeenSetup else { return }
         hasBeenSetup = true
         contentView.translatesAutoresizingMaskIntoConstraints = false
@@ -135,21 +139,21 @@ class ButtonCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    override var highlighted: Bool {
-        get { return super.highlighted }
+    override var isHighlighted: Bool {
+        get { return super.isHighlighted }
         set {
-            super.highlighted = newValue
-            label?.backgroundColor = UIColor.randomFlatColor()
+            super.isHighlighted = newValue
+            label?.backgroundColor = UIColor.randomFlat()
         }
     }
     
-    func update(v: SectionValue) {
+    func update(_ v: SectionValue) {
         switch v {
         case .occurrence(let o):
             label.text = o
             label.backgroundColor = UIColor.flatOrangeColorDark()
         case .activeState(let s):
-            label.text = "\(s.name) \(formatDuration(NSDate().timeIntervalSinceDate(s.date)))"
+            label.text = "\(s.name) \(formatDuration(Date().timeIntervalSince(s.date as Date)))"
             label.backgroundColor = UIColor.flatGreenColorDark()
         case .state(let (s, isActive)):
             label.text = s.icon

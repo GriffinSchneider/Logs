@@ -11,24 +11,25 @@ import ObjectMapper
 import RxSwift
 
 class SSyncManager {
-    static var schema = Variable(Mapper<SSchema>().map(try! NSString(contentsOfURL: schemaPath, encoding: NSUTF8StringEncoding))!)
+    static var schema = Variable(Mapper<SSchema>().map(JSONString: try! String(contentsOf: schemaPath, encoding: .utf8))!)
     
     static var data:Variable<SData> = {
-        let data = Variable(Mapper<SData>().map(try! NSString(contentsOfURL: dataPath, encoding: NSUTF8StringEncoding))!)
+        print(dataPath)
+        let data = Variable(Mapper<SData>().map(JSONString: try! String(contentsOf: dataPath, encoding: .utf8))!)
         _ = data.asObservable()
             .skip(1)
             .observeOn(SerialDispatchQueueScheduler(internalSerialQueueName: "DataWriteQueue"))
-            .subscribeNext {
-                try! $0.toJSONString(true)!.writeToURL(
-                    SSyncManager.dataPath,
+            .subscribe(onNext: {
+                try! $0.toJSONString(prettyPrint: true)!.write(
+                    to: SSyncManager.dataPath,
                     atomically: true,
-                    encoding: NSUTF8StringEncoding
+                    encoding: String.Encoding.utf8
                 )
-        }
+            })
         return data
     }()
     
-    private static let containerPath = NSFileManager.defaultManager().containerURLForSecurityApplicationGroupIdentifier("group.zone.griff.tracker")!
-    private static let schemaPath = containerPath.URLByAppendingPathComponent("schema.json")!
-    private static let dataPath = containerPath.URLByAppendingPathComponent("data.json")!
+    fileprivate static let containerPath = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.zone.griff.tracker")!
+    fileprivate static let schemaPath = containerPath.appendingPathComponent("schema.json")
+    fileprivate static let dataPath = containerPath.appendingPathComponent("data.json")
 }

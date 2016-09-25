@@ -9,17 +9,17 @@
 import Foundation
 
 class TrackerLabel: UILabel {
-    override func intrinsicContentSize() -> CGSize {
-        let s = super.intrinsicContentSize()
-        return CGSizeMake(max(60, s.width + 10), s.height + 10)
+    override var intrinsicContentSize : CGSize {
+        let s = super.intrinsicContentSize
+        return CGSize(width: max(60, s.width + 10), height: s.height + 10)
     }
 }
 
 class Style {
-    static func ButtonLabel(l: TrackerLabel) {
-        l.textColor = UIColor.flatWhiteColor()
+    static func ButtonLabel(_ l: TrackerLabel) {
+        l.textColor = UIColor.flatWhite()
         l.layer.cornerRadius = 5
         l.clipsToBounds = true
-        l.textAlignment = .Center
+        l.textAlignment = .center
     }
 }

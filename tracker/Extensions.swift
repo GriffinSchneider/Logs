@@ -9,33 +9,38 @@
 import Foundation
 import RxSwift
 
+// Ridiculous workaround - calling 'stride' direcly inside the Array extension
+// causes compilation to fail because Array now has a function named 'stride'.
+private func _stride(from: Int, to: Int, by: Int) -> StrideTo<Int>{
+    return stride(from: from, to: to, by: by)
+}
 
 extension Array {
-    func stride(by by: Int, @noescape block: (e: ArraySlice<Element>) -> Void) {
-        0.stride(to: count, by: by).forEach {idx in
-            let endIdx = idx.advancedBy(by, limit: count)
+    func stride(by: Int, block: @escaping (_ e: ArraySlice<Element>) -> Void) {
+       _stride(from: 0, to: count, by: by).forEach {idx in
+            let endIdx = index(idx, offsetBy: by)
             let thing = self[idx ..< endIdx]
-            block(e: thing)
+            block(thing)
         }
     }
 }
 
 extension Array where Element: Comparable {
-    mutating func sortedAppend(toInsert: Generator.Element) {
-        for idx in (0...(count-1)).reverse() {
+    mutating func sortedAppend(_ toInsert: Iterator.Element) {
+        for idx in (0...(count-1)).reversed() {
             let element = self[idx]
             if element < toInsert {
-                insert(toInsert, atIndex: idx + 1)
+                insert(toInsert, at: idx + 1)
                 return
             }
         }
-        insert(toInsert, atIndex: 0)
+        insert(toInsert, at: 0)
     }
 }
 
-extension SequenceType {
-    func reduce<T>(initial: T, @noescape combine: (T, Int, Generator.Element) throws -> T) rethrows -> T {
-        return try enumerate().reduce(initial) { (t: T, tuple: (index: Int, element: Generator.Element)) -> T in
+extension Sequence {
+    func reduce<T>(_ initial: T, combine: (T, Int, Iterator.Element) throws -> T) rethrows -> T {
+        return try enumerated().reduce(initial) { (t: T, tuple: (index: Int, element: Iterator.Element)) -> T in
             return try combine(t, tuple.index, tuple.element)
         }
     }

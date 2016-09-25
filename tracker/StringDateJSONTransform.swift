@@ -11,37 +11,37 @@ import ObjectMapper
 
 class StringDateJSONTransform: TransformType {
     
-    typealias Object = NSDate
+    typealias Object = Date
     typealias JSON = String
     
-    private static let outputDateFormatter: NSDateFormatter = {
-        let df = NSDateFormatter()
-        df.locale = NSLocale(localeIdentifier: "en_US_POSIX")
+    fileprivate static let outputDateFormatter: DateFormatter = {
+        let df = DateFormatter()
+        df.locale = Locale(identifier: "en_US_POSIX")
         df.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZ"
         return df
     }()
     
-    private static let inputDateFormatter: NSDateFormatter = {
-        let df = NSDateFormatter()
-        df.locale = NSLocale(localeIdentifier: "en_US_POSIX")
+    fileprivate static let inputDateFormatter: DateFormatter = {
+        let df = DateFormatter()
+        df.locale = Locale(identifier: "en_US_POSIX")
         df.dateFormat = "yyyy-MM-dd'T'HHmmssZZZ"
         return df
     }()
     
     init() {}
     
-    func transformFromJSON(value: AnyObject?) -> NSDate? {
+    func transformFromJSON(_ value: Any?) -> Date? {
         if let value = value as? String {
-            return StringDateJSONTransform.inputDateFormatter.dateFromString(
-                value.stringByReplacingOccurrencesOfString(":", withString: "")
+            return StringDateJSONTransform.inputDateFormatter.date(
+                from: value.replacingOccurrences(of: ":", with: "")
             )
         }
         return nil
     }
     
-    func transformToJSON(value: NSDate?) -> String? {
+    func transformToJSON(_ value: Date?) -> String? {
         if let value = value {
-            return StringDateJSONTransform.outputDateFormatter.stringFromDate(value)
+            return StringDateJSONTransform.outputDateFormatter.string(from: value)
         }
         return nil
     }
