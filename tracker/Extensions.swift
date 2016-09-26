@@ -9,15 +9,9 @@
 import Foundation
 import RxSwift
 
-// Ridiculous workaround - calling 'stride' direcly inside the Array extension
-// causes compilation to fail because Array now has a function named 'stride'.
-private func _stride(from: Int, to: Int, by: Int) -> StrideTo<Int>{
-    return stride(from: from, to: to, by: by)
-}
-
 extension Array {
     func stride(by: Int, block: @escaping (_ e: ArraySlice<Element>) -> Void) {
-       _stride(from: 0, to: count, by: by).forEach {idx in
+       Swift.stride(from: 0, to: count, by: by).forEach {idx in
             let endIdx = index(idx, offsetBy: by)
             let thing = self[idx ..< endIdx]
             block(thing)
