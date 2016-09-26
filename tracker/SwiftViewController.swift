@@ -40,6 +40,7 @@ class SwiftViewController: UIViewController {
     let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
+        SyncManager.i().loadFromDropbox()
         view.backgroundColor = UIColor.flatNavyBlueColorDark()
         
         let fl = UICollectionViewFlowLayout()
