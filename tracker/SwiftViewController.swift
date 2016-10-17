@@ -18,22 +18,43 @@ let SECTION_INSETS = UIEdgeInsets(top: 30, left: 10, bottom: 0, right: 10)
 let BUTTON_INSETS = UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2)
 
 enum SectionValue {
+    case action(String, () -> ())
     case occurrence(String)
     case activeState(SEvent)
     case state(SStateSchema, isActive: Bool)
     case reading(String)
 }
-
-struct SectionOfCustomData: SectionModelType {
-    var items: [Item]
-    typealias Item = SectionValue
-    init(items: [Item]) {
-        self.items = items
+extension SectionValue: Hashable {
+    var hashValue: Int {
+        switch self {
+        case let .action(s, _):
+            return s.hashValue
+        case let .occurrence(s):
+            return s.hashValue
+        case let .activeState(s):
+            return s.hashValue
+        case let .state(s, _):
+            return s.hashValue
+        case let .reading(s):
+            return s.hashValue
+        }
     }
-    init(original: SectionOfCustomData, items: [Item]) {
-        self = original
-        self.items = items
-    } 
+}
+func ==(lhs: SectionValue, rhs: SectionValue) -> Bool {
+    switch (lhs, rhs) {
+    case let (.action(l, _), .action(r, _)):
+        return l == r
+    case let (.occurrence(l), .occurrence(r)):
+        return l == r
+    case let (.activeState(l), .activeState(r)):
+        return l == r
+    case let (.state(l, _), .state(r, _)):
+        return l == r
+    case let (.reading(l), .reading(r)):
+        return l == r
+    default:
+        return false
+    }
 }
 
 class SwiftViewController: UIViewController {
@@ -46,121 +67,100 @@ class SwiftViewController: UIViewController {
         
         view.backgroundColor = UIColor.flatNavyBlueColorDark()
         
-        let fl = UICollectionViewFlowLayout()
-        fl.estimatedItemSize = CGSize(width: 10, height: 10)
-        fl.sectionInset = SECTION_INSETS
-        fl.scrollDirection = .vertical;
-        fl.minimumInteritemSpacing = SPACING
-        fl.minimumLineSpacing = 5
-        
-        let collectionView = view.addSubview(
-            UICollectionView(frame: CGRect.zero, collectionViewLayout: fl)
-        ) { v, make in
-            v.delaysContentTouches = false
+        let gridView = view.addSubview(ButtonGridView<SectionValue>() { b, data in
+            Style.ButtonLabel(b)
+            switch data {
+            case let .action(s, _):
+                b.setTitle(s, for: .normal)
+                b.backgroundColor = UIColor.flatPlum()
+            case let .occurrence(s):
+                b.setTitle(s, for: .normal)
+                b.backgroundColor = UIColor.flatOrangeColorDark()
+            case let .activeState(a):
+                b.setTitle("\(a.name!) \(formatDuration(Date().timeIntervalSince(a.date))!)" , for: .normal)
+                b.backgroundColor = UIColor.flatGreenColorDark()
+            case let .state(s, ia):
+                b.setTitle(s.name, for: .normal)
+                b.backgroundColor = ia ? UIColor.flatGreenColorDark() : UIColor.flatRedColorDark()
+            case let .reading(r):
+                b.setTitle(r, for: .normal)
+                b.backgroundColor = UIColor.blue
+            }
+        }) { v, make in
             v.backgroundColor = UIColor.flatNavyBlueColorDark()
-            v.register(ButtonCollectionViewCell.self, forCellWithReuseIdentifier: "id")
             make.edges.equalTo(v.superview!)
         }
         
-        let dataSource = RxCollectionViewSectionedReloadDataSource<SectionOfCustomData>()
-        
-        dataSource.configureCell = { ds, collectionView, indexPath, item in
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "id", for: indexPath) as! ButtonCollectionViewCell
-            cell.setup(UIEdgeInsetsInsetRect(collectionView.bounds, SECTION_INSETS))
-            cell.update(item)
-            return cell
-        }
+        let actions: [SectionValue] = [
+            .action("Edit") {
+                SyncManager.i().loadFromDisk()
+                self.present(UINavigationController(rootViewController: ListViewController {
+                    self.dismiss(animated: true)
+                }), animated: true)
+            },
+            .action("Timeline") {
+                SyncManager.i().loadFromDisk()
+                self.present(TimelineViewController {
+                    self.dismiss(animated: true)
+                }, animated: true)
+            },
+            .action("Reload") {
+                SyncManager.i().loadFromDropbox()
+            },
+            .action("Save") { print("sdfsdfdf") },
+        ]
         
         Observable
             .combineLatest(SSyncManager.data.asObservable(), SSyncManager.schema.asObservable()) { ($0, $1) }
-            .map { t -> [SectionOfCustomData] in
+            .map { t -> [[SectionValue]] in
                 let data = t.0, schema = t.1
                 let active = data.activeStates()
                 return [
-                    SectionOfCustomData(items: schema.occurrences.map(SectionValue.occurrence)),
-                    SectionOfCustomData(items: active.map(SectionValue.activeState)),
-                    SectionOfCustomData(items: schema.states.map { s in
-                        SectionValue.state(s, isActive: active.contains { a in
+                    actions,
+                    schema.occurrences.map { .occurrence($0) },
+                    active.map { .activeState($0) },
+                    schema.states.map { s in
+                        .state(s, isActive: active.contains { a in
                             s.name == a.name
                         })
-                    }),
-                    SectionOfCustomData(items: schema.readings.map(SectionValue.reading)),
+                    },
+                    schema.readings.map { .reading($0) }
                 ]
             }
-            .bindTo(collectionView.rx.items(dataSource: dataSource))
+            .bindTo(gridView.buttons)
             .addDisposableTo(disposeBag)
         
-        collectionView
-            .rx.modelSelected(SectionValue.self)
-            .map { v in
+        gridView
+            .selection
+            .map { v -> SEvent? in
                 switch v {
-                case .occurrence(let o):
+                case let .action(_, b):
+                    b()
+                    return nil
+                case let .occurrence(o):
                     return SEvent(
                         name: o,
                         date: Date(),
                         type: .Occurrence
                     )
-                case .activeState(let s):
+                case let .activeState(s):
                     return SEvent(
                         name: s.name,
                         date: Date(),
                         type: .EndState
                     )
-                case .state(let (s, isActive)):
+                case let .state((s, isActive)):
                     return SEvent(
                         name: s.name,
                         date: Date(),
                         type: isActive ? .EndState : .StartState
                     )
-                case .reading(let r):
-                    return SEvent(
-                        name: "TODO",
-                        date: Date(),
-                        type: SEventType.StartState
-                    )
+                case let .reading(r):
+                    return nil
                 }
             }
+            .filter { $0 != nil }.map { $0! }
             .subscribeNext { SSyncManager.data.value.events.sortedAppend($0) }
             .addDisposableTo(disposeBag)
-    }
-}
-
-
-class ButtonCollectionViewCell: UICollectionViewCell {
-    fileprivate var label: UILabel!
-    fileprivate var hasBeenSetup = false
-    func setup(_ superBounds: CGRect) {
-        guard !hasBeenSetup else { return }
-        hasBeenSetup = true
-        contentView.translatesAutoresizingMaskIntoConstraints = false
-        label = contentView.addSubview(Style.ButtonLabel) {v, make in
-            make.edges.equalTo(v.superview!).inset(BUTTON_INSETS)
-            make.width.greaterThanOrEqualTo(40)
-        }
-    }
-    
-    override var isHighlighted: Bool {
-        get { return super.isHighlighted }
-        set {
-            super.isHighlighted = newValue
-            label?.backgroundColor = UIColor.randomFlat()
-        }
-    }
-    
-    func update(_ v: SectionValue) {
-        switch v {
-        case .occurrence(let o):
-            label.text = o
-            label.backgroundColor = UIColor.flatOrangeColorDark()
-        case .activeState(let s):
-            label.text = "\(s.name) \(formatDuration(Date().timeIntervalSince(s.date as Date)))"
-            label.backgroundColor = UIColor.flatGreenColorDark()
-        case .state(let (s, isActive)):
-            label.text = s.icon
-            label.backgroundColor = isActive ? UIColor.flatGreenColorDark() : UIColor.flatRedColorDark()
-        case .reading(let r):
-            label.text = r
-            label.backgroundColor = UIColor.flatBlueColorDark()
-        }
     }
 }

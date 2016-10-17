@@ -260,15 +260,15 @@
                 _.titleColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.3];
                 make.right.and.bottom.equalTo(superview).with.insets(UIEdgeInsetsMake(0, 0, 8, 8));
             };
-//            @weakify(self);
-//            [[closeButton rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
-//                @strongify(self);
-//                self.done();
-//            }];
+            [closeButton addTarget:self action:@selector(closeButtonPressed) forControlEvents:UIControlEventTouchUpInside];
         }
     }
     
     [self updateConstraintsForOrientation];
+}
+
+- (void)closeButtonPressed {
+    self.done();
 }
 
 - (void)viewWillAppear:(BOOL)animated {
