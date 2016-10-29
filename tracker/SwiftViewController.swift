@@ -86,6 +86,7 @@ class SwiftViewController: UIViewController {
                 b.setTitle(r, for: .normal)
                 b.backgroundColor = UIColor.blue
             }
+            b.highlightedBackgroundColor = b.backgroundColor?.darken(byPercentage: 0.4)
         }) { v, make in
             v.backgroundColor = UIColor.flatNavyBlueColorDark()
             make.edges.equalTo(v.superview!)
