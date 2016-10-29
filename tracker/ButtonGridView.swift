@@ -10,6 +10,7 @@ import Foundation
 import RxSwift
 import DRYUI
 
+private let PADDING: CGFloat = 10
 
 class ButtonGridView<ButtonDataType: Hashable>: UIView {
     
@@ -71,6 +72,7 @@ class ButtonGridView<ButtonDataType: Hashable>: UIView {
     override func layoutSubviews() {
         var lastButton: UIButton? = nil
         var isNewSection = false
+        var lines: [[UIButton]] = [[]]
         
         UIView.beginAnimations(nil, context: nil)
         
@@ -84,19 +86,41 @@ class ButtonGridView<ButtonDataType: Hashable>: UIView {
                 v.frame.size.width = max(v.frame.size.width, 60)
                 
                 if let lastButton = lastButton {
-                    v.frame.origin.x = lastButton.frame.origin.x + lastButton.frame.size.width + 10
+                    v.frame.origin.x = lastButton.frame.origin.x + lastButton.frame.size.width + PADDING
                     v.frame.origin.y =  lastButton.frame.origin.y
                     if isNewSection || v.frame.origin.x + v.frame.size.width > v.superview!.frame.size.width {
-                        v.frame.origin.x = 10
+                        v.frame.origin.x = PADDING
                         v.frame.origin.y = lastButton.frame.origin.y + lastButton.frame.size.height + (isNewSection ? 20 : 10)
+                        lines.append([v])
+                    } else {
+                        lines[lines.count-1].append(v)
                     }
                 } else {
-                    v.frame.origin.x = 10
+                    lines[lines.count-1].append(v)
+                    v.frame.origin.x = PADDING
                     v.frame.origin.y = 20
                 }
                 
                 lastButton = v
                 isNewSection = false
+            }
+        }
+        
+        for line in lines {
+            lastButton = nil
+            let totalWidth = line.reduce(0) { $0 + $1.frame.size.width }
+            let availableWidth = frame.size.width - PADDING*2
+            let numPaddings = CGFloat(line.count - 1)
+            let requiredTotalWidth = availableWidth - numPaddings*PADDING
+            let additionalTotalWidth = requiredTotalWidth - totalWidth
+            let amountToGrowEach = additionalTotalWidth / CGFloat(line.count)
+            guard  amountToGrowEach > 0 else { continue }
+            for button in line {
+                button.frame.size.width += amountToGrowEach
+                if let lastButton = lastButton {
+                    button.frame.origin.x = lastButton.frame.origin.x + lastButton.frame.size.width + PADDING
+                }
+                lastButton = button
             }
         }
         
