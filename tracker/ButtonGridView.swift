@@ -63,9 +63,8 @@ class ButtonGridView<ButtonDataType: Hashable>: UIView {
             button.removeFromSuperview()
         }
         
-        outputDisposable = Observable.from(buttonMap.map { t -> Observable<ButtonDataType?> in
-            let (key, value) = t
-            return value.rx.tap.asObservable().map { key }
+        outputDisposable = Observable.from(buttonMap.map { k, v in
+            v.rx.tap.asObservable().map { k }
         }).merge().bindTo(_selection)
     }
     
@@ -125,5 +124,7 @@ class ButtonGridView<ButtonDataType: Hashable>: UIView {
         }
         
         UIView.commitAnimations()
+        
+        buttonMap.forEach { $0.value.isHighlighted = $0.value.isHighlighted }
     }
 }
