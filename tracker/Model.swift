@@ -11,9 +11,9 @@ import ObjectMapper
 
 
 struct SSchema: Mappable {
-    var occurrences: [String]!
-    var states: [SStateSchema]!
-    var readings: [String]!
+    var occurrences: [String] = []
+    var states: [SStateSchema] = []
+    var readings: [String] = []
     init?(map: Map) { }
     mutating func mapping(map: Map) {
         occurrences <- map["occurrences"]
@@ -45,7 +45,7 @@ func ==(lhs: SStateSchema, rhs: SStateSchema) -> Bool {
 
 
 struct SData: Mappable {
-    var events: [SEvent]!
+    var events: [SEvent] = []
     init?(map: Map) { }
     mutating func mapping(map: Map) {
         events <- map["events"]

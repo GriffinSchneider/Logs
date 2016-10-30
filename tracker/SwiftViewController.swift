@@ -62,9 +62,6 @@ class SwiftViewController: UIViewController {
     
     override func viewDidLoad() {
         
-//        SyncManager.i().loadFromDropbox();
-//        return
-        
         view.backgroundColor = UIColor.flatNavyBlueColorDark()
         
         let gridView = view.addSubview(ButtonGridView<SectionValue>() { b, data in
