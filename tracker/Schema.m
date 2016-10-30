@@ -7,7 +7,7 @@
 //
 
 #import "Schema.h"
-#import "Event.h"
+#import "EEvent.h"
 
 @implementation Schema
 

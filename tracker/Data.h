@@ -7,29 +7,29 @@
 //
 
 #import <JSONModel/JSONModel.h>
-#import "Event.h"
+#import "EEvent.h"
 #import "State.h"
 
 BOOL doStatesOverlap(State *s1, State *s2);
 
-Event *eventNamed(NSSet<Event *> *events, NSString *eventName);
-NSArray <State *> *statesFromEvents(NSArray<Event *> *events);
+EEvent *eventNamed(NSSet<EEvent *> *events, NSString *eventName);
+NSArray <State *> *statesFromEvents(NSArray<EEvent *> *events);
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 @interface Data : JSONModel
 
-@property (nonatomic, strong) NSMutableArray<Event> *events;
+@property (nonatomic, strong) NSMutableArray<EEvent> *events;
 
-- (void)addEvent:(Event *)event;
-- (void)replaceEvent:(Event *)oldEvent withEvent:(Event *)newEvent;
-- (void)removeEvent:(Event *)event;
+- (void)addEvent:(EEvent *)event;
+- (void)replaceEvent:(EEvent *)oldEvent withEvent:(EEvent *)newEvent;
+- (void)removeEvent:(EEvent *)event;
 - (void)sortEvents;
 
-- (NSSet<Event *> *)activeStates;
-- (NSDictionary<NSString *, Event *> *)lastReadings;
+- (NSArray<EEvent *> *)activeStates;
+- (NSDictionary<NSString *, EEvent *> *)lastReadings;
 - (NSSet<NSString *> *)recentOccurrences;
 
-- (NSArray<Event *> *)eventsForDay:(NSDate *)date;
+- (NSArray<EEvent *> *)eventsForDay:(NSDate *)date;
 
 @end

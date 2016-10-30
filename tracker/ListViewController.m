@@ -10,7 +10,7 @@
 #import <DRYUI/DRYUI.h>
 #import "ChameleonMacros.h"
 
-#import "Event.h"
+#import "EEvent.h"
 #import "EventViewController.h"
 #import "SyncManager.h"
 
@@ -67,7 +67,7 @@ UITableViewDataSource
     return [SyncManager i].data.events.count - row - 1;
 }
 
-- (Event *)eventForRow:(NSUInteger)row {
+- (EEvent *)eventForRow:(NSUInteger)row {
     return [SyncManager i].data.events[[self eventIndexForRow:row]];
 }
 
@@ -95,7 +95,7 @@ UITableViewDataSource
     cell.detailTextLabel.textColor = FlatGray;
     cell.detailTextLabel.highlightedTextColor = FlatNavyBlue;
     
-    Event *e = [self eventForRow:indexPath.row];
+    EEvent *e = [self eventForRow:indexPath.row];
     
     NSString *icon = [[SyncManager i].schema schemaForStateNamed:e.name].icon;
     icon = icon ? [NSString stringWithFormat:@"%@ ", icon] : @"";
@@ -108,8 +108,8 @@ UITableViewDataSource
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    Event *event = [self eventForRow:indexPath.row];
-    [self.navigationController pushViewController:[[EventViewController alloc] initWithData:[SyncManager i].data andEvent:event done:^(Event *editedEvent) {
+    EEvent *event = [self eventForRow:indexPath.row];
+    [self.navigationController pushViewController:[[EventViewController alloc] initWithData:[SyncManager i].data andEvent:event done:^(EEvent *editedEvent) {
         if (![[editedEvent toDictionary] isEqual:[event toDictionary]]) {
             [[SyncManager i].data replaceEvent:event withEvent:editedEvent];
             [[SyncManager i].data sortEvents];

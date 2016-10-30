@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <ReactiveCocoa/ReactiveCocoa.h>
 
 #import "Data.h"
 #import "Schema.h"
@@ -27,6 +26,5 @@
 
 - (void)writeToDisk;
 - (void)writeToDropbox;
-- (void)saveImmediately;
 
 @end

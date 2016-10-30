@@ -8,13 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "Data.h"
-#import "Event.h"
+#import "EEvent.h"
 
-typedef void (^EventViewControllerDoneBlock)(Event *event);
+typedef void (^EventViewControllerDoneBlock)(EEvent *event);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 @interface EventViewController : UIViewController
 
-- (instancetype)initWithData:(Data *)Data andEvent:(Event *)event done:(EventViewControllerDoneBlock)done;
+- (instancetype)initWithData:(Data *)Data andEvent:(EEvent *)event done:(EventViewControllerDoneBlock)done;
 
 @end

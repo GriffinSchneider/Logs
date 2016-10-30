@@ -59,10 +59,9 @@
     }
     
     if (errorMsg != nil) {
-        [[[UIAlertView alloc]
-          initWithTitle:@"Error Configuring Dropbox" message:errorMsg
-          delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil]
-         show];
+        UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"Error Configuring Dropbox" message:nil preferredStyle:UIAlertControllerStyleAlert];
+        [ac addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
+        [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:ac animated:YES completion:nil];
     }
     
     DBSession* session = [[DBSession alloc] initWithAppKey:appKey appSecret:appSecret root:root];
@@ -90,10 +89,14 @@
 - (void)sessionDidReceiveAuthorizationFailure:(DBSession*)session userId:(NSString *)userId {
     self.relinkUserId = userId;
     [[SyncManager i] hideActivity];
-    [[[UIAlertView alloc]
-      initWithTitle:@"Dropbox Session Ended" message:@"Do you want to relink?" delegate:self
-      cancelButtonTitle:@"Cancel" otherButtonTitles:@"Relink", nil]
-     show];
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"Dropbox Session Ended" message:@"Do you want to relink?" preferredStyle:UIAlertControllerStyleAlert];
+    [ac addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        
+    }]];
+    [ac addAction:[UIAlertAction actionWithTitle:@"Relink" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [[DBSession sharedSession] linkUserId:self.relinkUserId fromController:[UIApplication sharedApplication].keyWindow.rootViewController];
+    }]];
+    [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:ac animated:YES completion:nil];
 }
 
 
@@ -115,18 +118,5 @@ static int outstandingRequests;
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     }
 }
-
-
-#pragma mark -
-#pragma mark UIAlertViewDelegate methods
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)index {
-    if (index != alertView.cancelButtonIndex) {
-        [[DBSession sharedSession] linkUserId:self.relinkUserId fromController:[UIApplication sharedApplication].keyWindow.rootViewController];
-    }
-    self.relinkUserId = nil;
-}
-
-
 
 @end

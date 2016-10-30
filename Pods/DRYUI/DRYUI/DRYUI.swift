@@ -9,58 +9,76 @@ import SnapKit
 #endif
 
 public protocol DRYUIAble {
-    func dryui_addSubview(view: View) -> Void
+    @discardableResult func addSubview<SubviewType:View>(_ subviewBlocks: (SubviewType) -> Void ..., _ lastBlock: ((SubviewType, ConstraintMaker) -> Void)!) -> SubviewType
+    @discardableResult func addSubview<SubviewType:View>(_ subviewType: SubviewType.Type, _ subviewBlocks: (SubviewType) -> Void ..., _ lastBlock: ((SubviewType, ConstraintMaker) -> Void)!) -> SubviewType
+    @discardableResult func addSubview<SubviewType:View>(_ subview: SubviewType, _ subviewBlocks: (SubviewType) -> Void ..., _ lastBlock: ((SubviewType, ConstraintMaker) -> Void)!) -> SubviewType
 }
 
 extension View: DRYUIAble {
-    public func dryui_addSubview(view: View) {
-        addSubview(view)
-    }
-}
-
-public extension DRYUIAble {
     // MARK: Add a view with inferred type from blocks
-    public func addSubview<SubviewType:View>(subviewBlocks: (SubviewType) -> Void ...) -> SubviewType {
-        return addSubviewInternal(SubviewType(), subviewBlocks)
-    }
-    
-    public func addSubview<SubviewType:View>(subviewBlocks: (SubviewType) -> Void ..., @noescape _ lastBlock: (SubviewType, ConstraintMaker) -> Void) -> SubviewType {
-        return addSubviewInternal(SubviewType(), subviewBlocks, lastBlock)
+    @discardableResult public func addSubview<SubviewType:View>(_ subviewBlocks: (SubviewType) -> Void ..., _ lastBlock: ((SubviewType, ConstraintMaker) -> Void)! = nil) -> SubviewType {
+        let subview = SubviewType()
+        addSubview(subview)
+        subviewBlocks.forEach{ $0(subview) }
+        if let lastBlock = lastBlock {
+            subview.snp.makeConstraints { lastBlock(subview, $0) }
+        }
+        return subview
     }
     
     
     // MARK: Add a view with type passed explicitly
-    public func addSubview<SubviewType:View>(subviewType: SubviewType.Type, _ subviewBlocks: (SubviewType) -> Void ...) -> SubviewType {
-        return addSubviewInternal(SubviewType(), subviewBlocks)
-    }
-    
-    public func addSubview<SubviewType:View>(subviewType: SubviewType.Type, _ subviewBlocks: (SubviewType) -> Void ..., @noescape _ lastBlock: (SubviewType, ConstraintMaker) -> Void) -> SubviewType {
-        return addSubviewInternal(SubviewType(), subviewBlocks, lastBlock)
+    @discardableResult public func addSubview<SubviewType:View>(_ subviewType: SubviewType.Type, _ subviewBlocks: (SubviewType) -> Void ..., _ lastBlock: ((SubviewType, ConstraintMaker) -> Void)! = nil) -> SubviewType {
+        let subview = SubviewType()
+        addSubview(subview)
+        subviewBlocks.forEach{ $0(subview) }
+        if let lastBlock = lastBlock {
+            subview.snp.makeConstraints { lastBlock(subview, $0) }
+        }
+        return subview
     }
     
     
     // MARK: Add a view with the view instance passed explicitly
-    public func addSubview<SubviewType:View>(subview: SubviewType, _ subviewBlocks: (SubviewType) -> Void ...) -> SubviewType {
-        return addSubviewInternal(subview, subviewBlocks)
-    }
-    
-    public func addSubview<SubviewType:View>(subview: SubviewType, _ subviewBlocks: (SubviewType) -> Void ..., @noescape _ lastBlock: (SubviewType, ConstraintMaker) -> Void) -> SubviewType {
-        return addSubviewInternal(subview, subviewBlocks, lastBlock)
-    }
-    
-    
-    // MARK: Private methods
-    // These 'internal' methods _should_ be just more overloads of addSubview, but doing it that way makes the compiler crash (XCode 7.2).
-    private func addSubviewInternal<SubviewType:View>(subview: SubviewType, _ subviewBlocks: [(SubviewType) -> Void]) -> SubviewType {
-        self.dryui_addSubview(subview)
+    @discardableResult public func addSubview<SubviewType:View>(_ subview: SubviewType, _ subviewBlocks: (SubviewType) -> Void ..., _ lastBlock: ((SubviewType, ConstraintMaker) -> Void)! = nil) -> SubviewType {
+        addSubview(subview)
         subviewBlocks.forEach{ $0(subview) }
-        return subview
-    }
-    
-    private func addSubviewInternal<SubviewType:View>(subview: SubviewType, _ subviewBlocks: [(SubviewType) -> Void], @noescape _ lastBlock: (SubviewType, ConstraintMaker) -> Void) -> SubviewType {
-        self.dryui_addSubview(subview)
-        subviewBlocks.forEach{ $0(subview) }
-        subview.snp_makeConstraints { lastBlock(subview, $0) }
+        if let lastBlock = lastBlock {
+            subview.snp.makeConstraints { lastBlock(subview, $0) }
+        }
         return subview
     }
 }
+
+
+// MARK: Build a view with inferred type from blocks
+public func buildView<SubviewType:View>(_ subviewBlocks: (SubviewType) -> Void ..., _ lastBlock: ((SubviewType, ConstraintMaker) -> Void)! = nil) -> SubviewType {
+    let subview = SubviewType()
+    subviewBlocks.forEach{ $0(subview) }
+    if let lastBlock = lastBlock {
+        subview.snp.makeConstraints { lastBlock(subview, $0) }
+    }
+    return subview
+}
+
+
+// MARK: Build a view with type passed explicitly
+public func buildView<SubviewType:View>(_ subviewType: SubviewType.Type, _ subviewBlocks: (SubviewType) -> Void ..., _ lastBlock: ((SubviewType, ConstraintMaker) -> Void)! = nil) -> SubviewType {
+    let subview = SubviewType()
+    subviewBlocks.forEach{ $0(subview) }
+    if let lastBlock = lastBlock {
+        subview.snp.makeConstraints { lastBlock(subview, $0) }
+    }
+    return subview
+}
+
+
+// MARK: Build a view with the view instance passed explicitly
+public func buildView<SubviewType:View>(_ subview: SubviewType, _ subviewBlocks: (SubviewType) -> Void ..., _ lastBlock: ((SubviewType, ConstraintMaker) -> Void)! = nil) -> SubviewType {
+    subviewBlocks.forEach{ $0(subview) }
+    if let lastBlock = lastBlock {
+        subview.snp.makeConstraints { lastBlock(subview, $0) }
+    }
+    return subview
+}
+

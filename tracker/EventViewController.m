@@ -9,7 +9,6 @@
 #import "EventViewController.h"
 #import <DRYUI/DRYUI.h>
 #import <MoveViewUpForKeyboardKit/MVUFKView.h>
-#import <ReactiveCocoa/ReactiveCocoa.h>
 #import "ChameleonMacros.h"
 
 
@@ -17,8 +16,8 @@
 @interface EventViewController()
 
 @property (nonatomic, strong) Data *data;
-@property (nonatomic, strong) Event *originalEvent;
-@property (nonatomic, strong) Event *editingEvent;
+@property (nonatomic, strong) EEvent *originalEvent;
+@property (nonatomic, strong) EEvent *editingEvent;
 @property (nonatomic, strong) EventViewControllerDoneBlock done;
 
 @property (nonatomic, strong) NSDateFormatter *dateFormatter;
@@ -30,7 +29,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 @implementation EventViewController
 
-- (instancetype)initWithData:(Data *)data andEvent:(Event *)event done:(EventViewControllerDoneBlock)done {
+- (instancetype)initWithData:(Data *)data andEvent:(EEvent *)event done:(EventViewControllerDoneBlock)done {
     if (([super init])) {
         self.edgesForExtendedLayout = UIRectEdgeNone;
         self.data = data;
@@ -70,12 +69,12 @@
             [keyboardDoneButtonView setItems:@[doneButton]];
              _.inputAccessoryView = keyboardDoneButtonView;
             
-            @weakify(self);
-            [[pickerView rac_signalForControlEvents:UIControlEventValueChanged] subscribeNext:^(id x) {
-                @strongify(self);
-                self.editingEvent.date = pickerView.date;
-                _.text = [self.dateFormatter stringFromDate:self.editingEvent.date];
-            }];
+//            @weakify(self);
+//            [[pickerView rac_signalForControlEvents:UIControlEventValueChanged] subscribeNext:^(id x) {
+//                @strongify(self);
+//                self.editingEvent.date = pickerView.date;
+//                _.text = [self.dateFormatter stringFromDate:self.editingEvent.date];
+//            }];
             
             make.left.and.right.equalTo(superview);
             make.bottom.equalTo(keyboardView.mas_top).with.offset(-10);
@@ -88,9 +87,9 @@
             make.left.and.right.equalTo(superview);
             make.bottom.equalTo(self.dateTextField.mas_top).with.offset(-10);
             make.height.equalTo(@50);
-            [_.rac_textSignal subscribeNext:^(id x) {
-                self.editingEvent.name = _.text;
-            }];
+//            [_.rac_textSignal subscribeNext:^(id x) {
+//                self.editingEvent.name = _.text;
+//            }];
         };
     };
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed:)];

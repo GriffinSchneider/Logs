@@ -7,12 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "Event.h"
+#import "EEvent.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 @interface TimelineColumnView : UIView
 
-- (instancetype)initWithEvents:(NSArray<Event *> *)events startTime:(NSDate *)startTime endTime:(NSDate *)endTime;
+- (instancetype)initWithEvents:(NSArray<EEvent *> *)events startTime:(NSDate *)startTime endTime:(NSDate *)endTime;
 
 @end
