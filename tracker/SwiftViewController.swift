@@ -22,7 +22,6 @@ enum SectionValue {
     case occurrence(String)
     case activeState(SEvent)
     case state(SStateSchema, isActive: Bool)
-    case reading(String)
 }
 extension SectionValue: Hashable {
     var hashValue: Int {
@@ -34,8 +33,6 @@ extension SectionValue: Hashable {
         case let .activeState(s):
             return s.hashValue
         case let .state(s, _):
-            return s.hashValue
-        case let .reading(s):
             return s.hashValue
         }
     }
@@ -49,8 +46,6 @@ func ==(lhs: SectionValue, rhs: SectionValue) -> Bool {
     case let (.activeState(l), .activeState(r)):
         return l == r
     case let (.state(l, _), .state(r, _)):
-        return l == r
-    case let (.reading(l), .reading(r)):
         return l == r
     default:
         return false
@@ -79,9 +74,6 @@ class SwiftViewController: UIViewController {
             case let .state(s, ia):
                 b.setTitle(s.name, for: .normal)
                 b.backgroundColor = ia ? UIColor.flatGreenColorDark() : UIColor.flatRedColorDark()
-            case let .reading(r):
-                b.setTitle(r, for: .normal)
-                b.backgroundColor = UIColor.blue
             }
             b.highlightedBackgroundColor = b.backgroundColor?.darken(byPercentage: 0.4)
         }) { v, make in
@@ -89,7 +81,7 @@ class SwiftViewController: UIViewController {
             make.edges.equalTo(v.superview!)
         }
         
-        let actions: [SectionValue] = [
+        let topActions: [SectionValue] = [
             .action("Edit") {
                 SyncManager.i().loadFromDisk()
                 self.present(UINavigationController(rootViewController: ListViewController {
@@ -108,13 +100,32 @@ class SwiftViewController: UIViewController {
             .action("Save") { print("sdfsdfdf") },
         ]
         
+        let bottomActions: [SectionValue] = [
+            .action("Reading") {
+                let vc = ReadingViewController {
+                    $0.forEach {
+                        SSyncManager.data.value.events.sortedAppend(SEvent(
+                            name: $0.key,
+                            date: Date(),
+                            type: .Reading,
+                            reading: $0.value
+                        ))
+                    }
+                    self.dismiss(animated: true)
+                }
+                vc.modalPresentationStyle = .overCurrentContext
+                vc.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
+                self.present(vc, animated: true)
+            }
+        ]
+        
         Observable
             .combineLatest(SSyncManager.data.asObservable(), SSyncManager.schema.asObservable()) { ($0, $1) }
             .map { t -> [[SectionValue]] in
                 let data = t.0, schema = t.1
                 let active = data.activeStates()
                 return [
-                    actions,
+                    topActions,
                     schema.occurrences.map { .occurrence($0) },
                     active.map { .activeState($0) },
                     schema.states.map { s in
@@ -122,7 +133,7 @@ class SwiftViewController: UIViewController {
                             s.name == a.name
                         })
                     },
-                    schema.readings.map { .reading($0) }
+                    bottomActions,
                 ]
             }
             .bindTo(gridView.buttons)
@@ -153,8 +164,6 @@ class SwiftViewController: UIViewController {
                         date: Date(),
                         type: isActive ? .EndState : .StartState
                     )
-                case let .reading(r):
-                    return nil
                 }
             }
             .filter { $0 != nil }.map { $0! }

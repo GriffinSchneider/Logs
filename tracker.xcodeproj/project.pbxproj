@@ -10,6 +10,8 @@
 		04439B03210A85AFF895CC30 /* Pods_tracker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF11449F2EFACA3CE0CA70BB /* Pods_tracker.framework */; };
 		851B5F561D414F0D00A3AFFD /* TimelineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 851B5F551D414F0D00A3AFFD /* TimelineViewController.m */; };
 		851B5F591D41531A00A3AFFD /* State.m in Sources */ = {isa = PBXBuildFile; fileRef = 851B5F581D41531A00A3AFFD /* State.m */; };
+		8527E87D1DC68124008E8234 /* ReadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8527E87C1DC68124008E8234 /* ReadingViewController.swift */; };
+		8527E87E1DC68124008E8234 /* ReadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8527E87C1DC68124008E8234 /* ReadingViewController.swift */; };
 		853B23D41D6EA77200CD9AE5 /* SwiftViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 853B23D31D6EA77200CD9AE5 /* SwiftViewController.swift */; };
 		853B23D51D6EA77200CD9AE5 /* SwiftViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 853B23D31D6EA77200CD9AE5 /* SwiftViewController.swift */; };
 		854C75AF1D09185800DD4CEF /* Data.m in Sources */ = {isa = PBXBuildFile; fileRef = 854C75AE1D09185800DD4CEF /* Data.m */; };
@@ -99,6 +101,7 @@
 		851B5F551D414F0D00A3AFFD /* TimelineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimelineViewController.m; sourceTree = "<group>"; };
 		851B5F571D41531A00A3AFFD /* State.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = State.h; sourceTree = "<group>"; };
 		851B5F581D41531A00A3AFFD /* State.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = State.m; sourceTree = "<group>"; };
+		8527E87C1DC68124008E8234 /* ReadingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadingViewController.swift; sourceTree = "<group>"; };
 		853B23D11D6EA77100CD9AE5 /* tracker-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "tracker-Bridging-Header.h"; sourceTree = "<group>"; };
 		853B23D21D6EA77200CD9AE5 /* TrackerToday-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TrackerToday-Bridging-Header.h"; sourceTree = "<group>"; };
 		853B23D31D6EA77200CD9AE5 /* SwiftViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftViewController.swift; sourceTree = "<group>"; };
@@ -274,6 +277,7 @@
 				85AC34D91D775CC500EBFC12 /* ModelComputations.swift */,
 				85AC34D61D775C0200EBFC12 /* StringDateJSONTransform.swift */,
 				853B23D31D6EA77200CD9AE5 /* SwiftViewController.swift */,
+				8527E87C1DC68124008E8234 /* ReadingViewController.swift */,
 				85C162D41DB3FA6A001C75AC /* ButtonGridView.swift */,
 				85AC34CA1D76288B00EBFC12 /* Styles.swift */,
 				858607261D2B4D46003D39FA /* ListViewController.h */,
@@ -538,6 +542,7 @@
 				85555FA61D5D2436003047BC /* EEvent.m in Sources */,
 				85AC34D81D775C0200EBFC12 /* StringDateJSONTransform.swift in Sources */,
 				85555FAA1D5D2436003047BC /* TimelineViewController.m in Sources */,
+				8527E87E1DC68124008E8234 /* ReadingViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -554,6 +559,7 @@
 				85F299581D4AAA32007BA84A /* Utils.m in Sources */,
 				851B5F591D41531A00A3AFFD /* State.m in Sources */,
 				85B833F81D09169E009D6D42 /* Schema.m in Sources */,
+				8527E87D1DC68124008E8234 /* ReadingViewController.swift in Sources */,
 				85AC34C81D761D7500EBFC12 /* Extensions.swift in Sources */,
 				858B2AEA1D5251750027C439 /* StateSchema.m in Sources */,
 				85AC34D71D775C0200EBFC12 /* StringDateJSONTransform.swift in Sources */,
