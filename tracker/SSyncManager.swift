@@ -10,12 +10,12 @@ import Foundation
 import ObjectMapper
 import RxSwift
 
-class SSyncManager {
-    static var schema = Variable(Mapper<SSchema>().map(JSONString: try! String(contentsOf: schemaPath, encoding: .utf8))!)
+@objc class SSyncManager: NSObject {
+    static var schema = Variable(schemaFromDisk())
     
     static var data:Variable<SData> = {
         print(dataPath)
-        let data = Variable(Mapper<SData>().map(JSONString: try! String(contentsOf: dataPath, encoding: .utf8))!)
+        let data = Variable(dataFromDisk())
         _ = data.asObservable()
             .skip(1)
             .observeOn(SerialDispatchQueueScheduler(internalSerialQueueName: "DataWriteQueue"))
@@ -29,7 +29,22 @@ class SSyncManager {
         return data
     }()
     
-    fileprivate static let containerPath = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.zone.griff.tracker")!
-    fileprivate static let schemaPath = containerPath.appendingPathComponent("schema.json")
-    fileprivate static let dataPath = containerPath.appendingPathComponent("data.json")
+    private static let containerPath = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.zone.griff.tracker")!
+    private static let schemaPath = containerPath.appendingPathComponent("schema.json")
+    private static let dataPath = containerPath.appendingPathComponent("data.json")
+    
+    private static func dataFromDisk() -> SData {
+        let string = (try? String(contentsOf: dataPath, encoding: .utf8)) ?? "{}"
+        return Mapper<SData>().map(JSONString: string)!
+    }
+    
+    private static func schemaFromDisk() -> SSchema {
+        let string = (try? String(contentsOf: schemaPath, encoding: .utf8)) ?? "{}"
+        return Mapper<SSchema>().map(JSONString: string)!
+    }
+    
+    @objc static func loadFromDisk() {
+        schema.value = schemaFromDisk()
+        data.value = dataFromDisk()
+    }
 }

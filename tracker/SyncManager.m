@@ -11,6 +11,11 @@
 #import <UIKit/UIKit.h>
 #import <Toast/UIView+Toast.h>
 #import <DropboxSDK/DropboxSDK.h>
+#if IS_TODAY_EXTENSION
+#import "TrackerToday-Swift.h"
+#else
+#import "tracker-Swift.h"
+#endif
 
 
 #define PRETTY_PRINT(x) \
@@ -187,7 +192,7 @@ DBRestClientDelegate
         [self.restClient loadMetadata:@"/data.json"];
     } else {
         [self toast:@"✅Loaded Data✅"];
-        [self loadFromDisk];
+        [SSyncManager loadFromDisk];
     }
     [self hideActivity];
 }
