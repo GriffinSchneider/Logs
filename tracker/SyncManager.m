@@ -37,7 +37,6 @@ DBRestClientDelegate
 
 @property (nonatomic, strong) DBRestClient* restClient;
 
-@property (nonatomic, strong) NSTimer *saveTimer;
 @property (nonatomic, strong) NSString *currentlyLoadingFile;
 
 @end
@@ -151,16 +150,6 @@ DBRestClientDelegate
     if (!self.restClient) {
         NSAssert(NO, @"Trying to write to Dropbox with no Dropbox client!");
     }
-    [self writeToDisk];
-    [self.saveTimer invalidate];
-    self.saveTimer = [NSTimer timerWithTimeInterval:3.0 target:self selector:@selector(saveImmediately) userInfo:nil repeats:NO];
-    [[NSRunLoop currentRunLoop] addTimer:self.saveTimer forMode:NSRunLoopCommonModes];
-}
-
-- (void)saveImmediately {
-    [self.saveTimer invalidate];
-    self.saveTimer = nil;
-    [self writeToDisk];
     [self.restClient uploadFile:@"data.json" toPath:@"/" withParentRev:self.dataRevision fromPath:self.localDataPath];
 }
 

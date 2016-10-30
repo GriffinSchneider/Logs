@@ -85,6 +85,8 @@ class SwiftViewController: UIViewController {
             .action("Edit") {
                 SyncManager.i().loadFromDisk()
                 self.present(UINavigationController(rootViewController: ListViewController {
+                    SyncManager.i().writeToDisk()
+                    SSyncManager.loadFromDisk()
                     self.dismiss(animated: true)
                 }), animated: true)
             },
@@ -97,7 +99,9 @@ class SwiftViewController: UIViewController {
             .action("Reload") {
                 SyncManager.i().loadFromDropbox()
             },
-            .action("Save") { print("sdfsdfdf") },
+            .action("Save") {
+                 SyncManager.i().writeToDropbox()
+            },
         ]
         
         let bottomActions: [SectionValue] = [

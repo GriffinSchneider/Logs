@@ -26,6 +26,5 @@
 
 - (void)writeToDisk;
 - (void)writeToDropbox;
-- (void)saveImmediately;
 
 @end
