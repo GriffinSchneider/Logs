@@ -16,15 +16,37 @@ import RxSwift
     static var data:Variable<SData> = {
         print(dataPath)
         let data = Variable(dataFromDisk())
+        
+        print("LAST: \(data.value.events.last)")
         _ = data.asObservable()
             .skip(1)
+            .debounce(0.1, scheduler: MainScheduler.instance)
+            .map { data -> (SData, UIBackgroundTaskIdentifier?) in
+                #if IS_TODAY_EXTENSION
+                    return (data, nil)
+                #else
+                    let taskId = UIApplication.shared.beginBackgroundTask {
+                        print("Background task terminated!")
+                    }
+                    print("Beginning background task: \(taskId)")
+                    return (data, taskId)
+                #endif
+            }
             .observeOn(SerialDispatchQueueScheduler(internalSerialQueueName: "DataWriteQueue"))
             .subscribe(onNext: {
-                try! $0.toJSONString(prettyPrint: true)!.write(
-                    to: SSyncManager.dataPath,
-                    atomically: true,
-                    encoding: String.Encoding.utf8
-                )
+                do {
+                    try $0.0.toJSONString(prettyPrint: true)!.write(
+                        to: SSyncManager.dataPath,
+                        atomically: true,
+                        encoding: .utf8
+                    )
+                    #if !IS_TODAY_EXTENSION
+                        print("Completing background task: \($0.1)")
+                        UIApplication.shared.endBackgroundTask($0.1!)
+                    #endif
+                } catch {
+                    print("EXCEPTION: \(error)")
+                }
             })
         return data
     }()
@@ -35,7 +57,7 @@ import RxSwift
     
     private static func dataFromDisk() -> SData {
         let string = (try? String(contentsOf: dataPath, encoding: .utf8)) ?? "{}"
-        return Mapper<SData>().map(JSONString: string)!
+        return Mapper<SData>().map(JSONString: string) ?? Mapper<SData>().map(JSONString: "{}")!
     }
     
     private static func schemaFromDisk() -> SSchema {
