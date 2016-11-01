@@ -16,7 +16,6 @@ import RxSwift
     static var data:Variable<SData> = {
         print(dataPath)
         let data = Variable(dataFromDisk())
-        
         print("LAST: \(data.value.events.last)")
         _ = data.asObservable()
             .skip(1)

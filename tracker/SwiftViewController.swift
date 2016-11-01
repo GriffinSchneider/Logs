@@ -83,10 +83,7 @@ class SwiftViewController: UIViewController {
         
         let topActions: [SectionValue] = [
             .action("Edit") {
-                SyncManager.i().loadFromDisk()
-                self.present(UINavigationController(rootViewController: ListViewController {
-                    SyncManager.i().writeToDisk()
-                    SSyncManager.loadFromDisk()
+                self.present(UINavigationController(rootViewController: ListViewController() {
                     self.dismiss(animated: true)
                 }), animated: true)
             },
