@@ -94,7 +94,17 @@ class SwiftViewController: UIViewController {
                 }, animated: true)
             },
             .action("Reload") {
-                SyncManager.i().loadFromDropbox()
+                let ac = UIAlertController(title: "u sure bro?", message: nil, preferredStyle: .alert)
+                ac.addAction(UIAlertAction(title: "yeah bro", style: .default) { _ in
+                    let ac = UIAlertController(title: "rly tho?", message: nil, preferredStyle: .alert)
+                    ac.addAction(UIAlertAction(title: "yeeeeeeeeeee", style: .default) { _ in
+                        SyncManager.i().loadFromDropbox()
+                    })
+                    ac.addAction(UIAlertAction(title: "NOPE", style: .cancel) { _ in })
+                    self.present(ac, animated: true)
+                })
+                ac.addAction(UIAlertAction(title: "nah bro", style: .cancel) { _ in })
+                self.present(ac, animated: true)
             },
             .action("Save") {
                  SyncManager.i().writeToDropbox()
