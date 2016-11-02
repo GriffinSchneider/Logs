@@ -26,8 +26,6 @@ class ListViewController: UIViewController {
     required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     
     init(completion: @escaping () -> Void) {
-        
-        
         self.completion = completion
         self.tableView = UITableView()
         super.init(nibName: nil, bundle: nil)
@@ -104,6 +102,14 @@ extension ListViewController: UITableViewDataSource {
 extension ListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        // let e = event(forRow: indexPath.row)
+        let e = event(forRow: indexPath.row)
+        navigationController?.pushViewController(EventViewController(event: e) { e in
+            if let e = e {
+                SSyncManager.data.value.events[self.eventIndex(forRow: indexPath.row)] = e
+                SSyncManager.data.value.events.sort()
+                self.tableView.reloadData()
+            }
+            let _ = self.navigationController?.popViewController(animated: true)
+        }, animated: true)
     }
 }

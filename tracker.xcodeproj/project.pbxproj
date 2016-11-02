@@ -23,8 +23,9 @@
 		857DA4B61D090C7B00497E60 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 857DA4B51D090C7B00497E60 /* AppDelegate.m */; };
 		857DA4BE1D090C7B00497E60 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 857DA4BD1D090C7B00497E60 /* Assets.xcassets */; };
 		857DA4C11D090C7B00497E60 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 857DA4BF1D090C7B00497E60 /* LaunchScreen.storyboard */; };
-		8586072B1D2B57A4003D39FA /* EventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8586072A1D2B57A4003D39FA /* EventViewController.m */; };
 		858B2AEA1D5251750027C439 /* StateSchema.m in Sources */ = {isa = PBXBuildFile; fileRef = 858B2AE91D5251750027C439 /* StateSchema.m */; };
+		858B4AC81DC990EE00D56020 /* EventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858B4AC71DC990EE00D56020 /* EventViewController.swift */; };
+		858B4AC91DC990EE00D56020 /* EventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858B4AC71DC990EE00D56020 /* EventViewController.swift */; };
 		85AC34C21D6E407900EBFC12 /* UIColor+Chameleon.m in Sources */ = {isa = PBXBuildFile; fileRef = 85AC34BF1D6E407900EBFC12 /* UIColor+Chameleon.m */; };
 		85AC34C41D6E407900EBFC12 /* UIColor+ChameleonPrivate.m in Sources */ = {isa = PBXBuildFile; fileRef = 85AC34C11D6E407900EBFC12 /* UIColor+ChameleonPrivate.m */; };
 		85AC34C81D761D7500EBFC12 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85AC34C71D761D7500EBFC12 /* Extensions.swift */; };
@@ -58,7 +59,6 @@
 		85E7D4201DC6C4F4004E67D9 /* Styles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85AC34CA1D76288B00EBFC12 /* Styles.swift */; };
 		85E7D4221DC6C4F4004E67D9 /* TimelineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 851B5F551D414F0D00A3AFFD /* TimelineViewController.m */; };
 		85E7D4231DC6C4F4004E67D9 /* TimelineColumnView.m in Sources */ = {isa = PBXBuildFile; fileRef = 85F2995A1D4BFEED007BA84A /* TimelineColumnView.m */; };
-		85E7D4241DC6C4F4004E67D9 /* EventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8586072A1D2B57A4003D39FA /* EventViewController.m */; };
 		85E7D4291DC6C60E004E67D9 /* DropboxSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 854F17B41D28371A0051BE48 /* DropboxSDK.framework */; };
 		85E7D42A1DC6C625004E67D9 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85AC34C71D761D7500EBFC12 /* Extensions.swift */; };
 		85E7D42B1DC6C70D004E67D9 /* UIColor+Chameleon.m in Sources */ = {isa = PBXBuildFile; fileRef = 85AC34BF1D6E407900EBFC12 /* UIColor+Chameleon.m */; };
@@ -120,10 +120,9 @@
 		857DA4BD1D090C7B00497E60 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		857DA4C01D090C7B00497E60 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		857DA4C21D090C7B00497E60 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		858607291D2B57A4003D39FA /* EventViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventViewController.h; sourceTree = "<group>"; };
-		8586072A1D2B57A4003D39FA /* EventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventViewController.m; sourceTree = "<group>"; };
 		858B2AE81D5251750027C439 /* StateSchema.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StateSchema.h; sourceTree = "<group>"; };
 		858B2AE91D5251750027C439 /* StateSchema.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StateSchema.m; sourceTree = "<group>"; };
+		858B4AC71DC990EE00D56020 /* EventViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventViewController.swift; sourceTree = "<group>"; };
 		85AC34BE1D6E407900EBFC12 /* UIColor+Chameleon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Chameleon.h"; sourceTree = "<group>"; };
 		85AC34BF1D6E407900EBFC12 /* UIColor+Chameleon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Chameleon.m"; sourceTree = "<group>"; };
 		85AC34C01D6E407900EBFC12 /* UIColor+ChameleonPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+ChameleonPrivate.h"; sourceTree = "<group>"; };
@@ -255,6 +254,7 @@
 				857DA4B51D090C7B00497E60 /* AppDelegate.m */,
 				85AC34D31D77506000EBFC12 /* SSyncManager.swift */,
 				85034EBB1DC9405A0032DEBC /* ListViewController.swift */,
+				858B4AC71DC990EE00D56020 /* EventViewController.swift */,
 				85AC34D01D774C4500EBFC12 /* Model.swift */,
 				85AC34D91D775CC500EBFC12 /* ModelComputations.swift */,
 				85AC34D61D775C0200EBFC12 /* StringDateJSONTransform.swift */,
@@ -266,8 +266,6 @@
 				851B5F551D414F0D00A3AFFD /* TimelineViewController.m */,
 				85F299591D4BFEED007BA84A /* TimelineColumnView.h */,
 				85F2995A1D4BFEED007BA84A /* TimelineColumnView.m */,
-				858607291D2B57A4003D39FA /* EventViewController.h */,
-				8586072A1D2B57A4003D39FA /* EventViewController.m */,
 				857DA4BD1D090C7B00497E60 /* Assets.xcassets */,
 				857DA4BF1D090C7B00497E60 /* LaunchScreen.storyboard */,
 				857DA4C21D090C7B00497E60 /* Info.plist */,
@@ -514,7 +512,6 @@
 				85AC34D11D774C4500EBFC12 /* Model.swift in Sources */,
 				85AC34DA1D775CC500EBFC12 /* ModelComputations.swift in Sources */,
 				85B833F51D090D02009D6D42 /* EEvent.m in Sources */,
-				8586072B1D2B57A4003D39FA /* EventViewController.m in Sources */,
 				85AC34C21D6E407900EBFC12 /* UIColor+Chameleon.m in Sources */,
 				85F1BA051D2F026500C2A7E3 /* SyncManager.m in Sources */,
 				85F299581D4AAA32007BA84A /* Utils.m in Sources */,
@@ -522,6 +519,7 @@
 				85B833F81D09169E009D6D42 /* Schema.m in Sources */,
 				8527E87D1DC68124008E8234 /* ReadingViewController.swift in Sources */,
 				85AC34C81D761D7500EBFC12 /* Extensions.swift in Sources */,
+				858B4AC81DC990EE00D56020 /* EventViewController.swift in Sources */,
 				858B2AEA1D5251750027C439 /* StateSchema.m in Sources */,
 				85034EBC1DC9405A0032DEBC /* ListViewController.swift in Sources */,
 				85AC34D71D775C0200EBFC12 /* StringDateJSONTransform.swift in Sources */,
@@ -544,10 +542,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				85E7D4191DC6C4F4004E67D9 /* SSyncManager.swift in Sources */,
+				858B4AC91DC990EE00D56020 /* EventViewController.swift in Sources */,
 				85034EBD1DC9405A0032DEBC /* ListViewController.swift in Sources */,
 				85E7D41B1DC6C4F4004E67D9 /* ModelComputations.swift in Sources */,
 				85E7D42C1DC6C70D004E67D9 /* UIColor+ChameleonPrivate.m in Sources */,
-				85E7D4241DC6C4F4004E67D9 /* EventViewController.m in Sources */,
 				85E7D41E1DC6C4F4004E67D9 /* ReadingViewController.swift in Sources */,
 				85E7D4141DC6C4F4004E67D9 /* Schema.m in Sources */,
 				85E7D4111DC6C4F4004E67D9 /* Utils.m in Sources */,

@@ -13,7 +13,6 @@
 #import "ChameleonMacros.h"
 #import "SyncManager.h"
 #import "Utils.h"
-#import "EventViewController.h"
 #import "TimelineColumnView.h"
 
 
