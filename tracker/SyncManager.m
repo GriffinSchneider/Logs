@@ -138,14 +138,6 @@ DBRestClientDelegate
     }
 }
 
-- (void)writeToDisk {
-    if (!self.data) {
-        return;
-    }
-    NSData *nsData = [self.data toJSONData];
-    [nsData writeToFile:self.localDataPath atomically:YES];
-}
-
 - (void)writeToDropbox {
     if (!self.restClient) {
         NSAssert(NO, @"Trying to write to Dropbox with no Dropbox client!");

@@ -35,7 +35,7 @@
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
-    [[SyncManager i] writeToDisk];
+    
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {

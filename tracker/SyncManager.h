@@ -24,7 +24,6 @@
 - (void)loadFromDropbox;
 - (void)loadFromDisk;
 
-- (void)writeToDisk;
 - (void)writeToDropbox;
 
 @end
