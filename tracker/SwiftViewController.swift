@@ -72,8 +72,9 @@ class SwiftViewController: UIViewController {
                 b.setTitle("\(a.name!) \(formatDuration(Date().timeIntervalSince(a.date))!)" , for: .normal)
                 b.backgroundColor = UIColor.flatGreenColorDark()
             case let .state(s, ia):
-                b.setTitle(s.name, for: .normal)
+                b.setTitle(s.icon, for: .normal)
                 b.backgroundColor = ia ? UIColor.flatGreenColorDark() : UIColor.flatRedColorDark()
+                b.titleLabel?.font = UIFont.systemFont(ofSize: 32)
             }
             b.highlightedBackgroundColor = b.backgroundColor?.darken(byPercentage: 0.4)
         }) { v, make in

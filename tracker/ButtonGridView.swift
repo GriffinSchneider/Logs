@@ -52,7 +52,7 @@ class ButtonGridView<ButtonDataType: Hashable>: UIView {
             } else {
                 self.addSubview(UIButton.self, { v in
                     v.contentEdgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
-                    buttonMap[data] = v
+                    self.buttonMap[data] = v
                 })
             }
         }
