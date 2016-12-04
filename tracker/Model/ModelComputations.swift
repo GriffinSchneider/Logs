@@ -8,8 +8,8 @@
 
 import Foundation
 
+
 extension SData {
-    
     func activeStates() -> [SEvent] {
         var retVal = [SEvent]()
         var endedStates = Set<String>()
@@ -28,5 +28,4 @@ extension SData {
         }
         return retVal
     }
-
 }
