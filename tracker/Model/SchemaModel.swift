@@ -23,13 +23,15 @@ struct SSchema: Mappable {
 }
 
 
-struct SStateSchema: Mappable {
+struct SStateSchema: Mappable, Streakable {
     var name: String!
     var icon: String!
+    var streak: StreakSchema?
     init?(map: Map) { }
     mutating func mapping(map: Map) {
         name <- map["name"]
         icon <- map["icon"]
+        streak <- map["streak"]
     }
 }
 
@@ -46,11 +48,13 @@ func ==(lhs: SStateSchema, rhs: SStateSchema) -> Bool {
 }
 
 
-struct OccurrenceSchema: Mappable {
+struct OccurrenceSchema: Mappable, Streakable {
     var name: String!
+    var streak: StreakSchema?
     init?(map: Map) { }
     mutating func mapping(map: Map) {
         name <- map["name"]
+        streak <- map["streak"]
     }
 }
 
@@ -65,11 +69,13 @@ func ==(lhs: OccurrenceSchema, rhs: OccurrenceSchema) -> Bool {
 }
 
 
-struct ReadingSchema: Mappable {
+struct ReadingSchema: Mappable, Streakable {
     var name: String!
+    var streak: StreakSchema?
     init?(map: Map) { }
     mutating func mapping(map: Map) {
         name <- map["name"]
+        streak <- map["streak"]
     }
 }
 
@@ -81,4 +87,23 @@ extension ReadingSchema: Hashable {
 
 func ==(lhs: ReadingSchema, rhs: ReadingSchema) -> Bool {
     return lhs.name == rhs.name
+}
+
+
+struct StreakSchema: Mappable {
+    var perDay: Int = 1
+    var interval: Int = 0
+    init?(map: Map) { }
+    mutating func mapping(map: Map) {
+        perDay <- map["perDay"]
+        interval <- map["interval"]
+    }
+}
+
+protocol Streakable {
+    var streak: StreakSchema? { get }
+}
+
+extension Streakable {
+    var hasStreak: Bool { return streak != nil }
 }

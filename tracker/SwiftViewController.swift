@@ -22,6 +22,7 @@ enum SectionValue {
     case occurrence(OccurrenceSchema)
     case activeState(SEvent)
     case state(SStateSchema, isActive: Bool)
+    indirect case streak(StreakStatus, val: SectionValue)
 }
 extension SectionValue: Hashable {
     var hashValue: Int {
@@ -34,6 +35,8 @@ extension SectionValue: Hashable {
             return s.hashValue
         case let .state(s, _):
             return s.hashValue
+        case let .streak(_, v):
+            return v.hashValue
         }
     }
 }
@@ -47,13 +50,84 @@ func ==(lhs: SectionValue, rhs: SectionValue) -> Bool {
         return l == r
     case let (.state(l, _), .state(r, _)):
         return l == r
+    case let (.streak(_, l), .streak(_, r)):
+        return l == r
     default:
         return false
+    }
+}
+extension SectionValue {
+    var hasStreak: Bool {
+        switch self {
+        case let .occurrence(s):
+            return s.hasStreak
+        case let .state(s, _):
+            return s.hasStreak
+        case .streak:
+            return true
+        default:
+            return false
+        }
+    }
+    var streak: StreakSchema {
+        switch self {
+        case let .occurrence(s):
+            return s.streak!
+        case let .state(s, _):
+            return s.streak!
+        case let .streak(_, val):
+            return val.streak
+        default:
+            fatalError("No streak for \(self)")
+        }
+    }
+    var name: String {
+        switch self {
+        case let .action(s, _):
+            return s
+        case let .occurrence(s):
+            return s.name
+        case let .activeState(s):
+            return s.name
+        case let .state(s, _):
+            return s.name
+        case let .streak(_, v):
+            return v.name
+        }
     }
 }
 
 class SwiftViewController: UIViewController {
     let disposeBag = DisposeBag()
+    
+    private func valToEvent(v: SectionValue) -> SEvent? {
+        switch v {
+        case let .action(_, b):
+            b()
+            return nil
+        case let .occurrence(o):
+            return SEvent(
+                name: o.name,
+                date: Date(),
+                type: .Occurrence
+            )
+        case let .activeState(s):
+            return SEvent(
+                name: s.name,
+                date: Date(),
+                type: .EndState
+            )
+        case let .state((s, isActive)):
+            return SEvent(
+                name: s.name,
+                date: Date(),
+                type: isActive ? .EndState : .StartState
+            )
+        case let .streak((_, val)):
+            return valToEvent(v: val)
+        }
+    }
+    
     
     override func viewDidLoad() {
         
@@ -75,6 +149,28 @@ class SwiftViewController: UIViewController {
                 b.setTitle(s.icon, for: .normal)
                 b.backgroundColor = ia ? UIColor.flatGreenColorDark() : UIColor.flatRedColorDark()
                 b.titleLabel?.font = UIFont.systemFont(ofSize: 32)
+            case let .streak(s, v):
+                switch s.needed {
+                case .neededToday: b.backgroundColor = UIColor.flatRedColorDark()
+                case .notNeeded:   b.backgroundColor = UIColor.flatBlueColorDark()
+                }
+                b.titleLabel?.numberOfLines = 0
+                b.titleLabel?.textAlignment = .center
+                let title = NSMutableAttributedString(
+                    string: "\(s.count)",
+                    attributes: [
+                        NSFontAttributeName: UIFont.systemFont(ofSize: 18),
+                        NSForegroundColorAttributeName: UIColor.flatWhite()
+                    ]
+                )
+                title.append(NSAttributedString(
+                    string: "\n\(v.name)",
+                    attributes: [
+                        NSFontAttributeName: UIFont.systemFont(ofSize: 10),
+                        NSForegroundColorAttributeName: UIColor.flatWhiteColorDark()
+                    ]
+                ))
+                b.setAttributedTitle(title, for: .normal)
             }
             b.highlightedBackgroundColor = b.backgroundColor?.darken(byPercentage: 0.4)
         }) { v, make in
@@ -136,15 +232,27 @@ class SwiftViewController: UIViewController {
             .map { t -> [[SectionValue]] in
                 let data = t.0, schema = t.1
                 let active = data.activeStates()
-                return [
-                    topActions,
-                    schema.occurrences.map { .occurrence($0) },
-                    active.map { .activeState($0) },
-                    schema.states.map { s in
+                let occurrences: [SectionValue] = schema.occurrences
+                    .map { .occurrence($0) }
+                let states: [SectionValue] = schema.states
+                    .map { s in
                         .state(s, isActive: active.contains { a in
                             s.name == a.name
                         })
+                    }
+                let streaks = occurrences.filter {$0.hasStreak} + states.filter {$0.hasStreak}
+                
+                return [
+                    topActions,
+                    streaks.map {
+                        .streak(data.status(
+                            forStreak: $0.streak,
+                            named: $0.name
+                        ), val: $0)
                     },
+                    occurrences.filter { !$0.hasStreak },
+                    active.map { .activeState($0) },
+                    states.filter { !$0.hasStreak },
                     bottomActions,
                 ]
             }
@@ -153,33 +261,9 @@ class SwiftViewController: UIViewController {
         
         gridView
             .selection
-            .map { v -> SEvent? in
-                switch v {
-                case let .action(_, b):
-                    b()
-                    return nil
-                case let .occurrence(o):
-                    return SEvent(
-                        name: o.name,
-                        date: Date(),
-                        type: .Occurrence
-                    )
-                case let .activeState(s):
-                    return SEvent(
-                        name: s.name,
-                        date: Date(),
-                        type: .EndState
-                    )
-                case let .state((s, isActive)):
-                    return SEvent(
-                        name: s.name,
-                        date: Date(),
-                        type: isActive ? .EndState : .StartState
-                    )
-                }
-            }
+            .map(valToEvent)
             .filter { $0 != nil }.map { $0! }
-            .subscribeNext { SSyncManager.data.value.events.sortedAppend($0) }
+            .subscribe(onNext: { SSyncManager.data.value.events.sortedAppend($0) })
             .addDisposableTo(disposeBag)
     }
 }
