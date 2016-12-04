@@ -13,13 +13,13 @@ import DRYUI
 
 class ReadingViewController: UIViewController {
     let disposeBag = DisposeBag()
-    let completion: ([String: Float]) -> Void
+    let completion: ([ReadingSchema: Float]) -> Void
     
-    private var inputs: [String: Float] = [:]
+    private var inputs: [ReadingSchema: Float] = [:]
     
     required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     
-    init(completion: @escaping ([String: Float]) -> Void) {
+    init(completion: @escaping ([ReadingSchema: Float]) -> Void) {
         self.completion = completion
         super.init(nibName: nil, bundle: nil)
     }
@@ -32,7 +32,7 @@ class ReadingViewController: UIViewController {
             .addDisposableTo(disposeBag)
     }
     
-    private func update(readings: [String]) {
+    private func update(readings: [ReadingSchema]) {
         view.backgroundColor = UIColor(white: 0, alpha: 0.3)
         view.addSubview(UIButton.self) { v, make in
             v.backgroundColor = UIColor.clear
@@ -66,7 +66,7 @@ class ReadingViewController: UIViewController {
                     make.centerY.equalTo(label)
                 }
                 slider.rx.value.asObservable()
-                    .map { "\(reading): \(Int(floorf($0)))" }
+                    .map { "\(reading.name!): \(Int(floorf($0)))" }
                     .bindTo(label.rx.text)
                     .addDisposableTo(self.disposeBag)
                 slider.rx.value.asObservable()

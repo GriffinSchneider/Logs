@@ -11,9 +11,9 @@ import ObjectMapper
 
 
 struct SSchema: Mappable {
-    var occurrences: [String] = []
+    var occurrences: [OccurrenceSchema] = []
     var states: [SStateSchema] = []
-    var readings: [String] = []
+    var readings: [ReadingSchema] = []
     init?(map: Map) { }
     mutating func mapping(map: Map) {
         occurrences <- map["occurrences"]
@@ -41,6 +41,40 @@ func ==(lhs: SStateSchema, rhs: SStateSchema) -> Bool {
     return true &&
         lhs.name == rhs.name &&
         lhs.icon == rhs.icon
+}
+
+
+struct OccurrenceSchema: Mappable {
+    var name: String!
+    init?(map: Map) { }
+    mutating func mapping(map: Map) {
+        name <- map["name"]
+    }
+}
+extension OccurrenceSchema: Hashable {
+    var hashValue: Int {
+        return name.hashValue
+    }
+}
+func ==(lhs: OccurrenceSchema, rhs: OccurrenceSchema) -> Bool {
+    return lhs.name == rhs.name
+}
+
+
+struct ReadingSchema: Mappable {
+    var name: String!
+    init?(map: Map) { }
+    mutating func mapping(map: Map) {
+        name <- map["name"]
+    }
+}
+extension ReadingSchema: Hashable {
+    var hashValue: Int {
+        return name.hashValue
+    }
+}
+func ==(lhs: ReadingSchema, rhs: ReadingSchema) -> Bool {
+    return lhs.name == rhs.name
 }
 
 

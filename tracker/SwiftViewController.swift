@@ -19,7 +19,7 @@ let BUTTON_INSETS = UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2)
 
 enum SectionValue {
     case action(String, () -> ())
-    case occurrence(String)
+    case occurrence(OccurrenceSchema)
     case activeState(SEvent)
     case state(SStateSchema, isActive: Bool)
 }
@@ -66,7 +66,7 @@ class SwiftViewController: UIViewController {
                 b.setTitle(s, for: .normal)
                 b.backgroundColor = UIColor.flatPlum()
             case let .occurrence(s):
-                b.setTitle(s, for: .normal)
+                b.setTitle(s.name, for: .normal)
                 b.backgroundColor = UIColor.flatOrangeColorDark()
             case let .activeState(a):
                 b.setTitle("\(a.name!) \(formatDuration(Date().timeIntervalSince(a.date))!)" , for: .normal)
@@ -117,7 +117,7 @@ class SwiftViewController: UIViewController {
                 let vc = ReadingViewController {
                     $0.forEach {
                         SSyncManager.data.value.events.sortedAppend(SEvent(
-                            name: $0.key,
+                            name: $0.key.name,
                             date: Date(),
                             type: .Reading,
                             reading: $0.value
@@ -160,7 +160,7 @@ class SwiftViewController: UIViewController {
                     return nil
                 case let .occurrence(o):
                     return SEvent(
-                        name: o,
+                        name: o.name,
                         date: Date(),
                         type: .Occurrence
                     )
