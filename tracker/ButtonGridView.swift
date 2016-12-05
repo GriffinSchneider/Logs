@@ -66,6 +66,8 @@ class ButtonGridView<ButtonDataType: Hashable>: UIView {
         outputDisposable = Observable.from(buttonMap.map { k, v in
             v.rx.tap.asObservable().map { k }
         }).merge().bindTo(_selection)
+        
+        layoutSubviews()
     }
     
     override func layoutSubviews() {
