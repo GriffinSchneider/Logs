@@ -159,15 +159,15 @@ class SwiftViewController: UIViewController {
                 let title = NSMutableAttributedString(
                     string: "\(s.count)",
                     attributes: [
-                        NSFontAttributeName: UIFont.systemFont(ofSize: 18),
+                        NSFontAttributeName: UIFont.systemFont(ofSize: 24, weight: UIFontWeightBold),
                         NSForegroundColorAttributeName: UIColor.flatWhite()
                     ]
                 )
                 title.append(NSAttributedString(
                     string: "\n\(v.name)",
                     attributes: [
-                        NSFontAttributeName: UIFont.systemFont(ofSize: 10),
-                        NSForegroundColorAttributeName: UIColor.flatWhiteColorDark()
+                        NSFontAttributeName: UIFont.systemFont(ofSize: 10, weight: UIFontWeightLight),
+                        NSForegroundColorAttributeName: UIColor.flatWhite().withAlphaComponent(0.8)
                     ]
                 ))
                 b.setAttributedTitle(title, for: .normal)
