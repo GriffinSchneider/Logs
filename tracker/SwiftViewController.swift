@@ -150,10 +150,7 @@ class SwiftViewController: UIViewController {
                 b.backgroundColor = ia ? UIColor.flatGreenColorDark() : UIColor.flatRedColorDark()
                 b.titleLabel?.font = UIFont.systemFont(ofSize: 32)
             case let .streak(s, v):
-                switch s.needed {
-                case .neededToday: b.backgroundColor = UIColor.flatRedColorDark()
-                case .notNeeded:   b.backgroundColor = UIColor.flatBlueColorDark()
-                }
+                b.backgroundColor = s.numberNeededToday > 0 ? UIColor.flatRedColorDark() : UIColor.flatBlueColorDark()
                 b.titleLabel?.numberOfLines = 0
                 b.titleLabel?.textAlignment = .center
                 let title = NSMutableAttributedString(
@@ -164,7 +161,7 @@ class SwiftViewController: UIViewController {
                     ]
                 )
                 title.append(NSAttributedString(
-                    string: "\n\(v.name)",
+                    string: "\n\(v.name)" + (s.numberNeededToday > 0 ? " (\(s.numberNeededToday))" : ""),
                     attributes: [
                         NSFontAttributeName: UIFont.systemFont(ofSize: 10, weight: UIFontWeightLight),
                         NSForegroundColorAttributeName: UIColor.flatWhite().withAlphaComponent(0.8)

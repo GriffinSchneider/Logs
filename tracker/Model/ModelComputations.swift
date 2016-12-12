@@ -30,17 +30,13 @@ extension SData {
 }
 
 struct StreakStatus {
-    enum Needed {
-        case neededToday
-        case notNeeded
-    }
-    var needed: Needed
+    var numberNeededToday: Int
     var count: Int
 }
 
 extension SData {
     func status(forStreak streak: StreakSchema, named name: String) -> StreakStatus {
-        var retVal = StreakStatus(needed: .neededToday, count: 0)
+        var retVal = StreakStatus(numberNeededToday: 0, count: 0)
         var daysSinceStreakCounterToday = -1
         var daysSinceStreakCounter = 0
         var countThisDay = 0
@@ -48,6 +44,8 @@ extension SData {
         var isToday = true
         for e in events.reversed() {
             if e.name == EVENT_SLEEP && e.type == .StartState {
+                retVal.count += 1
+               
                 if isToday {
                     countToday = countThisDay
                 }
@@ -60,10 +58,12 @@ extension SData {
                     if daysSinceStreakCounterToday == -1 {
                         daysSinceStreakCounterToday = daysSinceStreakCounter
                     }
+                    if daysSinceStreakCounterToday >= streak.interval {
+                        retVal.numberNeededToday = streak.perDay - countToday
+                    }
+                    retVal.count -= (streak.interval + 1)
                     if countToday < streak.perDay && daysSinceStreakCounterToday >= streak.interval {
-                        retVal.needed = .neededToday
-                    } else {
-                        retVal.needed = .notNeeded
+                        retVal.count -= 1
                     }
                     return retVal
                 }
@@ -77,11 +77,6 @@ extension SData {
                     countThisDay += 1
                     if !isToday && daysSinceStreakCounterToday == -1 && countThisDay >= streak.perDay {
                         daysSinceStreakCounterToday = daysSinceStreakCounter
-                    }
-                    if isToday || countThisDay > streak.perDay {
-                        retVal.count += 1
-                    } else if countThisDay == streak.perDay {
-                        retVal.count += streak.perDay
                     }
                 }
             case .EndState: break
