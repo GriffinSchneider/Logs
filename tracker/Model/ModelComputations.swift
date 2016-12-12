@@ -53,6 +53,8 @@ extension SData {
                 }
                 if countThisDay < streak.perDay && !isToday {
                     daysSinceStreakCounter += 1
+                } else if countThisDay >= streak.perDay {
+                    daysSinceStreakCounter = 0
                 }
                 if daysSinceStreakCounter > streak.interval {
                     if daysSinceStreakCounterToday == -1 {
