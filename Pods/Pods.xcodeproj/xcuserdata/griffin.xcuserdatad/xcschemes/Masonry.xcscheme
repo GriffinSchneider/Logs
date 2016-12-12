@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '34577753D1D0C95A13DFB2801C69A854'
+               BlueprintIdentifier = 'A55B82E84FDB139A3A02F364B2B16D04'
                BlueprintName = 'Masonry'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'Masonry.framework'>

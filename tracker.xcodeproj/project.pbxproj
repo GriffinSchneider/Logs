@@ -713,7 +713,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 854F17BC1D284E440051BE48 /* debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = tracker/tracker.entitlements;
@@ -743,7 +742,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 854F17BD1D284E440051BE48 /* release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = tracker/tracker.entitlements;

@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '7A9557F7CFC0A76656228765962E537F'
+               BlueprintIdentifier = '26D6C322337FE743FB2A0576E4A49EE2'
                BlueprintName = 'MoveViewUpForKeyboardKit'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'MoveViewUpForKeyboardKit.framework'>

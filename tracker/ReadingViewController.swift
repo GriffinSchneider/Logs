@@ -36,7 +36,7 @@ class ReadingViewController: UIViewController {
         view.backgroundColor = UIColor(white: 0, alpha: 0.3)
         view.addSubview(UIButton.self) { v, make in
             v.backgroundColor = UIColor.clear
-            v.highlightedBackgroundColor = UIColor(white: 0, alpha: 0.3)
+            v.setHighlightedBackgroundColor(UIColor(white: 0, alpha: 0.3))
             make.edges.equalTo(v.superview!)
         }.rx.tap
             .subscribe(onNext: { self.completion([:]) })
@@ -85,7 +85,7 @@ class ReadingViewController: UIViewController {
                 v.backgroundColor = UIColor.flatGreenColorDark()
                 v.setTitleColor(UIColor.flatWhite(), for: .normal)
                 v.contentEdgeInsets = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
-                v.highlightedBackgroundColor = v.backgroundColor?.darken(byPercentage: 0.4)
+                v.setHighlightedBackgroundColor(v.backgroundColor?.darken(byPercentage: 0.4))
                 make.top.equalTo(lastView!.snp.bottom).offset(20)
                 make.left.right.bottom.equalTo(v.superview!)
             }.rx.tap

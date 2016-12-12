@@ -10,44 +10,44 @@ PODS:
   - DRYUI/swift (1.1.4):
     - DRYUI/base
     - SnapKit (~> 3.0)
-  - JSONModel (1.5.1)
+  - JSONModel (1.7.0)
   - Masonry (1.0.2)
   - MoveViewUpForKeyboardKit (2.0.0)
-  - ObjectMapper (2.0.0)
-  - RxCocoa (3.0.0-beta.1):
-    - RxSwift (~> 3.0.0-beta.1)
-  - RxDataSources (1.0.0-beta.2):
-    - RxCocoa (~> 3.0.0-beta.1)
-    - RxSwift (~> 3.0.0-beta.1)
-  - RxSwift (3.0.0-beta.1)
+  - ObjectMapper (2.2.2)
+  - RxCocoa (3.0.1):
+    - RxSwift (~> 3.0)
+  - RxDataSources (1.0.0):
+    - RxCocoa (~> 3.0)
+    - RxSwift (~> 3.0)
+  - RxSwift (3.0.1)
   - SnapKit (3.0.2)
-  - Toast (3.0)
-  - UIButton-ANDYHighlighted (1.0.0)
+  - Toast (3.1.0)
+  - UIButton-ANDYHighlighted (2.0.0)
 
 DEPENDENCIES:
   - DRYUI
   - JSONModel
   - MoveViewUpForKeyboardKit
   - ObjectMapper
-  - RxCocoa (~> 3.0.0-beta1)
+  - RxCocoa (~> 3.0.0)
   - RxDataSources (~> 1.0.0-beta.2)
-  - RxSwift (~> 3.0.0-beta1)
+  - RxSwift (~> 3.0.0)
   - Toast
   - UIButton-ANDYHighlighted
 
 SPEC CHECKSUMS:
   DRYUI: 54ad8da7ddc66afbdb8e5648737ef2e451511d8d
-  JSONModel: fd2553dc9e6608a3f35bfc956a14be35395d3852
+  JSONModel: 840bc0fcffb24b8454d2c026bf26fea454b8e98d
   Masonry: 7c429b56da9d4ee0bbb3ed77a5ea710d6a5df39e
   MoveViewUpForKeyboardKit: a1f9de6b1dd7aa9451f9a80d763f37cf55f6b218
-  ObjectMapper: aed2570edabbd3c9b26c939e1cabdb6558f933e0
-  RxCocoa: 8cecf331302b8ae5381bbab1bccba4ede2eae6a8
-  RxDataSources: 1cd87dc97fd46be002942eb1dcb1b432535141dd
-  RxSwift: 0823e8d7969c23bfa9ddfb2afa4881e424a1a710
+  ObjectMapper: 9e385c2295bcc4e16eabbcfc85db801442bba545
+  RxCocoa: 15a52fc590dcc700cb4a690a633b5c5184ce3a78
+  RxDataSources: 824693e84d00781d0a5e5cedc1ff95ce9250aacd
+  RxSwift: af5680055c4ad04480189c52d28385b1029493a6
   SnapKit: 2e456761aa92d4d4067a7a5594c18769d451a8ad
-  Toast: 32c59229abfcf41850162b83bb9259dc84372473
-  UIButton-ANDYHighlighted: da99b536b0b4a3c8d86c15c9b38cb10fddb09be6
+  Toast: 14a93686d6c8bfe2727afd342414e35660a8a1f3
+  UIButton-ANDYHighlighted: 3fcadf780786d8d2b4928b0d0e7394e43e827254
 
-PODFILE CHECKSUM: 705dfbc22c89497c31c74a5c4057429ba50733a2
+PODFILE CHECKSUM: 7cc8c1e6dba43bba228d37ce31eaf865d669fb7e
 
-COCOAPODS: 1.1.1
+COCOAPODS: 1.2.0.beta.1
