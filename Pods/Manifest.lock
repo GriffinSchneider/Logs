@@ -14,11 +14,15 @@ PODS:
   - Masonry (1.0.2)
   - MoveViewUpForKeyboardKit (2.0.0)
   - ObjectMapper (2.2.2)
+  - Popover (1.0.2)
   - RxCocoa (3.0.1):
     - RxSwift (~> 3.0)
   - RxDataSources (1.0.0):
     - RxCocoa (~> 3.0)
     - RxSwift (~> 3.0)
+  - RxGesture (0.2.0):
+    - RxCocoa (~> 3.0.0)
+    - RxSwift (~> 3.0.0)
   - RxSwift (3.0.1)
   - SnapKit (3.0.2)
   - Toast (3.1.0)
@@ -29,11 +33,17 @@ DEPENDENCIES:
   - JSONModel
   - MoveViewUpForKeyboardKit
   - ObjectMapper
+  - Popover (from `Popover`)
   - RxCocoa (~> 3.0.0)
   - RxDataSources (~> 1.0.0-beta.2)
+  - RxGesture
   - RxSwift (~> 3.0.0)
   - Toast
   - UIButton-ANDYHighlighted
+
+EXTERNAL SOURCES:
+  Popover:
+    :path: Popover
 
 SPEC CHECKSUMS:
   DRYUI: 54ad8da7ddc66afbdb8e5648737ef2e451511d8d
@@ -41,13 +51,15 @@ SPEC CHECKSUMS:
   Masonry: 7c429b56da9d4ee0bbb3ed77a5ea710d6a5df39e
   MoveViewUpForKeyboardKit: a1f9de6b1dd7aa9451f9a80d763f37cf55f6b218
   ObjectMapper: 9e385c2295bcc4e16eabbcfc85db801442bba545
+  Popover: 1a91e33fe362597fb2047215592fc3229b4630ce
   RxCocoa: 15a52fc590dcc700cb4a690a633b5c5184ce3a78
   RxDataSources: 824693e84d00781d0a5e5cedc1ff95ce9250aacd
+  RxGesture: 17b250d3c6732b35fab53d09800d35ceef717847
   RxSwift: af5680055c4ad04480189c52d28385b1029493a6
   SnapKit: 2e456761aa92d4d4067a7a5594c18769d451a8ad
   Toast: 14a93686d6c8bfe2727afd342414e35660a8a1f3
   UIButton-ANDYHighlighted: 3fcadf780786d8d2b4928b0d0e7394e43e827254
 
-PODFILE CHECKSUM: 7cc8c1e6dba43bba228d37ce31eaf865d669fb7e
+PODFILE CHECKSUM: 0342c7fb4000598fb018e3a8856c8c662e495137
 
 COCOAPODS: 1.2.0.beta.1

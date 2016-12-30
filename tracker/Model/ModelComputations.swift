@@ -21,7 +21,7 @@ extension SData {
                 }
             case .EndState:
                 endedStates.insert(e.name)
-            case .Reading, .Occurrence: break
+            case .Reading, .Occurrence, .StreakExcuse: break
             }
             if e.name == EVENT_SLEEP { break }
         }
@@ -41,16 +41,26 @@ extension SData {
         var daysSinceStreakCounter = 0
         var countThisDay = 0
         var countToday = 0
+        var excuseThisDay = false
+        var excuseToday = false
         var isToday = true
         for e in events.reversed() {
             if e.name == EVENT_SLEEP && e.type == .StartState {
-                retVal.count += 1
-               
+                
+                if isToday || !excuseThisDay {
+                    retVal.count += 1
+                }
                 if isToday {
                     countToday = countThisDay
+                    excuseToday = excuseThisDay
+                }
+                if !isToday && daysSinceStreakCounterToday == -1 && countThisDay >= streak.perDay {
+                    daysSinceStreakCounterToday = daysSinceStreakCounter
                 }
                 if countThisDay < streak.perDay && !isToday {
-                    daysSinceStreakCounter += 1
+                    if !excuseThisDay {
+                        daysSinceStreakCounter += 1
+                    }
                 } else if countThisDay >= streak.perDay {
                     daysSinceStreakCounter = 0
                 }
@@ -58,7 +68,7 @@ extension SData {
                     if daysSinceStreakCounterToday == -1 {
                         daysSinceStreakCounterToday = daysSinceStreakCounter
                     }
-                    if daysSinceStreakCounterToday >= streak.interval {
+                    if daysSinceStreakCounterToday >= streak.interval && !excuseToday {
                         retVal.numberNeededToday = streak.perDay - countToday
                     }
                     retVal.count -= (streak.interval + 1)
@@ -68,6 +78,7 @@ extension SData {
                     return retVal
                 }
                 countThisDay = 0
+                excuseThisDay = false
                 isToday = false
                 continue
             }
@@ -75,9 +86,10 @@ extension SData {
             case .StartState, .Reading, .Occurrence:
                 if e.name == name {
                     countThisDay += 1
-                    if !isToday && daysSinceStreakCounterToday == -1 && countThisDay >= streak.perDay {
-                        daysSinceStreakCounterToday = daysSinceStreakCounter
-                    }
+                }
+            case .StreakExcuse:
+                if e.name == name {
+                    excuseThisDay = true
                 }
             case .EndState: break
             }
