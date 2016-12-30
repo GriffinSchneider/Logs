@@ -12,6 +12,7 @@ import RxSwift
 import RxCocoa
 import RxDataSources
 import DRYUI
+import Popover
 
 let SPACING: CGFloat = 5.0
 let SECTION_INSETS = UIEdgeInsets(top: 30, left: 10, bottom: 0, right: 10)
@@ -261,6 +262,70 @@ class SwiftViewController: UIViewController {
             .map(valToEvent)
             .filter { $0 != nil }.map { $0! }
             .subscribe(onNext: { SSyncManager.data.value.events.sortedAppend($0) })
+            .addDisposableTo(disposeBag)
+        
+        gridView
+            .longPress
+            .map { (b: UIButton, val: SectionValue) -> (UIButton, [(String, () -> Void)]) in
+                let actions: [(String, () -> Void)]
+                switch val {
+                case let .streak(_, val):
+                    actions = [
+                        ("Extenuating Circumstances", {
+                            let event = self.valToEvent(v: val)
+                            let newEvent = SEvent(name: event!.name, date: Date(), type: .StreakExcuse)
+                            SSyncManager.data.value.events.sortedAppend(newEvent)
+                        })
+                    ]
+                default:
+                    actions = []
+                }
+                return (b, actions)
+            }
+            .subscribe(onNext: { (b, actions) in
+                guard actions.count > 0 else {
+                    return
+                }
+                let popover = Popover(options: [.color(UIColor.flatNavyBlueColorDark())])
+                let view = UIView()
+                view.frame = CGRect(x: 0, y: 0, width: 200, height: 0)
+                actions.forEach { name, block in
+                    let button = UIButton()
+                    button.titleLabel?.lineBreakMode = .byWordWrapping
+                    button.titleLabel?.textAlignment = .center
+                    button.titleLabel?.numberOfLines = 0
+                    button.setTitle(name, for: .normal)
+                    button.backgroundColor = UIColor.flatPlum()
+                    Style.ButtonLabel(button)
+                    let size = NSString(string: name) .boundingRect(
+                        with: CGSize(width: view.frame.size.width - 10, height: 9999),
+                        options: .usesLineFragmentOrigin,
+                        attributes: [NSFontAttributeName: button.titleLabel!.font],
+                        context: nil
+                    )
+                    button.frame.size = size.size
+                    let y: CGFloat
+                    if let last = view.subviews.last {
+                        y =  last.frame.origin.y + last.frame.size.height + 5
+                    } else {
+                        y = 5
+                    }
+                    button.frame = CGRect(
+                        x: 5,
+                        y: y,
+                        width: view.frame.size.width - 10,
+                        height: button.frame.size.height
+                    )
+                    button.rx.tap.subscribe(onNext: {
+                        block()
+                        popover.dismiss()
+                    }).addDisposableTo(self.disposeBag)
+                    view.addSubview(button)
+                }
+                let last = view.subviews.last!
+                view.frame = CGRect(x: 0, y: 0, width: 200, height: last.frame.origin.y + last.frame.size.height + 5)
+                popover.show(view, fromView: b, inView: self.view)
+            })
             .addDisposableTo(disposeBag)
     }
 }

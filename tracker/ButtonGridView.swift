@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import RxGesture
 import DRYUI
 
 private let PADDING: CGFloat = 10
@@ -16,9 +17,11 @@ class ButtonGridView<ButtonDataType: Hashable>: UIView {
     
     let buttons = Variable<[[ButtonDataType]]>([])
     let selection: Observable<ButtonDataType>
+    let longPress: Observable<(UIButton, ButtonDataType)>
 
     private let configBlock: (UIButton, ButtonDataType) -> Void
     private var _selection: Variable<ButtonDataType?> = Variable(nil)
+    private var _longPress: Variable<(UIButton, ButtonDataType)?> = Variable(nil)
     private let disposeBag: DisposeBag
     private var outputDisposable: Disposable? = nil
     private var buttonMap: [ButtonDataType: UIButton] = [:]
@@ -28,6 +31,7 @@ class ButtonGridView<ButtonDataType: Hashable>: UIView {
     init(config: @escaping (UIButton, ButtonDataType) -> Void) {
         disposeBag = DisposeBag()
         selection = _selection.asObservable().filter { $0 != nil }.map { $0! }
+        longPress = _longPress.asObservable().filter { $0 != nil }.map { $0! }
         configBlock = config
         super.init(frame: .zero)
         buttons.asObservable().subscribe(onNext: {[weak self] data in
@@ -63,11 +67,25 @@ class ButtonGridView<ButtonDataType: Hashable>: UIView {
             button.removeFromSuperview()
         }
         
+        for (_, button) in buttonMap {
+            button.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(longPressed(g:))))
+        }
+        
         outputDisposable = Observable.from(buttonMap.map { k, v in
             v.rx.tap.asObservable().map { k }
         }).merge().bindTo(_selection)
         
         layoutSubviews()
+    }
+    
+    @objc private func longPressed(g: UILongPressGestureRecognizer) {
+        guard g.state == .began else { return }
+        for (data, button) in buttonMap {
+            if g.view == button {
+                _longPress.value = (button, data)
+                return
+            }
+        }
     }
     
     override func layoutSubviews() {

@@ -13,5 +13,6 @@ class Style {
         l.setTitleColor(UIColor.flatWhite(), for: .normal)
         l.layer.cornerRadius = 5
         l.clipsToBounds = true
+        l.setHighlightedBackgroundColor(l.backgroundColor?.darken(byPercentage: 0.4))
     }
 }

@@ -24,6 +24,7 @@ enum SEventType: String {
     case EndState = "EndState"
     case Reading = "Reading"
     case Occurrence = "Occurrence"
+    case StreakExcuse = "StreakExcuse"
 }
 
 
