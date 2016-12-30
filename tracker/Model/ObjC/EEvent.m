@@ -18,6 +18,8 @@ NSString *EventType_toString(EventType t) {
             return @"Reading";
         case EventTypeOccurrence:
             return @"Occurrence";
+        case EventTypeStreakExcuse:
+            return @"StreakExcuse";
     }
 };
 
@@ -36,6 +38,8 @@ NSString *EventType_toString(EventType t) {
         self.type = EventTypeReading;
     } else if ([string isEqual:@"Occurrence"]) {
         self.type = EventTypeOccurrence;
+    } else if ([string isEqual:@"StreakExcuse"]) {
+        self.type = EventTypeStreakExcuse;
     }
 }
 

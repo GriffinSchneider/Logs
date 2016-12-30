@@ -16,6 +16,7 @@ typedef NS_ENUM(NSInteger, EventType) {
     EventTypeEndState,
     EventTypeReading,
     EventTypeOccurrence,
+    EventTypeStreakExcuse,
 };
 
 NSString *EventType_toString(EventType t);
