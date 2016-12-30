@@ -97,3 +97,21 @@ extension SData {
         return retVal
     }
 }
+
+extension SSchema {
+    func icon(for event: SEvent) -> String {
+        let stuff = occurrences as [Iconable] + states as [Iconable] + readings as [Iconable]
+        return stuff.first(where: {
+            $0.name == event.name
+        })?.icon ?? ""
+    }
+    
+    func spacedIcon(for event: SEvent) -> String {
+        let icon = self.icon(for: event)
+        if icon == "" {
+            return icon   
+        } else {
+            return " \(icon)"
+        }
+    }
+}

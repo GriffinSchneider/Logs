@@ -13,6 +13,7 @@ import RxCocoa
 import RxDataSources
 import DRYUI
 import Popover
+import Toast
 
 let SPACING: CGFloat = 5.0
 let SECTION_INSETS = UIEdgeInsets(top: 30, left: 10, bottom: 0, right: 10)
@@ -206,6 +207,8 @@ class SwiftViewController: UIViewController {
             },
         ]
         
+        var stack = [SEvent]()
+        
         let bottomActions: [SectionValue] = [
             .action("Reading") {
                 let vc = ReadingViewController {
@@ -222,6 +225,31 @@ class SwiftViewController: UIViewController {
                 vc.modalPresentationStyle = .overCurrentContext
                 vc.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
                 self.present(vc, animated: true)
+            },
+            .action("Pop") {
+                let last = SSyncManager.data.value.events.removeLast()
+                stack.append(last)
+                self.view.makeToast(
+                    "⤴️ \(SSyncManager.schema.value.spacedIcon(for: last))\(last.name!)",
+                    duration: 1,
+                    position: CSToastPositionCenter
+                )
+            },
+            .action("Push") {
+                if let last = stack.popLast() {
+                    SSyncManager.data.value.events.sortedAppend(last)
+                    self.view.makeToast(
+                        "⤵️ \(SSyncManager.schema.value.spacedIcon(for: last))\(last.name!)",
+                        duration: 1,
+                        position: CSToastPositionCenter
+                    )
+                } else {
+                    self.view.makeToast(
+                        "¯\\_(ツ)_/¯",
+                        duration: 1,
+                        position: CSToastPositionCenter
+                    )
+                }
             }
         ]
         

@@ -9,6 +9,10 @@
 import Foundation
 import ObjectMapper
 
+protocol Iconable {
+    var name: String! { get }
+    var icon: String { get }
+}
 
 struct SSchema: Mappable {
     var occurrences: [OccurrenceSchema] = []
@@ -23,9 +27,9 @@ struct SSchema: Mappable {
 }
 
 
-struct SStateSchema: Mappable, Streakable {
+struct SStateSchema: Mappable, Streakable, Iconable {
     var name: String!
-    var icon: String!
+    var icon: String = ""
     var streak: StreakSchema?
     init?(map: Map) { }
     mutating func mapping(map: Map) {
@@ -48,9 +52,10 @@ func ==(lhs: SStateSchema, rhs: SStateSchema) -> Bool {
 }
 
 
-struct OccurrenceSchema: Mappable, Streakable {
+struct OccurrenceSchema: Mappable, Streakable, Iconable {
     var name: String!
     var streak: StreakSchema?
+    var icon: String = ""
     init?(map: Map) { }
     mutating func mapping(map: Map) {
         name <- map["name"]
@@ -69,13 +74,15 @@ func ==(lhs: OccurrenceSchema, rhs: OccurrenceSchema) -> Bool {
 }
 
 
-struct ReadingSchema: Mappable, Streakable {
+struct ReadingSchema: Mappable, Streakable, Iconable {
     var name: String!
     var streak: StreakSchema?
+    var icon: String = ""
     init?(map: Map) { }
     mutating func mapping(map: Map) {
         name <- map["name"]
         streak <- map["streak"]
+        icon <- map["icon"]
     }
 }
 

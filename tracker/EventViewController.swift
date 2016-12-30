@@ -21,6 +21,7 @@ class EventViewController: UIViewController {
     private var event: SEvent
     
     private let dateTextField = UITextField()
+    private let noteTextView = UITextView()
     private let keyboardView = MVUFKView()
     
     private let dateFormatter: DateFormatter = {
@@ -44,6 +45,16 @@ class EventViewController: UIViewController {
         view.backgroundColor = UIColor.flatNavyBlueColorDark()
         
         view.addSubview(keyboardView) { _ in}
+        view.addSubview(noteTextView) { v, make in
+            v.text = self.event.note
+            v.backgroundColor = UIColor.flatNavyBlue()
+            make.left.right.equalToSuperview()
+            make.height.equalTo(200)
+            make.bottom.equalTo(self.keyboardView).offset(-10)
+            v.rx.text.subscribe(onNext: { text in
+                self.event.note = text
+            }).addDisposableTo(self.disposeBag)
+        }
         view.addSubview(dateTextField) { v, make in
             v.text = self.dateFormatter.string(from: self.event.date)
             v.textColor = UIColor.flatWhiteColorDark()
@@ -69,7 +80,7 @@ class EventViewController: UIViewController {
             }).addDisposableTo(self.disposeBag)
             
             make.left.right.equalToSuperview()
-            make.bottom.equalTo(self.keyboardView).offset(-10)
+            make.bottom.equalTo(self.noteTextView.snp.top).offset(-10)
             make.height.equalTo(50)
         }
         view.addSubview(UITextField.self) { v, make in
