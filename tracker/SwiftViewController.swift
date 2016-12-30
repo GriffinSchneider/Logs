@@ -258,14 +258,12 @@ class SwiftViewController: UIViewController {
             .map { t -> [[SectionValue]] in
                 let data = t.0, schema = t.1
                 let active = data.activeStates()
-                let occurrences: [SectionValue] = schema.occurrences
-                    .map { .occurrence($0) }
-                let states: [SectionValue] = schema.states
-                    .map { s in
-                        .state(s, isActive: active.contains { a in
-                            s.name == a.name
-                        })
-                    }
+                let occurrences: [SectionValue] = schema.occurrences.map { .occurrence($0) }
+                let states: [SectionValue] = schema.states.map { s in
+                    .state(s, isActive: active.contains { a in
+                        s.name == a.name
+                    })
+                }
                 let streaks = occurrences.filter {$0.hasStreak} + states.filter {$0.hasStreak}
                 
                 return [
