@@ -78,6 +78,7 @@ class ListViewController: UIViewController {
             v.clipsToBounds = true
             v.backgroundColor = UIColor.flatNavyBlue()
             v.textColor = UIColor.flatWhite()
+            v.keyboardAppearance = .dark
             v.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 0))
             v.leftViewMode = .always
             v.attributedPlaceholder = NSAttributedString(string: "Search", attributes: [

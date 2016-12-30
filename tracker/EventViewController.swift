@@ -49,6 +49,7 @@ class EventViewController: UIViewController {
             v.text = self.event.note
             v.backgroundColor = UIColor.flatNavyBlue()
             v.textColor = UIColor.flatWhiteColorDark()
+            v.keyboardAppearance = .dark
             make.left.right.equalToSuperview()
             make.height.equalTo(200)
             make.bottom.equalTo(self.keyboardView).offset(-10)
@@ -88,6 +89,7 @@ class EventViewController: UIViewController {
             v.text = self.event.name
             v.backgroundColor = UIColor.flatNavyBlue()
             v.textColor = UIColor.flatWhiteColorDark()
+            v.keyboardAppearance = .dark
             make.left.right.equalToSuperview()
             make.bottom.equalTo(self.dateTextField.snp.top).offset(-10)
             make.height.equalTo(50)
