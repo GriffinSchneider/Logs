@@ -48,6 +48,7 @@ class EventViewController: UIViewController {
         view.addSubview(noteTextView) { v, make in
             v.text = self.event.note
             v.backgroundColor = UIColor.flatNavyBlue()
+            v.textColor = UIColor.flatWhiteColorDark()
             make.left.right.equalToSuperview()
             make.height.equalTo(200)
             make.bottom.equalTo(self.keyboardView).offset(-10)
