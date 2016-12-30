@@ -12,6 +12,7 @@
 #import "SyncManager.h"
 #import "DropboxSessionManager.h"
 #import "tracker-Swift.h"
+#import "UIColor+Chameleon.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -22,6 +23,10 @@
     [CSToastManager setQueueEnabled:NO];
     
     [[DropboxSessionManager i] setupSession];
+    
+    [[UINavigationBar appearance] setTranslucent:NO];
+    [[UINavigationBar appearance] setBarTintColor:[UIColor flatNavyBlueColor]];
+    [[UINavigationBar appearance] setTintColor:[UIColor flatWhiteColorDark]];
     
     self.window = [UIWindow new];
     self.window.rootViewController = [[SwiftViewController alloc] init];
