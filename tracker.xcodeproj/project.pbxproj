@@ -843,7 +843,7 @@
 				857DA4C41D090C7B00497E60 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		857DA4C51D090C7B00497E60 /* Build configuration list for PBXNativeTarget "tracker" */ = {
 			isa = XCConfigurationList;
@@ -852,7 +852,7 @@
 				857DA4C71D090C7B00497E60 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		85E7D40C1DC6C387004E67D9 /* Build configuration list for PBXNativeTarget "TrackerToday" */ = {
 			isa = XCConfigurationList;
@@ -861,7 +861,7 @@
 				85E7D40E1DC6C387004E67D9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};
