@@ -109,6 +109,7 @@ struct StreakSchema: Mappable {
 
 protocol Streakable {
     var streak: StreakSchema? { get }
+    var name: String! { get }
 }
 
 extension Streakable {

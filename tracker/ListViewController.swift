@@ -190,6 +190,7 @@ class ListTableCell: UITableViewCell {
             guard let event = event else { return }
             let i = SSyncManager.schema.value.icon(for: event)
             icon.text = i
+            icon.backgroundColor = event.color
             circle.isHidden = !i.isEmpty
             nameLabel.text = event.name
             typeLabel.text = event.type.rawValue
@@ -202,7 +203,6 @@ class ListTableCell: UITableViewCell {
         selectedBackgroundView = UIView()
         selectedBackgroundView?.backgroundColor = UIColor.flatNavyBlue().lighten(byPercentage: 0.1)
         contentView.addSubview(icon) { v, _ in
-            v.backgroundColor = self.selectedBackgroundView?.backgroundColor
             v.layer.cornerRadius = 5
             v.clipsToBounds = true
             v.textAlignment = .center

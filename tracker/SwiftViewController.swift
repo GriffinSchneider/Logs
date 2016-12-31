@@ -140,19 +140,19 @@ class SwiftViewController: UIViewController {
             switch data {
             case let .action(s, _):
                 b.setTitle(s, for: .normal)
-                b.backgroundColor = UIColor.flatPlum()
+                b.backgroundColor = SEventType.readingColor
             case let .occurrence(s):
                 b.setTitle(s.name, for: .normal)
-                b.backgroundColor = UIColor.flatOrangeColorDark()
+                b.backgroundColor = SEventType.occurrenceColor
             case let .activeState(a):
                 b.setTitle("\(a.name!) \(formatDuration(Date().timeIntervalSince(a.date))!)" , for: .normal)
-                b.backgroundColor = UIColor.flatGreenColorDark()
+                b.backgroundColor = SEventType.streakColor
             case let .state(s, ia):
                 b.setTitle(s.icon, for: .normal)
-                b.backgroundColor = ia ? UIColor.flatGreenColorDark() : UIColor.flatRedColorDark()
+                b.backgroundColor = ia ? SEventType.streakColor : SEventType.stateColor
                 b.titleLabel?.font = UIFont.systemFont(ofSize: 32)
             case let .streak(s, v):
-                b.backgroundColor = s.numberNeededToday > 0 ? UIColor.flatRedColorDark() : UIColor.flatBlueColorDark()
+                b.backgroundColor = s.numberNeededToday > 0 ? SEventType.streakExcuseColor : SEventType.streakColor
                 b.titleLabel?.numberOfLines = 0
                 b.titleLabel?.textAlignment = .center
                 let title = NSMutableAttributedString(
@@ -292,12 +292,12 @@ class SwiftViewController: UIViewController {
         
         gridView
             .longPress
-            .map { (b: UIButton, val: SectionValue) -> (UIButton, [(String, () -> Void)]) in
-                let actions: [(String, () -> Void)]
+            .map { (b: UIButton, val: SectionValue) -> (UIButton, [(String, UIColor, () -> Void)]) in
+                let actions: [(String, UIColor, () -> Void)]
                 switch val {
                 case let .streak(_, val):
                     actions = [
-                        ("Extenuating Circumstances", {
+                        ("Extenuating Circumstances", SEventType.streakExcuseColor ,{
                             let event = self.valToEvent(v: val)
                             let newEvent = SEvent(name: event!.name, date: Date(), type: .StreakExcuse)
                             SSyncManager.data.value.events.sortedAppend(newEvent)
@@ -315,13 +315,13 @@ class SwiftViewController: UIViewController {
                 let popover = Popover(options: [.color(UIColor.flatNavyBlueColorDark())])
                 let view = UIView()
                 view.frame = CGRect(x: 0, y: 0, width: 200, height: 0)
-                actions.forEach { name, block in
+                actions.forEach { name, color, block in
                     let button = UIButton()
                     button.titleLabel?.lineBreakMode = .byWordWrapping
                     button.titleLabel?.textAlignment = .center
                     button.titleLabel?.numberOfLines = 0
                     button.setTitle(name, for: .normal)
-                    button.backgroundColor = UIColor.flatPlum()
+                    button.backgroundColor = color
                     Style.ButtonLabel(button)
                     let size = NSString(string: name) .boundingRect(
                         with: CGSize(width: view.frame.size.width - 10, height: 9999),

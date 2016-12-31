@@ -114,4 +114,42 @@ extension SSchema {
             return " \(icon)"
         }
     }
+    
+    func hasStreak(event: SEvent) -> Bool {
+        let stuff = occurrences as [Streakable] + states as [Streakable] + readings as [Streakable]
+        return stuff.first(where: {
+            $0.name == event.name
+        })?.hasStreak ?? false
+    }
+}
+
+extension SEventType {
+    static let stateColor = UIColor.flatBlueColorDark()!
+    static let readingColor = UIColor.flatPlum()!.lighten(byPercentage: 0.05)!
+    static let occurrenceColor = UIColor.flatOrangeColorDark()!.darken(byPercentage: 0.1)!
+    static let streakColor = UIColor.flatGreenColorDark()!.darken(byPercentage: 0.1)!
+    static let streakExcuseColor = UIColor.flatRedColorDark()!
+    
+    var color: UIColor {
+        switch self {
+        case .StartState, .EndState:
+            return SEventType.stateColor
+        case .Reading:
+            return SEventType.readingColor
+        case .Occurrence:
+            return SEventType.occurrenceColor
+        case .StreakExcuse:
+            return SEventType.streakExcuseColor
+        }
+    }
+}
+
+extension SEvent {
+    var color: UIColor {
+        if SSyncManager.schema.value.hasStreak(event: self) && type != .StreakExcuse {
+            return SEventType.streakColor
+        } else {
+            return type.color
+        }
+    }
 }
