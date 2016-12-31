@@ -276,4 +276,14 @@ class ListTableCell: UITableViewCell {
         )
     }
     
+    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+        super.setHighlighted(highlighted, animated: animated)
+        let e = event ; event = e
+    }
+    
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        let e = event ; event = e
+    }
+    
 }
