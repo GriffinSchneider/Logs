@@ -94,6 +94,7 @@ class ListViewController: UIViewController {
             v.delegate = self
             v.dataSource = self
             v.backgroundColor = UIColor.flatNavyBlueColorDark()
+            v.separatorStyle = .none
             make.left.right.bottom.equalToSuperview()
             make.top.equalTo(self.searchTextField.snp.bottom).offset(10)
         }
@@ -119,25 +120,13 @@ extension ListViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCell(withIdentifier: "cell")
-        if cell == nil {
-            cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
-        }
-        cell?.backgroundColor = UIColor.flatNavyBlueColorDark()
-        cell?.textLabel?.textColor = UIColor.flatWhiteColorDark()
-        cell?.textLabel?.highlightedTextColor = UIColor.flatGray()
-        cell?.detailTextLabel?.textColor = UIColor.flatWhiteColorDark()
-        cell?.detailTextLabel?.highlightedTextColor = UIColor.flatGray()
-        
         let e = event(forRow: indexPath.row)
         
-        let icon = SSyncManager.schema.value.states.first {
-            $0.name == e.name
-        }?.icon
-        
-        cell?.textLabel?.text = "\(icon == nil ? "" : icon!)\(icon == nil ? "" : " ")\(e.type.rawValue): \(e.name!)"
-        cell?.detailTextLabel?.text = dateFormatter.string(from: e.date)
-        
+        var cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! ListTableCell?
+        if cell == nil {
+            cell = ListTableCell(reuseIdentifier: "cell")
+        }
+        cell?.event = e
         return cell!
     }
     
@@ -170,4 +159,121 @@ extension ListViewController: UITableViewDelegate {
             let _ = self.navigationController?.popViewController(animated: true)
         }, animated: true)
     }
+}
+
+
+class ListTableCell: UITableViewCell {
+    
+    private let nameLabel = UILabel()
+    private let typeLabel = UILabel()
+    private let dateLabel = UILabel()
+    private let icon = UILabel()
+    private let circle = CAShapeLayer()
+    private let bottomLine = UIView()
+    
+    private static let dateFormatter: DateFormatter = {
+        let t = DateFormatter()
+        t.dateStyle = .medium
+        t.timeStyle = .medium
+        return t
+    }()
+    
+    required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+    
+    init(reuseIdentifier: String?) {
+        super.init(style: .default, reuseIdentifier: reuseIdentifier)
+        buildView()
+    }
+    
+    var event: SEvent? = nil {
+        didSet {
+            guard let event = event else { return }
+            let i = SSyncManager.schema.value.icon(for: event)
+            icon.text = i
+            circle.isHidden = !i.isEmpty
+            nameLabel.text = event.name
+            typeLabel.text = event.type.rawValue
+            dateLabel.text = ListTableCell.dateFormatter.string(from: event.date)
+        }
+    }
+    
+    private func buildView() {
+        backgroundColor = UIColor.flatNavyBlueColorDark()
+        selectedBackgroundView = UIView()
+        selectedBackgroundView?.backgroundColor = UIColor.flatNavyBlue().lighten(byPercentage: 0.1)
+        contentView.addSubview(icon) { v, _ in
+            v.backgroundColor = self.selectedBackgroundView?.backgroundColor
+            v.layer.cornerRadius = 5
+            v.clipsToBounds = true
+            v.textAlignment = .center
+            v.textColor = UIColor.flatNavyBlueColorDark()
+            self.circle.fillColor = UIColor.flatNavyBlueColorDark().cgColor
+            v.layer.addSublayer(self.circle)
+        }
+        contentView.addSubview(nameLabel) { v, _ in
+            v.textColor = UIColor.flatWhiteColorDark()
+            v.font = UIFont.systemFont(ofSize: 16)
+        }
+        contentView.addSubview(typeLabel) { v, _ in
+            v.textColor = UIColor.flatWhiteColorDark()
+            v.font = UIFont.systemFont(ofSize: 9, weight: UIFontWeightLight)
+        }
+        contentView.addSubview(dateLabel) { v, _ in
+            v.textColor = UIColor.flatWhiteColorDark()
+            v.textAlignment = .right
+            v.font = UIFont.systemFont(ofSize: 9, weight: UIFontWeightLight)
+        }
+        contentView.addSubview(bottomLine) { v, _ in
+            v.backgroundColor = UIColor.flatWhiteColorDark().withAlphaComponent(0.3)
+        }
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        let size = self.contentView.frame.size.height - 8
+        icon.frame = CGRect(x: 10, y: 4, width: size, height: size)
+        
+        circle.path = UIBezierPath(
+            arcCenter: CGPoint(x: size/2, y: size/2),
+            radius: CGFloat(size/2 - 10.0),
+            startAngle: 0,
+            endAngle:CGFloat(M_PI) * 2,
+            clockwise: true
+        ).cgPath
+        
+        nameLabel.sizeToFit()
+        let x = icon.frame.origin.x + icon.frame.size.width + 12
+        nameLabel.frame = CGRect(
+            x: x,
+            y: icon.frame.origin.y + 1,
+            width: contentView.frame.size.width - x,
+            height: nameLabel.frame.size.height
+        )
+        
+        typeLabel.sizeToFit()
+        let y = nameLabel.frame.origin.y + nameLabel.frame.size.height
+        typeLabel.frame = CGRect(
+            x: nameLabel.frame.origin.x,
+            y: y,
+            width: nameLabel.frame.size.width,
+            height: icon.frame.origin.y + icon.frame.size.height - y
+        )
+        
+        dateLabel.sizeToFit()
+        dateLabel.frame = CGRect(
+            x: contentView.frame.size.width - dateLabel.frame.size.width - 15,
+            y: typeLabel.frame.origin.y,
+            width: dateLabel.frame.size.width,
+            height: typeLabel.frame.size.height
+        )
+        
+        bottomLine.frame = CGRect(
+            x: nameLabel.frame.origin.x,
+            y: contentView.frame.size.height - 0.5,
+            width: dateLabel.frame.origin.x + dateLabel.frame.size.width - nameLabel.frame.origin.x,
+            height: 0.5
+        )
+    }
+    
 }
