@@ -100,12 +100,9 @@ class EventViewController: UIViewController {
         }
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        dateTextField.becomeFirstResponder()
-    }
-    
     override func viewWillAppear(_ animated: Bool) {
         keyboardView.enabled = true
+        dateTextField.becomeFirstResponder()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
