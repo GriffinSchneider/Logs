@@ -124,7 +124,7 @@ extension SSchema {
 }
 
 extension SEventType {
-    static let stateColor = UIColor.flatBlueColorDark()!
+    static let stateColor = UIColor.flatBlueColorDark()!.lighten(byPercentage: 0.1)!
     static let readingColor = UIColor.flatPlum()!.lighten(byPercentage: 0.05)!
     static let occurrenceColor = UIColor.flatOrangeColorDark()!.darken(byPercentage: 0.1)!
     static let streakColor = UIColor.flatGreenColorDark()!.darken(byPercentage: 0.1)!

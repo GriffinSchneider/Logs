@@ -147,9 +147,9 @@ extension ListViewController: UITableViewDataSource {
 
 extension ListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
         let oldEvent = event(forRow: indexPath.row)
         navigationController?.pushViewController(EventViewController(event: oldEvent) { newEvent in
+            tableView.deselectRow(at: indexPath, animated: true)
             if let e = newEvent {
                 let idx = SSyncManager.data.value.events.index(of: oldEvent)
                 SSyncManager.data.value.events[idx!] = e
@@ -201,7 +201,7 @@ class ListTableCell: UITableViewCell {
     private func buildView() {
         backgroundColor = UIColor.flatNavyBlueColorDark()
         selectedBackgroundView = UIView()
-        selectedBackgroundView?.backgroundColor = UIColor.flatNavyBlue().lighten(byPercentage: 0.1)
+        selectedBackgroundView?.backgroundColor = UIColor.flatNavyBlueColorDark().darken(byPercentage: 0.1)
         contentView.addSubview(icon) { v, _ in
             v.layer.cornerRadius = 5
             v.clipsToBounds = true
@@ -277,13 +277,17 @@ class ListTableCell: UITableViewCell {
     }
     
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+        let i = icon.backgroundColor, b = bottomLine.backgroundColor
         super.setHighlighted(highlighted, animated: animated)
-        let e = event ; event = e
+        icon.backgroundColor = i
+        bottomLine.backgroundColor = b
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
+        let i = icon.backgroundColor, b = bottomLine.backgroundColor
         super.setSelected(selected, animated: animated)
-        let e = event ; event = e
+        icon.backgroundColor = i
+        bottomLine.backgroundColor = b
     }
     
 }
