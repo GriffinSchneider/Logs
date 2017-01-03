@@ -39,3 +39,20 @@ extension Sequence {
         }
     }
 }
+
+extension NSAttributedString {
+    static func build(_ strings: (String, [String : Any])...) -> NSAttributedString {
+        let retVal = NSMutableAttributedString()
+        strings.forEach { retVal.append(NSAttributedString(string: $0.0, attributes: $0.1)) }
+        return retVal
+    }
+    
+    static func build(_ strings: (Bool?, String?, [String : Any])...) -> NSAttributedString {
+        let retVal = NSMutableAttributedString()
+        strings.forEach {
+            guard let b = $0.0, b else { return }
+            retVal.append(NSAttributedString(string: $0.1!, attributes: $0.2))
+        }
+        return retVal
+    }
+}

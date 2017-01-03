@@ -54,11 +54,12 @@ func ==(lhs: SStateSchema, rhs: SStateSchema) -> Bool {
 
 struct OccurrenceSchema: Mappable, Streakable, Iconable {
     var name: String!
-    var streak: StreakSchema?
     var icon: String = ""
+    var streak: StreakSchema?
     init?(map: Map) { }
     mutating func mapping(map: Map) {
         name <- map["name"]
+        icon <- map["icon"]
         streak <- map["streak"]
     }
 }
@@ -76,13 +77,13 @@ func ==(lhs: OccurrenceSchema, rhs: OccurrenceSchema) -> Bool {
 
 struct ReadingSchema: Mappable, Streakable, Iconable {
     var name: String!
-    var streak: StreakSchema?
     var icon: String = ""
+    var streak: StreakSchema?
     init?(map: Map) { }
     mutating func mapping(map: Map) {
         name <- map["name"]
-        streak <- map["streak"]
         icon <- map["icon"]
+        streak <- map["streak"]
     }
 }
 

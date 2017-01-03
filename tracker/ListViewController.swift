@@ -192,7 +192,14 @@ class ListTableCell: UITableViewCell {
             icon.text = i
             icon.backgroundColor = event.color
             circle.isHidden = !i.isEmpty
-            nameLabel.text = event.name
+            nameLabel.attributedText = .build(
+                (true, event.name, [
+                    NSFontAttributeName: UIFont.systemFont(ofSize: 16, weight: UIFontWeightLight)
+                ]),
+                (event.note != nil && !event.note!.isEmpty, "   \(event.note ?? "")", [
+                    NSFontAttributeName: UIFont.systemFont(ofSize: 9, weight: UIFontWeightUltraLight)
+                ])
+            )
             typeLabel.text = event.type.rawValue
             dateLabel.text = ListTableCell.dateFormatter.string(from: event.date)
         }
@@ -212,7 +219,6 @@ class ListTableCell: UITableViewCell {
         }
         contentView.addSubview(nameLabel) { v, _ in
             v.textColor = UIColor.flatWhiteColorDark()
-            v.font = UIFont.systemFont(ofSize: 16)
         }
         contentView.addSubview(typeLabel) { v, _ in
             v.textColor = UIColor.flatWhiteColorDark()
@@ -247,7 +253,7 @@ class ListTableCell: UITableViewCell {
         nameLabel.frame = CGRect(
             x: x,
             y: icon.frame.origin.y + 1,
-            width: contentView.frame.size.width - x,
+            width: contentView.frame.size.width - x - 15,
             height: nameLabel.frame.size.height
         )
         
