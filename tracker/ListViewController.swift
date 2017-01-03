@@ -259,7 +259,6 @@ class ListTableCell: UITableViewCell {
             height: nameLabel.frame.size.height
         )
         
-        typeLabel.sizeToFit()
         let y = nameLabel.frame.origin.y + nameLabel.frame.size.height
         typeLabel.frame = CGRect(
             x: nameLabel.frame.origin.x,
