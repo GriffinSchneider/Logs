@@ -27,15 +27,17 @@ class Filterer {
         } else if s != search {
             search = s
             s = s.lowercased()
-            if s.characters.last == " " {
-                s = s.trimmingCharacters(in: .whitespaces)
-                filtered = SSyncManager.data.value.events.filter{ e in
-                    e.name.lowercased() == s
-                }
-            } else {
-                filtered = SSyncManager.data.value.events.filter{ e in
-                    e.name.lowercased().range(of: s) != nil
-                }
+            let searches = s.components(separatedBy: ",").map {
+                ($0.characters.last == " ", $0.trimmingCharacters(in: .whitespaces))
+            }
+            filtered = SSyncManager.data.value.events.filter{ e in
+                searches.reduce(false, { acc, t in
+                    if t.0 {
+                        return acc || e.name.lowercased() == t.1
+                    } else {
+                        return acc || e.name.lowercased().range(of: t.1) != nil
+                    }
+                })
             }
         }
         return filtered
