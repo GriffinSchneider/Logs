@@ -11,21 +11,25 @@ import Foundation
 
 extension SData {
     func activeStates() -> [SEvent] {
-        var retVal = [SEvent]()
-        var endedStates = Set<String>()
-        for e in events.reversed() {
+        var retVal = [String: SEvent]()
+        for e in events {
             switch e.type! {
             case .StartState:
-                if !endedStates.contains(e.name) {
-                    retVal.append(e)
+                if let old = retVal[e.name] {
+                    print("Starting already started state!\n\(old)\n\(e)")
+                } else {
+                    retVal[e.name] = e
                 }
             case .EndState:
-                endedStates.insert(e.name)
-            case .Reading, .Occurrence, .StreakExcuse: break
+                if retVal[e.name] != nil {
+                    retVal.removeValue(forKey: e.name)
+                } else {
+                    print("Ending state that hasn't started\n\(e)")
+                }
+            case .Reading, .Occurrence, .StreakExcuse: 1;
             }
-            if e.name == EVENT_SLEEP { break }
         }
-        return retVal
+        return Array(retVal.values)
     }
 }
 
