@@ -25,8 +25,9 @@
     [[DropboxSessionManager i] setupSession];
     
     [[UINavigationBar appearance] setTranslucent:NO];
-    [[UINavigationBar appearance] setBarTintColor:[UIColor flatNavyBlueColor]];
-    [[UINavigationBar appearance] setTintColor:[UIColor flatWhiteColorDark]];
+    [[UINavigationBar appearance] setBarTintColor: [UIColor flatNavyBlueColor]];
+    [[UINavigationBar appearance] setTintColor: [UIColor flatWhiteColorDark]];
+    [[UINavigationBar appearance] setTitleTextAttributes: @{NSForegroundColorAttributeName: [UIColor flatWhiteColorDark]}];
     
     self.window = [UIWindow new];
     self.window.rootViewController = [[SwiftViewController alloc] init];

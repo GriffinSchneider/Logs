@@ -41,7 +41,11 @@ class EventViewController: UIViewController {
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonPressed))
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelButtonPressed))
-        
+        if let idx = SSyncManager.data.value.events.index(of: event) {
+            let icn = SSyncManager.schema.value.icon(for: event)
+            navigationItem.title = "\(icn) #\(idx) \(icn)"
+        }
+    
         view.backgroundColor = UIColor.flatNavyBlueColorDark()
         
         view.addSubview(keyboardView) { _ in}
