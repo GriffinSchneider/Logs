@@ -333,7 +333,7 @@ class SwiftViewController: UIViewController {
                 }
                 let popover = Popover(options: [.color(UIColor.flatNavyBlueColorDark())])
                 let view = UIView()
-                view.frame = CGRect(x: 0, y: 0, width: 200, height: 0)
+                view.frame = CGRect(x: 0, y: 0, width: 250, height: 0)
                 actions.forEach { name, color, block in
                     let button = UIButton()
                     button.titleLabel?.lineBreakMode = .byWordWrapping
@@ -343,22 +343,22 @@ class SwiftViewController: UIViewController {
                     button.backgroundColor = color
                     Style.ButtonLabel(button)
                     let size = NSString(string: name) .boundingRect(
-                        with: CGSize(width: view.frame.size.width - 10, height: 9999),
+                        with: CGSize(width: view.frame.size.width - 14, height: 9999),
                         options: .usesLineFragmentOrigin,
                         attributes: [NSFontAttributeName: button.titleLabel!.font],
                         context: nil
                     )
-                    button.frame.size = size.size
+                    button.frame.size = CGSize(width: size.width, height: size.height + 7)
                     let y: CGFloat
                     if let last = view.subviews.last {
-                        y =  last.frame.origin.y + last.frame.size.height + 5
+                        y =  last.frame.origin.y + last.frame.size.height + 7
                     } else {
-                        y = 5
+                        y = 7
                     }
                     button.frame = CGRect(
-                        x: 5,
+                        x: 7,
                         y: y,
-                        width: view.frame.size.width - 10,
+                        width: view.frame.size.width - 14,
                         height: button.frame.size.height
                     )
                     button.rx.tap.subscribe(onNext: {
@@ -368,7 +368,7 @@ class SwiftViewController: UIViewController {
                     view.addSubview(button)
                 }
                 let last = view.subviews.last!
-                view.frame = CGRect(x: 0, y: 0, width: 200, height: last.frame.origin.y + last.frame.size.height + 5)
+                view.frame = CGRect(x: 0, y: 0, width: view.frame.size.width, height: last.frame.origin.y + last.frame.size.height + 7)
                 popover.show(view, fromView: b, inView: self.view)
             })
             .addDisposableTo(disposeBag)
