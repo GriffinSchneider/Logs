@@ -68,7 +68,9 @@ class ButtonGridView<ButtonDataType: Hashable>: UIView {
         }
         
         for (_, button) in buttonMap {
-            button.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(longPressed(g:))))
+            let g = UILongPressGestureRecognizer(target: self, action: #selector(longPressed(g:)))
+            g.minimumPressDuration = 0.23
+            button.addGestureRecognizer(g)
         }
         
         outputDisposable = Observable.from(buttonMap.map { k, v in

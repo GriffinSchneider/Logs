@@ -331,7 +331,11 @@ class SwiftViewController: UIViewController {
                 guard actions.count > 0 else {
                     return
                 }
-                let popover = Popover(options: [.color(UIColor.flatNavyBlueColorDark())])
+                let popover = Popover(options: [
+                    .color(UIColor.flatNavyBlueColorDark()),
+                    .animationIn(0.1),
+                    .animationOut(0.1)
+                ])
                 let view = UIView()
                 view.frame = CGRect(x: 0, y: 0, width: 250, height: 0)
                 actions.forEach { name, color, block in
