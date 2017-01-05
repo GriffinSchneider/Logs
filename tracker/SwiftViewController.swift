@@ -302,19 +302,7 @@ class SwiftViewController: UIViewController {
         gridView
             .longPress
             .map { (b: UIButton, val: SectionValue) -> (UIButton, [(String, UIColor, () -> Void)]) in
-                var actions: [(String, UIColor, () -> Void)]
-                switch val {
-                case let .streak(_, val):
-                    actions = [
-                        ("Extenuating Circumstances", SEventType.streakExcuseColor ,{
-                            let event = self.valToEvent(val)
-                            let newEvent = SEvent(name: event!.name, date: Date(), type: .StreakExcuse)
-                            SSyncManager.data.value.events.sortedAppend(newEvent)
-                        })
-                    ]
-                default:
-                    actions = []
-                }
+                var actions =  [(String, UIColor, () -> Void)]()
                 if let event = self.valToEvent(val) {
                     actions.append(("Add + Edit", SEventType.readingColor ,{
                         self.present(UINavigationController(rootViewController: EventViewController(event: event, done: {[weak self] newEvent in
@@ -324,6 +312,16 @@ class SwiftViewController: UIViewController {
                             self?.dismiss(animated: true)
                         })), animated: true)
                     }))
+                }
+                switch val {
+                case let .streak(_, val):
+                    actions.append(("Extenuating Circumstances", SEventType.streakExcuseColor ,{
+                        let event = self.valToEvent(val)
+                        let newEvent = SEvent(name: event!.name, date: Date(), type: .StreakExcuse)
+                        SSyncManager.data.value.events.sortedAppend(newEvent)
+                    }))
+                default:
+                    break
                 }
                 return (b, actions)
             }
