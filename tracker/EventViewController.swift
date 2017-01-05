@@ -152,6 +152,7 @@ private class Suggester {
         didSet {
             guard let eventName = eventName else { return }
             suggestions = SSyncManager.data.value.events
+                .reversed()
                 .filter { $0.name == eventName }
                 .flatMap {(e: SEvent) -> [String?] in e.note?.components(separatedBy: "\n") ?? [] }
                 .map { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
