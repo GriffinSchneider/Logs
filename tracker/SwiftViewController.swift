@@ -102,10 +102,9 @@ extension SectionValue {
 class SwiftViewController: UIViewController {
     let disposeBag = DisposeBag()
     
-    private func valToEvent(v: SectionValue) -> SEvent? {
+    private func valToEvent(_ v: SectionValue) -> SEvent? {
         switch v {
-        case let .action(_, b):
-            b()
+        case .action:
             return nil
         case let .occurrence(o):
             return SEvent(
@@ -126,7 +125,17 @@ class SwiftViewController: UIViewController {
                 type: isActive ? .EndState : .StartState
             )
         case let .streak((_, val)):
-            return valToEvent(v: val)
+            return valToEvent(val)
+        }
+    }
+    
+    @discardableResult private func execVal(_ v: SectionValue) -> Bool {
+        switch v {
+        case let .action(_, b):
+            b()
+            return true
+        default:
+            return false
         }
     }
     
@@ -285,7 +294,7 @@ class SwiftViewController: UIViewController {
         
         gridView
             .selection
-            .map(valToEvent)
+            .map { self.execVal($0) ; return self.valToEvent($0) }
             .filter { $0 != nil }.map { $0! }
             .subscribe(onNext: { SSyncManager.data.value.events.sortedAppend($0) })
             .addDisposableTo(disposeBag)
@@ -293,18 +302,28 @@ class SwiftViewController: UIViewController {
         gridView
             .longPress
             .map { (b: UIButton, val: SectionValue) -> (UIButton, [(String, UIColor, () -> Void)]) in
-                let actions: [(String, UIColor, () -> Void)]
+                var actions: [(String, UIColor, () -> Void)]
                 switch val {
                 case let .streak(_, val):
                     actions = [
                         ("Extenuating Circumstances", SEventType.streakExcuseColor ,{
-                            let event = self.valToEvent(v: val)
+                            let event = self.valToEvent(val)
                             let newEvent = SEvent(name: event!.name, date: Date(), type: .StreakExcuse)
                             SSyncManager.data.value.events.sortedAppend(newEvent)
                         })
                     ]
                 default:
                     actions = []
+                }
+                if let event = self.valToEvent(val) {
+                    actions.append(("Add + Edit", SEventType.readingColor ,{
+                        self.present(UINavigationController(rootViewController: EventViewController(event: event, done: {[weak self] newEvent in
+                            if let e = newEvent {
+                                SSyncManager.data.value.events.sortedAppend(e)
+                            }
+                            self?.dismiss(animated: true)
+                        })), animated: true)
+                    }))
                 }
                 return (b, actions)
             }
