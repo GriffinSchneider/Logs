@@ -146,29 +146,41 @@ class EventViewController: UIViewController {
     }
 }
 
+private struct Suggestion {
+    let text: String?
+    let count: Int
+}
+
 private class Suggester {
-    var suggestions: [String?] = []
+    var suggestions: [Suggestion] = []
     var eventName: String? = nil {
         didSet {
             guard let eventName = eventName else { return }
-            suggestions = SSyncManager.data.value.events
+            let sugs = SSyncManager.data.value.events
                 .reversed()
                 .filter { $0.name == eventName }
                 .flatMap {(e: SEvent) -> [String?] in e.note?.components(separatedBy: "\n") ?? [] }
                 .map { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
                 .filter { !($0 == nil || $0!.isEmpty) }
+            var freq: [String: Int] = [:]
+            for s in sugs {
+                freq[s!] = (freq[s!] ?? 0) + 1
+            }
+            suggestions = freq
+                .sorted { l, r in l.value > r.value }
+                .map { Suggestion(text: $0.key, count: $0.value) }
         }
     }
 }
 
 extension EventViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let suggestion = suggester.suggestions[indexPath.row] else { return }
+        let suggestion = suggester.suggestions[indexPath.row]
         var note = self.noteTextView.text.trimmingCharacters(in: .whitespacesAndNewlines)
         while !note.isEmpty && !note.hasSuffix("\n\n") {
             note += "\n"
         }
-        note += suggestion
+        note += suggestion.text ?? ""
         noteTextView.text = note
     }
 }
@@ -181,17 +193,19 @@ extension EventViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let suggestion = suggester.suggestions[indexPath.row]
-        
         var cell = tableView.dequeueReusableCell(withIdentifier: "cell")
         if cell == nil {
-            cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
+            cell = UITableViewCell(style: .value1, reuseIdentifier: "cell")
             cell?.textLabel?.textColor = UIColor.flatWhiteColorDark()
             cell?.textLabel?.font = UIFont.systemFont(ofSize: 10, weight: UIFontWeightThin)
+            cell?.detailTextLabel?.textColor = UIColor.flatWhiteColorDark().darken(byPercentage: 0.2)
+            cell?.detailTextLabel?.font = UIFont.systemFont(ofSize: 10, weight: UIFontWeightUltraLight)
             cell?.backgroundColor = UIColor.flatNavyBlue()
             cell?.selectedBackgroundView = UIView()
             cell?.selectedBackgroundView?.backgroundColor = UIColor.flatNavyBlue().darken(byPercentage: 0.1)
         }
-        cell?.textLabel?.text = suggestion
+        cell?.textLabel?.text = suggestion.text
+        cell?.detailTextLabel?.text = String(suggestion.count)
         return cell!
     }
 }
