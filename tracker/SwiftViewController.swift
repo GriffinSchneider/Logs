@@ -220,20 +220,7 @@ class SwiftViewController: UIViewController {
         
         let bottomActions: [SectionValue] = [
             .action("Reading") {
-                let vc = ReadingViewController {
-                    $0.forEach {
-                        SSyncManager.data.value.events.sortedAppend(SEvent(
-                            name: $0.key.name,
-                            date: Date(),
-                            type: .Reading,
-                            reading: $0.value
-                        ))
-                    }
-                    self.dismiss(animated: true)
-                }
-                vc.modalPresentationStyle = .overCurrentContext
-                vc.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
-                self.present(vc, animated: true)
+                self.doReading()
             },
             .action("Pop") {
                 let last = SSyncManager.data.value.events.removeLast()
@@ -374,5 +361,22 @@ class SwiftViewController: UIViewController {
                 popover.show(view, fromView: b, inView: self.view)
             })
             .addDisposableTo(disposeBag)
+    }
+    
+    public func doReading() {
+        let vc = ReadingViewController {
+            $0.forEach {
+                SSyncManager.data.value.events.sortedAppend(SEvent(
+                    name: $0.key.name,
+                    date: Date(),
+                    type: .Reading,
+                    reading: $0.value
+                ))
+            }
+            self.dismiss(animated: true)
+        }
+        vc.modalPresentationStyle = .overCurrentContext
+        vc.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
+        self.present(vc, animated: true)
     }
 }

@@ -26,7 +26,7 @@ extension SData {
                 } else {
                     print("Ending state that hasn't started\n\(e)")
                 }
-            case .Reading, .Occurrence, .StreakExcuse: 1;
+            case .Reading, .Occurrence, .StreakExcuse: break
             }
         }
         return Array(retVal.values)

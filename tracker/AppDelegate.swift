@@ -17,16 +17,26 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     func applicationDidFinishLaunching(_ application: UIApplication) {
         CSToastManager.setQueueEnabled(false)
         DropboxSessionManager.i().setupSession()
+       
+        let center = UNUserNotificationCenter.current()
+        center.requestAuthorization(options: [.alert, .sound]){ granted, error in
+            
+        }
+        
+        let vc = SwiftViewController()
+        
+        let _ = SSyncManager.data
+        NotificationManager.setup(vc: vc)
+        
         UINavigationBar.appearance().isTranslucent = false
         UINavigationBar.appearance().barTintColor = UIColor.flatNavyBlue()
         UINavigationBar.appearance().tintColor = UIColor.flatWhiteColorDark()
         UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName: UIColor.flatWhiteColorDark()]
+        
         SSyncManager.initialize()
-        let center = UNUserNotificationCenter.current()
-        center.requestAuthorization(options: [.alert, .sound]){ granted, error in
-        }
+       
         self.window = UIWindow()
-        self.window?.rootViewController = SwiftViewController()
+        self.window?.rootViewController = vc
         self.window?.makeKeyAndVisible()
     }
     
