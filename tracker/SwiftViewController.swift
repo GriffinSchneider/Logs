@@ -251,6 +251,7 @@ class SwiftViewController: UIViewController {
         
         Observable
             .combineLatest(SSyncManager.data.asObservable(), SSyncManager.schema.asObservable()) { ($0, $1) }
+            .observeOn(MainScheduler.asyncInstance)
             .map { t -> [[SectionValue]] in
                 let data = t.0, schema = t.1
                 let active = data.activeStates()
@@ -281,6 +282,7 @@ class SwiftViewController: UIViewController {
         
         gridView
             .selection
+            .observeOn(SerialDispatchQueueScheduler(internalSerialQueueName: "Background"))
             .map { self.execVal($0) ; return self.valToEvent($0) }
             .filter { $0 != nil }.map { $0! }
             .subscribe(onNext: { SSyncManager.data.value.events.sortedAppend($0) })
