@@ -65,7 +65,7 @@ private class _NotificationDelegate: NSObject, UNUserNotificationCenterDelegate 
     ) {
         let content = notification.request.content
         let ac = UIAlertController(title: content.title, message: content.body, preferredStyle: .alert)
-        ac.addAction(UIAlertAction(title: "ok", style: .default) { _ in
+        ac.addAction(UIAlertAction(title: "👌🏻", style: .default) { _ in
             self.userOpenedNotification(notification)
         })
         vc.present(ac, animated: true)
