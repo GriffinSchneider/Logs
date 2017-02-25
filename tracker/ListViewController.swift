@@ -35,7 +35,7 @@ class Filterer {
                     if t.0 {
                         return acc || e.name.lowercased() == t.1
                     } else {
-                        return acc || e.name.lowercased().range(of: t.1) != nil
+                        return acc || e.name.lowercased().range(of: t.1) != nil || e.note?.lowercased().range(of: t.1) != nil
                     }
                 })
             }
