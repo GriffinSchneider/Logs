@@ -25,6 +25,7 @@ class ButtonGridView<ButtonDataType: Hashable>: UIView {
     private let disposeBag: DisposeBag
     private var outputDisposable: Disposable? = nil
     private var buttonMap: [ButtonDataType: UIButton] = [:]
+    private var sizeCache: [UIButton: (String?, CGSize)] = [:]
     
     required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     
@@ -64,6 +65,7 @@ class ButtonGridView<ButtonDataType: Hashable>: UIView {
         // Remove buttons in the map that aren't in the new data
         for (data, button) in foundMap {
             buttonMap.removeValue(forKey: data)
+            sizeCache.removeValue(forKey: button)
             button.removeFromSuperview()
         }
         
@@ -103,8 +105,14 @@ class ButtonGridView<ButtonDataType: Hashable>: UIView {
                 let v = self.buttonMap[data]!
                 self.configBlock(v, data)
                 
-                v.sizeToFit()
-                v.frame.size.width = max(v.frame.size.width, 60)
+                if let cachedSize = sizeCache[v],
+                    v.title(for: .normal) == cachedSize.0 {
+                    v.frame.size = cachedSize.1
+                } else {
+                    v.sizeToFit()
+                    v.frame.size.width = max(v.frame.size.width, 60)
+                    sizeCache[v] = (v.title(for: .normal), v.frame.size)
+                }
                 
                 if let lastButton = lastButton {
                     v.frame.origin.x = lastButton.frame.origin.x + lastButton.frame.size.width + PADDING
