@@ -39,8 +39,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         self.window?.rootViewController = vc
         self.window?.makeKeyAndVisible()
         
-        let key = ProcessInfo.processInfo.environment["DROPBOX_APP_KEY"]
-        DropboxClientsManager.setupWithAppKey(key!)
+        DropboxClientsManager.setupWithAppKey(kDropBoxAPIKey)
         
         if DropboxClientsManager.authorizedClient == nil {
             DropboxClientsManager.authorizeFromController(

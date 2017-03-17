@@ -61,13 +61,6 @@
             ReferencedContainer = "container:tracker.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <EnvironmentVariables>
-         <EnvironmentVariable
-            key = "DROPBOX_APP_KEY"
-            value = "$(DROPBOX_APP_KEY)"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-      </EnvironmentVariables>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
