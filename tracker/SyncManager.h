@@ -19,11 +19,6 @@
 - (Data *)data;
 - (Schema *)schema;
 
-- (void)hideActivity;
-
-- (void)loadFromDropbox;
 - (void)loadFromDisk;
-
-- (void)writeToDropbox;
 
 @end

@@ -1,4 +1,5 @@
 PODS:
+  - Alamofire (4.0.1)
   - DRYUI (1.1.4):
     - DRYUI/base (= 1.1.4)
     - DRYUI/objc (= 1.1.4)
@@ -25,6 +26,8 @@ PODS:
     - RxSwift (~> 3.0.0)
   - RxSwift (3.0.1)
   - SnapKit (3.0.2)
+  - SwiftyDropbox (4.1.1):
+    - Alamofire (~> 4.0.1)
   - Toast (3.1.0)
   - UIButton-ANDYHighlighted (2.0.0)
 
@@ -38,6 +41,7 @@ DEPENDENCIES:
   - RxDataSources (~> 1.0.0-beta.2)
   - RxGesture
   - RxSwift (~> 3.0.0)
+  - SwiftyDropbox
   - Toast
   - UIButton-ANDYHighlighted
 
@@ -46,6 +50,7 @@ EXTERNAL SOURCES:
     :path: Popover
 
 SPEC CHECKSUMS:
+  Alamofire: 7682d43245de14874acd142ec137b144aa1dd335
   DRYUI: 54ad8da7ddc66afbdb8e5648737ef2e451511d8d
   JSONModel: 840bc0fcffb24b8454d2c026bf26fea454b8e98d
   Masonry: 7c429b56da9d4ee0bbb3ed77a5ea710d6a5df39e
@@ -57,9 +62,10 @@ SPEC CHECKSUMS:
   RxGesture: 17b250d3c6732b35fab53d09800d35ceef717847
   RxSwift: af5680055c4ad04480189c52d28385b1029493a6
   SnapKit: 2e456761aa92d4d4067a7a5594c18769d451a8ad
+  SwiftyDropbox: dfcd4d308d32d74729255b48833db61acdfb9c23
   Toast: 14a93686d6c8bfe2727afd342414e35660a8a1f3
   UIButton-ANDYHighlighted: 3fcadf780786d8d2b4928b0d0e7394e43e827254
 
-PODFILE CHECKSUM: 0342c7fb4000598fb018e3a8856c8c662e495137
+PODFILE CHECKSUM: 6dd1230002985a040986f0589403b6ce6d779262
 
-COCOAPODS: 1.2.0.beta.1
+COCOAPODS: 1.2.0

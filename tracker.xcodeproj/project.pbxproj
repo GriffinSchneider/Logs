@@ -14,7 +14,6 @@
 		851B5F561D414F0D00A3AFFD /* TimelineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 851B5F551D414F0D00A3AFFD /* TimelineViewController.m */; };
 		8527E87D1DC68124008E8234 /* ReadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8527E87C1DC68124008E8234 /* ReadingViewController.swift */; };
 		853B23D41D6EA77200CD9AE5 /* SwiftViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 853B23D31D6EA77200CD9AE5 /* SwiftViewController.swift */; };
-		854F17B51D28371A0051BE48 /* DropboxSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 854F17B41D28371A0051BE48 /* DropboxSDK.framework */; };
 		854F17B71D2837290051BE48 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 854F17B61D2837290051BE48 /* Security.framework */; };
 		854F17B91D28372D0051BE48 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 854F17B81D28372D0051BE48 /* QuartzCore.framework */; };
 		855566031E62008300E03555 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 855566021E62008300E03555 /* NotificationManager.swift */; };
@@ -49,7 +48,6 @@
 		85AC34C81D761D7500EBFC12 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85AC34C71D761D7500EBFC12 /* Extensions.swift */; };
 		85AC34CB1D76288B00EBFC12 /* Styles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85AC34CA1D76288B00EBFC12 /* Styles.swift */; };
 		85AC34D41D77506000EBFC12 /* SSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85AC34D31D77506000EBFC12 /* SSyncManager.swift */; };
-		85B081B01D6D60380008B256 /* DropboxSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 85B081AF1D6D60380008B256 /* DropboxSessionManager.m */; };
 		85C162D51DB3FA6A001C75AC /* ButtonGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C162D41DB3FA6A001C75AC /* ButtonGridView.swift */; };
 		85E7D3FB1DC6C1B2004E67D9 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85555F901D5D23F2003047BC /* NotificationCenter.framework */; };
 		85E7D4011DC6C387004E67D9 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85555F901D5D23F2003047BC /* NotificationCenter.framework */; };
@@ -64,7 +62,6 @@
 		85E7D4201DC6C4F4004E67D9 /* Styles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85AC34CA1D76288B00EBFC12 /* Styles.swift */; };
 		85E7D4221DC6C4F4004E67D9 /* TimelineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 851B5F551D414F0D00A3AFFD /* TimelineViewController.m */; };
 		85E7D4231DC6C4F4004E67D9 /* TimelineColumnView.m in Sources */ = {isa = PBXBuildFile; fileRef = 85F2995A1D4BFEED007BA84A /* TimelineColumnView.m */; };
-		85E7D4291DC6C60E004E67D9 /* DropboxSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 854F17B41D28371A0051BE48 /* DropboxSDK.framework */; };
 		85E7D42A1DC6C625004E67D9 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85AC34C71D761D7500EBFC12 /* Extensions.swift */; };
 		85E7D42B1DC6C70D004E67D9 /* UIColor+Chameleon.m in Sources */ = {isa = PBXBuildFile; fileRef = 85AC34BF1D6E407900EBFC12 /* UIColor+Chameleon.m */; };
 		85E7D42C1DC6C70D004E67D9 /* UIColor+ChameleonPrivate.m in Sources */ = {isa = PBXBuildFile; fileRef = 85AC34C11D6E407900EBFC12 /* UIColor+ChameleonPrivate.m */; };
@@ -107,7 +104,6 @@
 		853B23D11D6EA77100CD9AE5 /* tracker-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "tracker-Bridging-Header.h"; sourceTree = "<group>"; };
 		853B23D21D6EA77200CD9AE5 /* TrackerToday-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TrackerToday-Bridging-Header.h"; sourceTree = "<group>"; };
 		853B23D31D6EA77200CD9AE5 /* SwiftViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftViewController.swift; sourceTree = "<group>"; };
-		854F17B41D28371A0051BE48 /* DropboxSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DropboxSDK.framework; sourceTree = "<group>"; };
 		854F17B61D2837290051BE48 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		854F17B81D28372D0051BE48 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		854F17BC1D284E440051BE48 /* debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = debug.xcconfig; sourceTree = SOURCE_ROOT; };
@@ -145,8 +141,6 @@
 		85AC34C71D761D7500EBFC12 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		85AC34CA1D76288B00EBFC12 /* Styles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Styles.swift; sourceTree = "<group>"; };
 		85AC34D31D77506000EBFC12 /* SSyncManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSyncManager.swift; sourceTree = "<group>"; };
-		85B081AE1D6D60380008B256 /* DropboxSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DropboxSessionManager.h; sourceTree = "<group>"; };
-		85B081AF1D6D60380008B256 /* DropboxSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DropboxSessionManager.m; sourceTree = "<group>"; };
 		85C162D41DB3FA6A001C75AC /* ButtonGridView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonGridView.swift; sourceTree = "<group>"; };
 		85CEEB9A1D2C0442008A3F6F /* secrets.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = secrets.xcconfig; sourceTree = SOURCE_ROOT; };
 		85E7D4001DC6C387004E67D9 /* TrackerToday.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = TrackerToday.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -175,7 +169,6 @@
 				85E7D3FB1DC6C1B2004E67D9 /* NotificationCenter.framework in Frameworks */,
 				854F17B91D28372D0051BE48 /* QuartzCore.framework in Frameworks */,
 				854F17B71D2837290051BE48 /* Security.framework in Frameworks */,
-				854F17B51D28371A0051BE48 /* DropboxSDK.framework in Frameworks */,
 				04439B03210A85AFF895CC30 /* Pods_tracker.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -186,7 +179,6 @@
 			files = (
 				85E7D4011DC6C387004E67D9 /* NotificationCenter.framework in Frameworks */,
 				2F0A01A4C372AB4E65D519EA /* Pods_TrackerToday.framework in Frameworks */,
-				85E7D4291DC6C60E004E67D9 /* DropboxSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -199,7 +191,6 @@
 				855566051E62033900E03555 /* UserNotifications.framework */,
 				854F17B81D28372D0051BE48 /* QuartzCore.framework */,
 				854F17B61D2837290051BE48 /* Security.framework */,
-				854F17B41D28371A0051BE48 /* DropboxSDK.framework */,
 				AF11449F2EFACA3CE0CA70BB /* Pods_tracker.framework */,
 				85555F901D5D23F2003047BC /* NotificationCenter.framework */,
 				B52C20B1681CFD3D6586731B /* Pods_TrackerToday.framework */,
@@ -248,8 +239,6 @@
 				85F299571D4AAA32007BA84A /* Utils.m */,
 				85F1BA031D2F026500C2A7E3 /* SyncManager.h */,
 				85F1BA041D2F026500C2A7E3 /* SyncManager.m */,
-				85B081AE1D6D60380008B256 /* DropboxSessionManager.h */,
-				85B081AF1D6D60380008B256 /* DropboxSessionManager.m */,
 				85AC34D31D77506000EBFC12 /* SSyncManager.swift */,
 				855566021E62008300E03555 /* NotificationManager.swift */,
 				85034EBB1DC9405A0032DEBC /* ListViewController.swift */,
@@ -559,7 +548,6 @@
 				858916511DF4A283005C53E1 /* ModelComputations.swift in Sources */,
 				858916601DF4A2BF005C53E1 /* Schema.m in Sources */,
 				858916611DF4A2BF005C53E1 /* State.m in Sources */,
-				85B081B01D6D60380008B256 /* DropboxSessionManager.m in Sources */,
 				85F2995B1D4BFEED007BA84A /* TimelineColumnView.m in Sources */,
 				85AC34C41D6E407900EBFC12 /* UIColor+ChameleonPrivate.m in Sources */,
 			);
@@ -670,6 +658,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_SWIFT_FLAGS = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -714,6 +703,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_SWIFT_FLAGS = "";
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";

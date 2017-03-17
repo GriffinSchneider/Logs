@@ -9,6 +9,7 @@
 import Foundation
 import Toast
 import UserNotifications
+import SwiftyDropbox
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     
@@ -16,7 +17,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
     func applicationDidFinishLaunching(_ application: UIApplication) {
         CSToastManager.setQueueEnabled(false)
-        DropboxSessionManager.i().setupSession()
        
         let center = UNUserNotificationCenter.current()
         center.requestAuthorization(options: [.alert, .sound]){ granted, error in
@@ -38,10 +38,39 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         self.window = UIWindow()
         self.window?.rootViewController = vc
         self.window?.makeKeyAndVisible()
+        
+        let key = ProcessInfo.processInfo.environment["DROPBOX_APP_KEY"]
+        DropboxClientsManager.setupWithAppKey(key!)
+        
+        if DropboxClientsManager.authorizedClient == nil {
+            DropboxClientsManager.authorizeFromController(
+                UIApplication.shared,
+                controller: vc,
+                openURL: { (url: URL) -> Void in
+                    UIApplication.shared.openURL(url)
+                }
+            )
+        } else {
+            dropboxAuthenticated()
+        }
     }
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
-        return DropboxSessionManager.i().handleOpen(url)
+        if let authResult = DropboxClientsManager.handleRedirectURL(url) {
+            switch authResult {
+            case .success:
+                dropboxAuthenticated()
+                print("Success! User is logged into Dropbox.")
+            case .cancel:
+                print("Authorization flow was manually canceled by user!")
+            case .error(_, let description):
+                print("Error: \(description)")
+            }
+        }
+        return true
     }
     
+    func dropboxAuthenticated() {
+
+    }
 }

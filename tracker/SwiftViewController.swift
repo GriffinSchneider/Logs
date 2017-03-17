@@ -203,7 +203,7 @@ class SwiftViewController: UIViewController {
                 ac.addAction(UIAlertAction(title: "yeah bro", style: .default) { _ in
                     let ac = UIAlertController(title: "rly tho?", message: nil, preferredStyle: .alert)
                     ac.addAction(UIAlertAction(title: "yeeeeeeeeeee", style: .default) { _ in
-                        SyncManager.i().loadFromDropbox()
+                        SSyncManager.download()
                     })
                     ac.addAction(UIAlertAction(title: "NOPE", style: .cancel) { _ in })
                     self.present(ac, animated: true)
@@ -212,7 +212,7 @@ class SwiftViewController: UIViewController {
                 self.present(ac, animated: true)
             },
             .action("Save") {
-                 SyncManager.i().writeToDropbox()
+                SSyncManager.upload()
             },
         ]
         
