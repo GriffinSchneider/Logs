@@ -12,7 +12,6 @@ import RxSwift
 import RxCocoa
 import RxDataSources
 import DRYUI
-import Popover
 import Toast
 
 let SPACING: CGFloat = 5.0
@@ -269,50 +268,65 @@ class SwiftViewController: UIViewController {
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { sel, event, suggs in
                 guard suggs.count > 0 else { return }
-                self.popover(onButton: sel.0, withButtons:
-                    [("Add", { $0.backgroundColor = SEventType.streakExcuseColor }, {
-                        guard let event = event else { return }
-                        SSyncManager.data.value.events.sortedAppend(event)
-                    })] +
-                    suggs.map { sugg in
-                        (sugg.text ?? "", { $0.backgroundColor = SEventType.streakColor }, {
-                            guard var event = event else { return }
-                            event.note = sugg.text
+                
+                popover(inView: self.view, onButton: sel.0, withBag: self.disposeBag, withButtons:
+                    [PopoverButtonInfo(
+                        title: "Add",
+                        config: { $0.backgroundColor = SEventType.streakExcuseColor },
+                        tap: {
+                            guard let event = event else { return }
                             SSyncManager.data.value.events.sortedAppend(event)
-                        })
+                        }
+                    )] +
+                    suggs.map { sugg in
+                        PopoverButtonInfo(
+                            title: sugg.text ?? "",
+                            config: { $0.backgroundColor = SEventType.streakColor },
+                            tap: {
+                                guard var event = event else { return }
+                                event.note = sugg.text
+                                SSyncManager.data.value.events.sortedAppend(event)
+                            }
+                        )
                     })
             }).addDisposableTo(disposeBag)
         
         gridView
             .longPress
-            .map { (b: UIButton, val: SectionValue) -> (UIButton, [(String, UIColor, () -> Void)]) in
-                var actions =  [(String, UIColor, () -> Void)]()
+            .map { (b: UIButton, val: SectionValue) -> (UIButton, [PopoverButtonInfo]) in
+                var actions =  [PopoverButtonInfo]()
                 if let event = self.valToEvent(val) {
-                    actions.append(("Add + Edit", SEventType.readingColor ,{
-                        self.present(UINavigationController(rootViewController: EventViewController(event: event, done: {[weak self] newEvent in
-                            if let e = newEvent {
-                                SSyncManager.data.value.events.sortedAppend(e)
-                            }
-                            self?.dismiss(animated: true)
-                        })), animated: true)
-                    }))
+                    actions.append(PopoverButtonInfo(
+                        title: "Add + Edit",
+                        config: { $0.backgroundColor = SEventType.readingColor },
+                        tap: {
+                            self.present(UINavigationController(rootViewController: EventViewController(event: event, done: {[weak self] newEvent in
+                                if let e = newEvent {
+                                    SSyncManager.data.value.events.sortedAppend(e)
+                                }
+                                self?.dismiss(animated: true)
+                            })), animated: true)
+                        }
+                    ))
                 }
                 switch val {
                 case let .streak(_, val):
-                    actions.append(("Extenuating Circumstances", SEventType.streakExcuseColor ,{
-                        let event = self.valToEvent(val)
-                        let newEvent = SEvent(name: event!.name, date: Date(), type: .StreakExcuse)
-                        SSyncManager.data.value.events.sortedAppend(newEvent)
-                    }))
+                    actions.append(PopoverButtonInfo(
+                        title:"Extenuating Circumstances",
+                        config: { $0.backgroundColor = SEventType.streakExcuseColor },
+                        tap: {
+                            let event = self.valToEvent(val)
+                            let newEvent = SEvent(name: event!.name, date: Date(), type: .StreakExcuse)
+                            SSyncManager.data.value.events.sortedAppend(newEvent)
+                        }
+                    ))
                 default:
                     break
                 }
                 return (b, actions)
             }
-            .subscribe(onNext: { (b, actions) in
-                self.popover(onButton: b, withButtons: actions.map { a in
-                    (a.0, { $0.backgroundColor = a.1 }, a.2)
-                })
+            .subscribe(onNext: { (b, buttons) in
+                popover(inView: self.view, onButton: b, withBag: self.disposeBag, withButtons: buttons)
             })
             .addDisposableTo(disposeBag)
     }
@@ -332,57 +346,5 @@ class SwiftViewController: UIViewController {
         vc.modalPresentationStyle = .overCurrentContext
         vc.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
         self.present(vc, animated: true)
-    }
-    
-    private func popover(onButton button: UIButton, withButtons buttons: [(String, (UIButton) -> Void, () -> Void)]) {
-        guard buttons.count > 0 else { return }
-        let direction = button.frame.origin.y + button.frame.size.height > (self.view.frame.size.height / 2)
-            ? PopoverType.up : PopoverType.down
-        let popover = Popover(options: [
-            .color(UIColor.flatNavyBlueColorDark()),
-            .animationIn(0.1),
-            .animationOut(0.1),
-            .type(direction)
-            ])
-        var buttons = buttons
-        if direction == .up { buttons.reverse() }
-        let view = UIView()
-        view.frame = CGRect(x: 0, y: 0, width: 250, height: 0)
-        buttons.forEach { name, config, block in
-            let button = UIButton()
-            button.titleLabel?.lineBreakMode = .byWordWrapping
-            button.titleLabel?.textAlignment = .center
-            button.titleLabel?.numberOfLines = 0
-            button.setTitle(name, for: .normal)
-            config(button)
-            Style.ButtonLabel(button)
-            let size = NSString(string: name) .boundingRect(
-                with: CGSize(width: view.frame.size.width - 14, height: 9999),
-                options: .usesLineFragmentOrigin,
-                attributes: [NSFontAttributeName: button.titleLabel!.font],
-                context: nil
-            )
-            button.frame.size = CGSize(width: size.width, height: size.height + 7)
-            let y: CGFloat
-            if let last = view.subviews.last {
-                y =  last.frame.origin.y + last.frame.size.height + 7
-            } else {
-                y = 7
-            }
-            button.frame = CGRect(
-                x: 7,
-                y: y,
-                width: view.frame.size.width - 14,
-                height: button.frame.size.height
-            )
-            button.rx.tap.subscribe(onNext: {
-                block()
-                popover.dismiss()
-            }).addDisposableTo(self.disposeBag)
-            view.addSubview(button)
-        }
-        let last = view.subviews.last!
-        view.frame = CGRect(x: 0, y: 0, width: view.frame.size.width, height: last.frame.origin.y + last.frame.size.height + 7)
-        popover.show(view, fromView: button, inView: self.view)
     }
 }
