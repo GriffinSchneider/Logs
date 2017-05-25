@@ -256,10 +256,27 @@ class SwiftViewController: UIViewController {
         gridView
             .selection
             .observeOn(SerialDispatchQueueScheduler(internalSerialQueueName: "Background"))
-            .map { self.execVal($0) ; return self.valToEvent($0) }
-            .filter { $0 != nil }.map { $0! }
-            .subscribe(onNext: { SSyncManager.data.value.events.sortedAppend($0) })
-            .addDisposableTo(disposeBag)
+            .map { sel -> ((UIButton, SectionValue), SEvent?, [SData.Suggestion]) in
+                self.execVal(sel.1)
+                let event = self.valToEvent(sel.1)
+                let needsSuggs = event != nil && event?.type != .EndState
+                let suggs = needsSuggs ? SSyncManager.data.value
+                    .noteSuggestions(forEventNamed: event?.name!)
+                    .filter { $0.count > 1 } : []
+                if let e = event, suggs.count == 0 { SSyncManager.data.value.events.sortedAppend(e) }
+                return (sel, event, suggs)
+            }
+            .observeOn(MainScheduler.instance)
+            .subscribe(onNext: { sel, event, suggs in
+                guard suggs.count > 0 else { return }
+                self.popover(onButton: sel.0, withButtons: suggs.map { sugg in
+                    (sugg.text ?? "", { $0.backgroundColor = SEventType.streakColor }, {
+                        guard var event = event else { return }
+                        event.note = sugg.text
+                        SSyncManager.data.value.events.sortedAppend(event)
+                    })
+                })
+            }).addDisposableTo(disposeBag)
         
         gridView
             .longPress
@@ -288,52 +305,9 @@ class SwiftViewController: UIViewController {
                 return (b, actions)
             }
             .subscribe(onNext: { (b, actions) in
-                guard actions.count > 0 else {
-                    return
-                }
-                let popover = Popover(options: [
-                    .color(UIColor.flatNavyBlueColorDark()),
-                    .animationIn(0.1),
-                    .animationOut(0.1)
-                ])
-                let view = UIView()
-                view.frame = CGRect(x: 0, y: 0, width: 250, height: 0)
-                actions.forEach { name, color, block in
-                    let button = UIButton()
-                    button.titleLabel?.lineBreakMode = .byWordWrapping
-                    button.titleLabel?.textAlignment = .center
-                    button.titleLabel?.numberOfLines = 0
-                    button.setTitle(name, for: .normal)
-                    button.backgroundColor = color
-                    Style.ButtonLabel(button)
-                    let size = NSString(string: name) .boundingRect(
-                        with: CGSize(width: view.frame.size.width - 14, height: 9999),
-                        options: .usesLineFragmentOrigin,
-                        attributes: [NSFontAttributeName: button.titleLabel!.font],
-                        context: nil
-                    )
-                    button.frame.size = CGSize(width: size.width, height: size.height + 7)
-                    let y: CGFloat
-                    if let last = view.subviews.last {
-                        y =  last.frame.origin.y + last.frame.size.height + 7
-                    } else {
-                        y = 7
-                    }
-                    button.frame = CGRect(
-                        x: 7,
-                        y: y,
-                        width: view.frame.size.width - 14,
-                        height: button.frame.size.height
-                    )
-                    button.rx.tap.subscribe(onNext: {
-                        block()
-                        popover.dismiss()
-                    }).addDisposableTo(self.disposeBag)
-                    view.addSubview(button)
-                }
-                let last = view.subviews.last!
-                view.frame = CGRect(x: 0, y: 0, width: view.frame.size.width, height: last.frame.origin.y + last.frame.size.height + 7)
-                popover.show(view, fromView: b, inView: self.view)
+                self.popover(onButton: b, withButtons: actions.map { a in
+                    (a.0, { $0.backgroundColor = a.1 }, a.2)
+                })
             })
             .addDisposableTo(disposeBag)
     }
@@ -353,5 +327,52 @@ class SwiftViewController: UIViewController {
         vc.modalPresentationStyle = .overCurrentContext
         vc.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
         self.present(vc, animated: true)
+    }
+    
+    private func popover(onButton button: UIButton, withButtons buttons: [(String, (UIButton) -> Void, () -> Void)]) {
+        guard buttons.count > 0 else { return }
+        let popover = Popover(options: [
+            .color(UIColor.flatNavyBlueColorDark()),
+            .animationIn(0.1),
+            .animationOut(0.1)
+            ])
+        let view = UIView()
+        view.frame = CGRect(x: 0, y: 0, width: 250, height: 0)
+        buttons.forEach { name, config, block in
+            let button = UIButton()
+            button.titleLabel?.lineBreakMode = .byWordWrapping
+            button.titleLabel?.textAlignment = .center
+            button.titleLabel?.numberOfLines = 0
+            button.setTitle(name, for: .normal)
+            config(button)
+            Style.ButtonLabel(button)
+            let size = NSString(string: name) .boundingRect(
+                with: CGSize(width: view.frame.size.width - 14, height: 9999),
+                options: .usesLineFragmentOrigin,
+                attributes: [NSFontAttributeName: button.titleLabel!.font],
+                context: nil
+            )
+            button.frame.size = CGSize(width: size.width, height: size.height + 7)
+            let y: CGFloat
+            if let last = view.subviews.last {
+                y =  last.frame.origin.y + last.frame.size.height + 7
+            } else {
+                y = 7
+            }
+            button.frame = CGRect(
+                x: 7,
+                y: y,
+                width: view.frame.size.width - 14,
+                height: button.frame.size.height
+            )
+            button.rx.tap.subscribe(onNext: {
+                block()
+                popover.dismiss()
+            }).addDisposableTo(self.disposeBag)
+            view.addSubview(button)
+        }
+        let last = view.subviews.last!
+        view.frame = CGRect(x: 0, y: 0, width: view.frame.size.width, height: last.frame.origin.y + last.frame.size.height + 7)
+        popover.show(view, fromView: button, inView: self.view)
     }
 }

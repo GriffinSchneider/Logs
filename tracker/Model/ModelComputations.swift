@@ -102,6 +102,29 @@ extension SData {
     }
 }
 
+extension SData {
+    struct Suggestion {
+        let text: String?
+        let count: Int
+    }
+    func noteSuggestions(forEventNamed eventName: String?) -> [Suggestion] {
+        guard let eventName = eventName else { return [] }
+        let sugs = events
+            .reversed()
+            .filter { $0.name == eventName }
+            .flatMap {(e: SEvent) -> [String?] in e.note?.components(separatedBy: "\n") ?? [] }
+            .map { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !($0 == nil || $0!.isEmpty) }
+        var freq: [String: Int] = [:]
+        for s in sugs {
+            freq[s!] = (freq[s!] ?? 0) + 1
+        }
+        return freq
+            .sorted { l, r in l.value > r.value }
+            .map { Suggestion(text: $0.key, count: $0.value) }
+    }
+}
+
 extension SSchema {
     func icon(for event: SEvent) -> String {
         let stuff = occurrences as [Iconable] + states as [Iconable] + readings as [Iconable]

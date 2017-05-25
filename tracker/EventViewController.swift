@@ -146,29 +146,11 @@ class EventViewController: UIViewController {
     }
 }
 
-private struct Suggestion {
-    let text: String?
-    let count: Int
-}
-
 private class Suggester {
-    var suggestions: [Suggestion] = []
+    var suggestions: [SData.Suggestion] = []
     var eventName: String? = nil {
         didSet {
-            guard let eventName = eventName else { return }
-            let sugs = SSyncManager.data.value.events
-                .reversed()
-                .filter { $0.name == eventName }
-                .flatMap {(e: SEvent) -> [String?] in e.note?.components(separatedBy: "\n") ?? [] }
-                .map { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
-                .filter { !($0 == nil || $0!.isEmpty) }
-            var freq: [String: Int] = [:]
-            for s in sugs {
-                freq[s!] = (freq[s!] ?? 0) + 1
-            }
-            suggestions = freq
-                .sorted { l, r in l.value > r.value }
-                .map { Suggestion(text: $0.key, count: $0.value) }
+            suggestions = SSyncManager.data.value.noteSuggestions(forEventNamed: eventName)
         }
     }
 }

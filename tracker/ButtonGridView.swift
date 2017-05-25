@@ -16,11 +16,11 @@ private let PADDING: CGFloat = 10
 class ButtonGridView<ButtonDataType: Hashable>: UIView {
     
     let buttons = Variable<[[ButtonDataType]]>([])
-    let selection: Observable<ButtonDataType>
+    let selection: Observable<(UIButton, ButtonDataType)>
     let longPress: Observable<(UIButton, ButtonDataType)>
 
     private let configBlock: (UIButton, ButtonDataType) -> Void
-    private var _selection: Variable<ButtonDataType?> = Variable(nil)
+    private var _selection: Variable<(UIButton, ButtonDataType)?> = Variable(nil)
     private var _longPress: Variable<(UIButton, ButtonDataType)?> = Variable(nil)
     private let disposeBag: DisposeBag
     private var outputDisposable: Disposable? = nil
@@ -76,7 +76,7 @@ class ButtonGridView<ButtonDataType: Hashable>: UIView {
         }
         
         outputDisposable = Observable.from(buttonMap.map { k, v in
-            v.rx.tap.asObservable().map { k }
+            v.rx.tap.asObservable().map { (v, k) }
         }).merge().bindTo(_selection)
         
         layoutSubviews()
