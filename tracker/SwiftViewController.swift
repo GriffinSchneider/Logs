@@ -216,36 +216,9 @@ class SwiftViewController: UIViewController {
             },
         ]
         
-        var stack = [SEvent]()
-        
         let bottomActions: [SectionValue] = [
             .action("Reading") {
                 self.doReading()
-            },
-            .action("Pop") {
-                let last = SSyncManager.data.value.events.removeLast()
-                stack.append(last)
-                self.view.makeToast(
-                    "⤴️ \(SSyncManager.schema.value.spacedIcon(for: last))\(last.name!)",
-                    duration: 1,
-                    position: CSToastPositionCenter
-                )
-            },
-            .action("Push") {
-                if let last = stack.popLast() {
-                    SSyncManager.data.value.events.sortedAppend(last)
-                    self.view.makeToast(
-                        "⤵️ \(SSyncManager.schema.value.spacedIcon(for: last))\(last.name!)",
-                        duration: 1,
-                        position: CSToastPositionCenter
-                    )
-                } else {
-                    self.view.makeToast(
-                        "¯\\_(ツ)_/¯",
-                        duration: 1,
-                        position: CSToastPositionCenter
-                    )
-                }
             }
         ]
         
