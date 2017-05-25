@@ -269,26 +269,33 @@ class SwiftViewController: UIViewController {
             .subscribe(onNext: { sel, event, suggs in
                 guard suggs.count > 0 else { return }
                 
-                popover(inView: self.view, onButton: sel.0, withBag: self.disposeBag, withButtons:
-                    [PopoverButtonInfo(
-                        title: "Add",
-                        config: { $0.backgroundColor = SEventType.streakExcuseColor },
-                        tap: {
-                            guard let event = event else { return }
-                            SSyncManager.data.value.events.sortedAppend(event)
-                        }
-                    )] +
+                popover(inView: self.view, onButton: sel.0, disposeBag: self.disposeBag, buttons:
                     suggs.map { sugg in
                         PopoverButtonInfo(
                             title: sugg.text ?? "",
-                            config: { $0.backgroundColor = SEventType.streakColor },
+                            config: { $0.backgroundColor = SEventType.stateColor },
                             tap: {
                                 guard var event = event else { return }
                                 event.note = sugg.text
                                 SSyncManager.data.value.events.sortedAppend(event)
                             }
                         )
-                    })
+                    }, barButtons: [PopoverButtonInfo(
+                        title: "Add",
+                        config: { $0.backgroundColor = SEventType.readingColor },
+                        tap: {
+                            guard let event = event else { return }
+                            SSyncManager.data.value.events.sortedAppend(event)
+                        }
+                    ), PopoverButtonInfo(
+                        title: "Edit",
+                        config: { $0.backgroundColor = SEventType.readingColor },
+                        tap: {
+                            guard let event = event else { return }
+                            self.addAndEdit(event: event)
+                        }
+                    )]
+                )
             }).addDisposableTo(disposeBag)
         
         gridView
@@ -299,14 +306,7 @@ class SwiftViewController: UIViewController {
                     actions.append(PopoverButtonInfo(
                         title: "Add + Edit",
                         config: { $0.backgroundColor = SEventType.readingColor },
-                        tap: {
-                            self.present(UINavigationController(rootViewController: EventViewController(event: event, done: {[weak self] newEvent in
-                                if let e = newEvent {
-                                    SSyncManager.data.value.events.sortedAppend(e)
-                                }
-                                self?.dismiss(animated: true)
-                            })), animated: true)
-                        }
+                        tap: { self.addAndEdit(event: event) }
                     ))
                 }
                 switch val {
@@ -326,9 +326,18 @@ class SwiftViewController: UIViewController {
                 return (b, actions)
             }
             .subscribe(onNext: { (b, buttons) in
-                popover(inView: self.view, onButton: b, withBag: self.disposeBag, withButtons: buttons)
+                popover(inView: self.view, onButton: b, disposeBag: self.disposeBag, buttons: buttons)
             })
             .addDisposableTo(disposeBag)
+    }
+    
+    public func addAndEdit(event: SEvent) {
+        self.present(UINavigationController(rootViewController: EventViewController(event: event, done: {[weak self] newEvent in
+            if let e = newEvent {
+                SSyncManager.data.value.events.sortedAppend(e)
+            }
+            self?.dismiss(animated: true)
+        })), animated: true)
     }
     
     public func doReading() {
