@@ -331,11 +331,16 @@ class SwiftViewController: UIViewController {
     
     private func popover(onButton button: UIButton, withButtons buttons: [(String, (UIButton) -> Void, () -> Void)]) {
         guard buttons.count > 0 else { return }
+        let direction = button.frame.origin.y + button.frame.size.height > (self.view.frame.size.height / 2)
+            ? PopoverType.up : PopoverType.down
         let popover = Popover(options: [
             .color(UIColor.flatNavyBlueColorDark()),
             .animationIn(0.1),
-            .animationOut(0.1)
+            .animationOut(0.1),
+            .type(direction)
             ])
+        var buttons = buttons
+        if direction == .up { buttons.reverse() }
         let view = UIView()
         view.frame = CGRect(x: 0, y: 0, width: 250, height: 0)
         buttons.forEach { name, config, block in
