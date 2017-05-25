@@ -107,11 +107,12 @@ extension SData {
         let text: String?
         let count: Int
     }
-    func noteSuggestions(forEventNamed eventName: String?) -> [Suggestion] {
+    func noteSuggestions(forEventNamed eventName: String?, filterExcuses: Bool = false) -> [Suggestion] {
         guard let eventName = eventName else { return [] }
         let sugs = events
             .reversed()
             .filter { $0.name == eventName }
+            .filter { !filterExcuses || $0.type != .StreakExcuse }
             .flatMap {(e: SEvent) -> [String?] in e.note?.components(separatedBy: "\n") ?? [] }
             .map { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
             .filter { !($0 == nil || $0!.isEmpty) }

@@ -261,7 +261,7 @@ class SwiftViewController: UIViewController {
                 let event = self.valToEvent(sel.1)
                 let needsSuggs = event != nil && event?.type != .EndState
                 let suggs = needsSuggs ? SSyncManager.data.value
-                    .noteSuggestions(forEventNamed: event?.name!)
+                    .noteSuggestions(forEventNamed: event?.name!, filterExcuses: true)
                     .filter { $0.count > 1 } : []
                 if let e = event, suggs.count == 0 { SSyncManager.data.value.events.sortedAppend(e) }
                 return (sel, event, suggs)
