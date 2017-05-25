@@ -269,13 +269,18 @@ class SwiftViewController: UIViewController {
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { sel, event, suggs in
                 guard suggs.count > 0 else { return }
-                self.popover(onButton: sel.0, withButtons: suggs.map { sugg in
-                    (sugg.text ?? "", { $0.backgroundColor = SEventType.streakColor }, {
-                        guard var event = event else { return }
-                        event.note = sugg.text
+                self.popover(onButton: sel.0, withButtons:
+                    [("Add", { $0.backgroundColor = SEventType.streakExcuseColor }, {
+                        guard let event = event else { return }
                         SSyncManager.data.value.events.sortedAppend(event)
+                    })] +
+                    suggs.map { sugg in
+                        (sugg.text ?? "", { $0.backgroundColor = SEventType.streakColor }, {
+                            guard var event = event else { return }
+                            event.note = sugg.text
+                            SSyncManager.data.value.events.sortedAppend(event)
+                        })
                     })
-                })
             }).addDisposableTo(disposeBag)
         
         gridView
