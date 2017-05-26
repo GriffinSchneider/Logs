@@ -286,18 +286,18 @@ class SwiftViewController: UIViewController {
                         )
                     },
                     barButtons: [PopoverButtonInfo(
-                        title: "Add",
-                        config: { $0.backgroundColor = SEventType.readingColor },
-                        tap: {
-                            guard let event = event else { return }
-                            SSyncManager.data.value.events.sortedAppend(event)
-                        }
-                    ), PopoverButtonInfo(
                         title: "Edit",
                         config: { $0.backgroundColor = SEventType.readingColor },
                         tap: {
                             guard let event = event else { return }
                             self.addAndEdit(event: event)
+                        }
+                    ), PopoverButtonInfo(
+                        title: "Add",
+                        config: { $0.backgroundColor = SEventType.readingColor },
+                        tap: {
+                            guard let event = event else { return }
+                            SSyncManager.data.value.events.sortedAppend(event)
                         }
                     )]
                 )
