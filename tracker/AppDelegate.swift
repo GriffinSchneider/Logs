@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Toast
 import UserNotifications
 import SwiftyDropbox
 
@@ -16,8 +15,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     var window: UIWindow?
 
     func applicationDidFinishLaunching(_ application: UIApplication) {
-        CSToastManager.setQueueEnabled(false)
-       
         let center = UNUserNotificationCenter.current()
         center.requestAuthorization(options: [.alert, .sound]){ granted, error in
             

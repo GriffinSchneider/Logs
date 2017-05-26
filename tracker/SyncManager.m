@@ -9,7 +9,6 @@
 #import "SyncManager.h"
 
 #import <UIKit/UIKit.h>
-#import <Toast/UIView+Toast.h>
 #if IS_TODAY_EXTENSION
 #import "TrackerToday-Swift.h"
 #else

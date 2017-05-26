@@ -28,7 +28,7 @@ PODS:
   - SnapKit (3.0.2)
   - SwiftyDropbox (4.1.1):
     - Alamofire (~> 4.0.1)
-  - Toast (3.1.0)
+  - Toast-Swift (2.0.0)
   - UIButton-ANDYHighlighted (2.0.0)
 
 DEPENDENCIES:
@@ -42,7 +42,7 @@ DEPENDENCIES:
   - RxGesture
   - RxSwift (~> 3.0.0)
   - SwiftyDropbox
-  - Toast
+  - Toast-Swift
   - UIButton-ANDYHighlighted
 
 EXTERNAL SOURCES:
@@ -63,9 +63,9 @@ SPEC CHECKSUMS:
   RxSwift: af5680055c4ad04480189c52d28385b1029493a6
   SnapKit: 2e456761aa92d4d4067a7a5594c18769d451a8ad
   SwiftyDropbox: dfcd4d308d32d74729255b48833db61acdfb9c23
-  Toast: 14a93686d6c8bfe2727afd342414e35660a8a1f3
+  Toast-Swift: 5b2f8f720f7e78e48511f693df1f9c9a6e38a25a
   UIButton-ANDYHighlighted: 3fcadf780786d8d2b4928b0d0e7394e43e827254
 
-PODFILE CHECKSUM: 6dd1230002985a040986f0589403b6ce6d779262
+PODFILE CHECKSUM: f92eeb882ce1f80bbcf80179d815780adb90bf5f
 
 COCOAPODS: 1.2.0
