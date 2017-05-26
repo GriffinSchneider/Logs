@@ -153,7 +153,9 @@ class SwiftViewController: UIViewController {
                 b.setTitle(s.name, for: .normal)
                 b.backgroundColor = SEventType.occurrenceColor
             case let .activeState(a):
-                b.setTitle("\(a.name!) \(formatDuration(Date().timeIntervalSince(a.date))!)" , for: .normal)
+                var icon = SSyncManager.schema.value.icon(for: a)
+                if icon == "" { icon = a.name }
+                b.setTitle("\(icon) \(formatDuration(Date().timeIntervalSince(a.date))!)" , for: .normal)
                 b.backgroundColor = SEventType.streakColor
             case let .state(s, ia):
                 b.setTitle(s.icon, for: .normal)
