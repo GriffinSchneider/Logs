@@ -24,6 +24,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         
         let _ = SSyncManager.data
         NotificationManager.setup(vc: vc)
+        SSyncManager.viewController = vc
         
         UINavigationBar.appearance().isTranslucent = false
         UINavigationBar.appearance().barTintColor = UIColor.flatNavyBlue()

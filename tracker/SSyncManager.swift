@@ -10,8 +10,11 @@ import Foundation
 import ObjectMapper
 import RxSwift
 import SwiftyDropbox
+import Toast_Swift
 
 @objc class SSyncManager: NSObject {
+    public static var viewController: UIViewController? = nil
+    
     static var schema = Variable(schemaFromDisk())
     
     static var data:Variable<SData> = {
@@ -61,7 +64,7 @@ import SwiftyDropbox
     
     private static func schemaFromDisk() -> SSchema {
         let string = (try? String(contentsOf: schemaPath, encoding: .utf8)) ?? "{}"
-        return Mapper<SSchema>().map(JSONString: string)!
+        return Mapper<SSchema>().map(JSONString: string) ?? Mapper<SSchema>().map(JSONString: "{}")!
     }
     
     @objc static func loadFromDisk() {
@@ -71,15 +74,19 @@ import SwiftyDropbox
     
     static func upload() {
         let rev = UserDefaults.standard.value(forKey: "DATA_REV") as? String
+        DispatchQueue.main.async { viewController?.view.makeToastActivity(.center) }
         DropboxClientsManager.authorizedClient!.files.upload(
             path: "/data.json",
             mode: .update(rev ?? ""),
             input: dataPath
         ).response { response, error in
+            DispatchQueue.main.async { viewController?.view.hideToastActivity() }
             if let response = response {
+                DispatchQueue.main.async { viewController?.view.makeToast("✅") }
                 UserDefaults.standard.set(response.rev, forKey: "DATA_REV")
                 print(response)
             } else if let error = error {
+                DispatchQueue.main.async { viewController?.view.makeToast("🙅🏻\(error)") }
                 print(error)
             }
         }.progress { progressData in
@@ -88,14 +95,18 @@ import SwiftyDropbox
     }
     
     private static func download(path: String, url: URL, revKey: String) {
+        DispatchQueue.main.async { viewController?.view.makeToastActivity(.center) }
         DropboxClientsManager.authorizedClient!.files.download(path: path, overwrite: true) { _ in
             return url
         }.response { response, error in
+            DispatchQueue.main.async { viewController?.view.hideToastActivity() }
             if let response = response {
+                DispatchQueue.main.async { viewController?.view.makeToast("✅") }
                 UserDefaults.standard.set(response.0.rev, forKey: revKey)
                 self.loadFromDisk()
                 print(response)
             } else if let error = error {
+                DispatchQueue.main.async { viewController?.view.makeToast("🙅🏻\(error)") }
                 print(error)
             }
         }.progress { progressData in
