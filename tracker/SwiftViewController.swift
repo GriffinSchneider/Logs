@@ -268,9 +268,11 @@ class SwiftViewController: UIViewController {
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { sel, event, suggs in
                 guard suggs.count > 0 else { return }
-                
-                popover(inView: self.view, onButton: sel.0, disposeBag: self.disposeBag, buttons:
-                    suggs.map { sugg in
+                popover(
+                    inView: self.view,
+                    onButton: sel.0,
+                    disposeBag: self.disposeBag,
+                    buttons: suggs.map { sugg in
                         PopoverButtonInfo(
                             title: sugg.text ?? "",
                             config: { $0.backgroundColor = SEventType.stateColor },
@@ -280,7 +282,8 @@ class SwiftViewController: UIViewController {
                                 SSyncManager.data.value.events.sortedAppend(event)
                             }
                         )
-                    }, barButtons: [PopoverButtonInfo(
+                    },
+                    barButtons: [PopoverButtonInfo(
                         title: "Add",
                         config: { $0.backgroundColor = SEventType.readingColor },
                         tap: {
