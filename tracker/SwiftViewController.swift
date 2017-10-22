@@ -255,9 +255,14 @@ class SwiftViewController: UIViewController {
         
         gridView
             .selection
+            .observeOn(MainScheduler.instance)
+            .map { sel -> (UIButton, SectionValue) in
+                self.execVal(sel.1)
+                return sel
+            }
             .observeOn(SerialDispatchQueueScheduler(internalSerialQueueName: "Background"))
             .map { sel -> ((UIButton, SectionValue), SEvent?, [SData.Suggestion]) in
-                self.execVal(sel.1)
+                
                 let event = self.valToEvent(sel.1)
                 let needsSuggs = event != nil && event?.type != .EndState
                 let suggs = needsSuggs ? SSyncManager.data.value
