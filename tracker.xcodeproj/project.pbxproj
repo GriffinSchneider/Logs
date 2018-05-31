@@ -53,6 +53,7 @@
 		85C162D51DB3FA6A001C75AC /* ButtonGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C162D41DB3FA6A001C75AC /* ButtonGridView.swift */; };
 		85C472631E7CADB20052C913 /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 85C472621E7CADB20052C913 /* Constants.m */; };
 		85C472641E7CADB20052C913 /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 85C472621E7CADB20052C913 /* Constants.m */; };
+		85DD388D20C0760100C06CE0 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85DD388C20C0760100C06CE0 /* UIKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		85E7D3FB1DC6C1B2004E67D9 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85555F901D5D23F2003047BC /* NotificationCenter.framework */; };
 		85E7D4011DC6C387004E67D9 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85555F901D5D23F2003047BC /* NotificationCenter.framework */; };
 		85E7D4071DC6C387004E67D9 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 85E7D4051DC6C387004E67D9 /* MainInterface.storyboard */; };
@@ -150,6 +151,8 @@
 		85C472611E7CADB20052C913 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		85C472621E7CADB20052C913 /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
 		85CEEB9A1D2C0442008A3F6F /* secrets.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = secrets.xcconfig; sourceTree = SOURCE_ROOT; };
+		85DD388A20C075A800C06CE0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		85DD388C20C0760100C06CE0 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		85E7D4001DC6C387004E67D9 /* TrackerToday.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = TrackerToday.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		85E7D4031DC6C387004E67D9 /* TodayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewController.swift; sourceTree = "<group>"; };
 		85E7D4061DC6C387004E67D9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
@@ -172,6 +175,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				85DD388D20C0760100C06CE0 /* UIKit.framework in Frameworks */,
 				855566061E62033900E03555 /* UserNotifications.framework in Frameworks */,
 				85E7D3FB1DC6C1B2004E67D9 /* NotificationCenter.framework in Frameworks */,
 				854F17B91D28372D0051BE48 /* QuartzCore.framework in Frameworks */,
@@ -195,6 +199,8 @@
 		19361570CE402AADC59B0A76 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				85DD388C20C0760100C06CE0 /* UIKit.framework */,
+				85DD388A20C075A800C06CE0 /* Foundation.framework */,
 				855566051E62033900E03555 /* UserNotifications.framework */,
 				854F17B81D28372D0051BE48 /* QuartzCore.framework */,
 				854F17B61D2837290051BE48 /* Security.framework */,
