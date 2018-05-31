@@ -21,6 +21,9 @@ extension Array {
 
 extension Array where Element: Comparable {
     mutating func sortedAppend(_ toInsert: Iterator.Element) {
+        if (count < 1) {
+            insert(toInsert, at: 0)
+        }
         for idx in (0...(count-1)).reversed() {
             let element = self[idx]
             if element < toInsert {
