@@ -45,6 +45,23 @@ DEPENDENCIES:
   - Toast-Swift
   - UIButton-ANDYHighlighted
 
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Alamofire
+    - DRYUI
+    - JSONModel
+    - Masonry
+    - MoveViewUpForKeyboardKit
+    - ObjectMapper
+    - RxCocoa
+    - RxDataSources
+    - RxGesture
+    - RxSwift
+    - SnapKit
+    - SwiftyDropbox
+    - Toast-Swift
+    - UIButton-ANDYHighlighted
+
 EXTERNAL SOURCES:
   Popover:
     :path: Popover
@@ -56,7 +73,7 @@ SPEC CHECKSUMS:
   Masonry: 7c429b56da9d4ee0bbb3ed77a5ea710d6a5df39e
   MoveViewUpForKeyboardKit: a1f9de6b1dd7aa9451f9a80d763f37cf55f6b218
   ObjectMapper: 9e385c2295bcc4e16eabbcfc85db801442bba545
-  Popover: 1a91e33fe362597fb2047215592fc3229b4630ce
+  Popover: d9da80e2965ded8495b20041c3ca92cbdd949f22
   RxCocoa: 15a52fc590dcc700cb4a690a633b5c5184ce3a78
   RxDataSources: 824693e84d00781d0a5e5cedc1ff95ce9250aacd
   RxGesture: 17b250d3c6732b35fab53d09800d35ceef717847
@@ -68,4 +85,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: f92eeb882ce1f80bbcf80179d815780adb90bf5f
 
-COCOAPODS: 1.3.1
+COCOAPODS: 1.5.3
