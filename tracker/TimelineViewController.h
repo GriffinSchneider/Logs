@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-typedef void (^TimelineViewControllerDoneBlock)();
+typedef void (^TimelineViewControllerDoneBlock)(void);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 @interface TimelineViewController : UIViewController

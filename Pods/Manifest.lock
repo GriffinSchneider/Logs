@@ -1,34 +1,36 @@
 PODS:
-  - Alamofire (4.0.1)
-  - DRYUI (1.1.4):
-    - DRYUI/base (= 1.1.4)
-    - DRYUI/objc (= 1.1.4)
-    - DRYUI/swift (= 1.1.4)
-  - DRYUI/base (1.1.4):
+  - Alamofire (4.7.3)
+  - Differentiator (3.1.0)
+  - DRYUI (1.2.0):
+    - DRYUI/base (= 1.2.0)
+    - DRYUI/objc (= 1.2.0)
+    - DRYUI/swift (= 1.2.0)
+  - DRYUI/base (1.2.0):
     - Masonry
-  - DRYUI/objc (1.1.4):
+  - DRYUI/objc (1.2.0):
     - DRYUI/base
-  - DRYUI/swift (1.1.4):
+  - DRYUI/swift (1.2.0):
     - DRYUI/base
-    - SnapKit (~> 3.0)
-  - JSONModel (1.7.0)
-  - Masonry (1.0.2)
-  - MoveViewUpForKeyboardKit (2.0.0)
-  - ObjectMapper (2.2.2)
+    - SnapKit (~> 4.0)
+  - JSONModel (1.8.0)
+  - Masonry (1.1.0)
+  - MoveViewUpForKeyboardKit (3.0.1)
+  - ObjectMapper (3.3.0)
   - Popover (1.0.2)
-  - RxCocoa (3.0.1):
-    - RxSwift (~> 3.0)
-  - RxDataSources (1.0.0):
-    - RxCocoa (~> 3.0)
-    - RxSwift (~> 3.0)
-  - RxGesture (0.2.0):
-    - RxCocoa (~> 3.0.0)
-    - RxSwift (~> 3.0.0)
-  - RxSwift (3.0.1)
-  - SnapKit (3.0.2)
-  - SwiftyDropbox (4.1.1):
-    - Alamofire (~> 4.0.1)
-  - Toast-Swift (2.0.0)
+  - RxCocoa (4.3.1):
+    - RxSwift (~> 4.0)
+  - RxDataSources (3.1.0):
+    - Differentiator (~> 3.0)
+    - RxCocoa (~> 4.0)
+    - RxSwift (~> 4.0)
+  - RxGesture (2.0.1):
+    - RxCocoa (~> 4.3.1)
+    - RxSwift (~> 4.3.1)
+  - RxSwift (4.3.1)
+  - SnapKit (4.2.0)
+  - SwiftyDropbox (4.7.0):
+    - Alamofire (~> 4.7)
+  - Toast-Swift (4.0.0)
   - UIButton-ANDYHighlighted (2.0.0)
 
 DEPENDENCIES:
@@ -37,17 +39,18 @@ DEPENDENCIES:
   - MoveViewUpForKeyboardKit
   - ObjectMapper
   - Popover (from `Popover`)
-  - RxCocoa (~> 3.0.0)
-  - RxDataSources (~> 1.0.0-beta.2)
+  - RxCocoa
+  - RxDataSources
   - RxGesture
-  - RxSwift (~> 3.0.0)
-  - SwiftyDropbox
+  - RxSwift
+  - SwiftyDropbox (from `https://github.com/SofteqDG/SwiftyDropbox.git`, branch `feature/swift-4.2`)
   - Toast-Swift
   - UIButton-ANDYHighlighted
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Alamofire
+    - Differentiator
     - DRYUI
     - JSONModel
     - Masonry
@@ -58,31 +61,39 @@ SPEC REPOS:
     - RxGesture
     - RxSwift
     - SnapKit
-    - SwiftyDropbox
     - Toast-Swift
     - UIButton-ANDYHighlighted
 
 EXTERNAL SOURCES:
   Popover:
     :path: Popover
+  SwiftyDropbox:
+    :branch: feature/swift-4.2
+    :git: https://github.com/SofteqDG/SwiftyDropbox.git
+
+CHECKOUT OPTIONS:
+  SwiftyDropbox:
+    :commit: 59a832f5da893a89767b81d1411a3fad496acc54
+    :git: https://github.com/SofteqDG/SwiftyDropbox.git
 
 SPEC CHECKSUMS:
-  Alamofire: 7682d43245de14874acd142ec137b144aa1dd335
-  DRYUI: 54ad8da7ddc66afbdb8e5648737ef2e451511d8d
-  JSONModel: 840bc0fcffb24b8454d2c026bf26fea454b8e98d
-  Masonry: 7c429b56da9d4ee0bbb3ed77a5ea710d6a5df39e
-  MoveViewUpForKeyboardKit: a1f9de6b1dd7aa9451f9a80d763f37cf55f6b218
-  ObjectMapper: 9e385c2295bcc4e16eabbcfc85db801442bba545
+  Alamofire: c7287b6e5d7da964a70935e5db17046b7fde6568
+  Differentiator: be49ca3408f0ecfc761e4c7763d20c62be01b9ad
+  DRYUI: 0580fd938d797f3e04eb5054c62b30f1de3c92f7
+  JSONModel: 02ab723958366a3fd27da57ea2af2113658762e9
+  Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
+  MoveViewUpForKeyboardKit: 33988bafaff9758443aa3584eda6bddeef33f0b2
+  ObjectMapper: b612bf8c8e99c4dc0bb6013a51f7c27966ed5da9
   Popover: d9da80e2965ded8495b20041c3ca92cbdd949f22
-  RxCocoa: 15a52fc590dcc700cb4a690a633b5c5184ce3a78
-  RxDataSources: 824693e84d00781d0a5e5cedc1ff95ce9250aacd
-  RxGesture: 17b250d3c6732b35fab53d09800d35ceef717847
-  RxSwift: af5680055c4ad04480189c52d28385b1029493a6
-  SnapKit: 2e456761aa92d4d4067a7a5594c18769d451a8ad
-  SwiftyDropbox: dfcd4d308d32d74729255b48833db61acdfb9c23
-  Toast-Swift: 5b2f8f720f7e78e48511f693df1f9c9a6e38a25a
+  RxCocoa: 78763c7b07d02455598d9fc3c1ad091a28b73635
+  RxDataSources: a843bad90c29817f5923ec8163f4af2de084ceb3
+  RxGesture: 26ede4ed13ffc6336d29dbd9a8dff229bdb72de7
+  RxSwift: fe0fd770a43acdb7d0a53da411c9b892e69bb6e4
+  SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
+  SwiftyDropbox: 95615017cf098d8a66ab76a55406d370626711fa
+  Toast-Swift: 594b5c5e5129f15438e410207e43287f027b3c00
   UIButton-ANDYHighlighted: 3fcadf780786d8d2b4928b0d0e7394e43e827254
 
-PODFILE CHECKSUM: f92eeb882ce1f80bbcf80179d815780adb90bf5f
+PODFILE CHECKSUM: e7332a50bd8b053e1d0f7bf2991e1c1ff83e17bd
 
 COCOAPODS: 1.5.3

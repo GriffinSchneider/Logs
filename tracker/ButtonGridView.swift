@@ -37,7 +37,7 @@ class ButtonGridView<ButtonDataType: Hashable>: UIView {
         super.init(frame: .zero)
         buttons.asObservable().subscribe(onNext: {[weak self] data in
             self?.display(inputData: data)
-        }).addDisposableTo(disposeBag)
+        }).disposed(by: disposeBag)
         
         Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(layoutSubviews), userInfo: nil, repeats: true)
     }
@@ -77,7 +77,7 @@ class ButtonGridView<ButtonDataType: Hashable>: UIView {
         
         outputDisposable = Observable.from(buttonMap.map { k, v in
             v.rx.tap.asObservable().map { (v, k) }
-        }).merge().bindTo(_selection)
+        }).merge().bind(to: _selection)
         
         layoutSubviews()
     }

@@ -126,13 +126,13 @@ private func makeButton(_ b: PopoverButtonInfo, _ popover: Popover, _ disposeBag
     let size = NSString(string: b.title) .boundingRect(
         with: CGSize(width: width, height: 9999),
         options: .usesLineFragmentOrigin,
-        attributes: [NSFontAttributeName: button.titleLabel!.font],
+        attributes: [.font: button.titleLabel!.font],
         context: nil
     )
     button.frame.size = CGSize(width: width, height: size.height + 7)
     button.rx.tap.subscribe(onNext: {
         b.tap()
         popover.dismiss()
-    }).addDisposableTo(disposeBag)
+    }).disposed(by: disposeBag)
     return button
 }

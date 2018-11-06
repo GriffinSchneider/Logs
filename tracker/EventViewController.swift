@@ -50,8 +50,9 @@ class EventViewController: UIViewController {
         }
     
         view.backgroundColor = UIColor.flatNavyBlueColorDark()
-        
-        view.addSubview(keyboardView) { _ in}
+
+        // TODO
+        view.addSubview(keyboardView) { _, _ in}
         view.addSubview { v, make in
             make.top.left.right.equalToSuperview()
             make.bottom.equalTo(self.keyboardView.snp.top)
@@ -65,7 +66,7 @@ class EventViewController: UIViewController {
                 make.height.equalTo(200)
                 v.rx.text.subscribe(onNext: { text in
                     self.event.note = text
-                }).addDisposableTo(self.disposeBag)
+                }).disposed(by: self.disposeBag)
             }
             v.addSubview(self.suggestionsTableView) { v, make in
                 v.delegate = self
@@ -76,7 +77,7 @@ class EventViewController: UIViewController {
                 v.separatorColor = UIColor.flatWhiteColorDark()
                 make.bottom.equalTo(self.noteTextView.snp.top).offset(-10)
                 make.left.right.equalToSuperview().inset(10)
-                make.height.equalToSuperview().priority(UILayoutPriorityDefaultHigh)
+                make.height.equalToSuperview().priority(UILayoutPriority.defaultHigh)
             }
             v.addSubview(self.dateTextField) { v, make in
                 v.text = self.dateFormatter.string(from: self.event.date)
@@ -100,7 +101,7 @@ class EventViewController: UIViewController {
                 picker.rx.date.asObservable().subscribe(onNext: { date in
                     self.event.date = date
                     v.text = self.dateFormatter.string(from: date)
-                }).addDisposableTo(self.disposeBag)
+                }).disposed(by: self.disposeBag)
                 
                 make.left.right.equalToSuperview()
                 make.bottom.equalTo(self.suggestionsTableView.snp.top).offset(-10)
@@ -120,7 +121,7 @@ class EventViewController: UIViewController {
                     self.event.name = text
                     self.suggester.eventName = self.event.name
                     self.suggestionsTableView.reloadData()
-                }).addDisposableTo(self.disposeBag)
+                }).disposed(by: self.disposeBag)
             }
         }
     }
@@ -179,9 +180,9 @@ extension EventViewController: UITableViewDataSource {
         if cell == nil {
             cell = UITableViewCell(style: .value1, reuseIdentifier: "cell")
             cell?.textLabel?.textColor = UIColor.flatWhiteColorDark()
-            cell?.textLabel?.font = UIFont.systemFont(ofSize: 10, weight: UIFontWeightThin)
+            cell?.textLabel?.font = UIFont.systemFont(ofSize: 10, weight: .thin)
             cell?.detailTextLabel?.textColor = UIColor.flatWhiteColorDark().darken(byPercentage: 0.2)
-            cell?.detailTextLabel?.font = UIFont.systemFont(ofSize: 10, weight: UIFontWeightUltraLight)
+            cell?.detailTextLabel?.font = UIFont.systemFont(ofSize: 10, weight: .ultraLight)
             cell?.backgroundColor = UIColor.flatNavyBlue()
             cell?.selectedBackgroundView = UIView()
             cell?.selectedBackgroundView?.backgroundColor = UIColor.flatNavyBlue().darken(byPercentage: 0.1)

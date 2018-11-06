@@ -29,7 +29,7 @@ class ReadingViewController: UIViewController {
         SSyncManager.schema.asObservable()
             .map { $0.readings }
             .subscribe(onNext: update)
-            .addDisposableTo(disposeBag)
+            .disposed(by: disposeBag)
     }
     
     private func update(readings: [ReadingSchema]) {
@@ -40,7 +40,7 @@ class ReadingViewController: UIViewController {
             make.edges.equalTo(v.superview!)
         }.rx.tap
             .subscribe(onNext: { self.completion([:]) })
-            .addDisposableTo(self.disposeBag)
+            .disposed(by: self.disposeBag)
         view.addSubview(UIView.self) { v, make in
             v.backgroundColor = UIColor.flatNavyBlueColorDark()
             v.layer.cornerRadius = 5
@@ -67,8 +67,8 @@ class ReadingViewController: UIViewController {
                 }
                 slider.rx.value.asObservable()
                     .map { "\(reading.name!): \(Int(floorf($0)))" }
-                    .bindTo(label.rx.text)
-                    .addDisposableTo(self.disposeBag)
+                    .bind(to: label.rx.text)
+                    .disposed(by: self.disposeBag)
                 slider.rx.value.asObservable()
                     .subscribe(onNext: {
                         if $0 >= 0 {
@@ -77,7 +77,7 @@ class ReadingViewController: UIViewController {
                             self.inputs.removeValue(forKey: reading)
                         }
                     })
-                    .addDisposableTo(self.disposeBag)
+                    .disposed(by: self.disposeBag)
                 lastView = label
             }
             v.addSubview(UIButton.self) { v, make in
@@ -90,7 +90,7 @@ class ReadingViewController: UIViewController {
                 make.left.right.bottom.equalTo(v.superview!)
             }.rx.tap
                 .subscribe(onNext: { self.completion(self.inputs) })
-                .addDisposableTo(self.disposeBag)
+                .disposed(by: self.disposeBag)
         }
     }
 }

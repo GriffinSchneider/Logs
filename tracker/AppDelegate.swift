@@ -21,6 +21,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         }
         
         let vc = SwiftViewController()
+        let nc = UINavigationController()
+        nc.isNavigationBarHidden = true
         
         let _ = SSyncManager.data
         NotificationManager.setup(vc: vc)
@@ -29,13 +31,14 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         UINavigationBar.appearance().isTranslucent = false
         UINavigationBar.appearance().barTintColor = UIColor.flatNavyBlue()
         UINavigationBar.appearance().tintColor = UIColor.flatWhiteColorDark()
-        UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName: UIColor.flatWhiteColorDark()]
+        UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.flatWhiteColorDark()]
         
         SSyncManager.initialize()
        
         self.window = UIWindow()
-        self.window?.rootViewController = vc
         self.window?.makeKeyAndVisible()
+        self.window?.rootViewController = nc
+        nc.viewControllers = [vc]
         
         DropboxClientsManager.setupWithAppKey(kDropBoxAPIKey)
         
@@ -44,7 +47,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                 UIApplication.shared,
                 controller: vc,
                 openURL: { (url: URL) -> Void in
-                    UIApplication.shared.openURL(url)
+                    UIApplication.shared.open(url)
                 }
             )
         } else {
@@ -52,7 +55,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         }
     }
     
-    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
         if let authResult = DropboxClientsManager.handleRedirectURL(url) {
             switch authResult {
             case .success:

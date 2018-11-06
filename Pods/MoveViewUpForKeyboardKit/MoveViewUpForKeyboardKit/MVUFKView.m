@@ -9,7 +9,6 @@
 #import "MVUFKView.h"
 
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 @protocol MVUFKKKeyboardListener <NSObject>
 - (void)keyboardFrameWillChangeToFrame:(CGRect)frame withAnimationDuration:(NSTimeInterval)duration andAnimationCurve:(UIViewAnimationCurve)curve;
@@ -77,11 +76,17 @@ static MVUFKKKeyboardManager *managerInstance;
 
 - (void)keyboardFrameWillChangeToFrame:(CGRect)frame withAnimationDuration:(NSTimeInterval)duration andAnimationCurve:(UIViewAnimationCurve)curve {
     if (!self.enabled) return;
-    
+
     if (!self.constraint) {
+        id item;
+        if (@available(iOS 11, *)) {
+            item = self.superview.safeAreaLayoutGuide;
+        } else {
+            item = self.superview;
+        }
         self.constraint =
         [NSLayoutConstraint
-         constraintWithItem:self.superview
+         constraintWithItem: item
          attribute:NSLayoutAttributeBottom
          relatedBy:NSLayoutRelationEqual
          toItem:self
@@ -90,18 +95,25 @@ static MVUFKKKeyboardManager *managerInstance;
          constant:0.0f];
         [self.superview addConstraint:self.constraint];
     }
-    
+
     CGFloat superViewHeight = self.superview.frame.size.height;
     CGFloat keyboardY = [self.superview convertRect:frame fromView:nil].origin.y;
-    CGFloat newConstant = MAX(superViewHeight - keyboardY, 0);
-    
+
+    CGFloat newConstant = 0;
+    if (superViewHeight - keyboardY > 0) {
+        newConstant = superViewHeight - keyboardY;
+        if (@available(iOS 11, *)) {
+            newConstant = newConstant - self.superview.safeAreaInsets.bottom;
+        }
+    }
+
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:0];
     [UIView setAnimationCurve:curve];
     [UIView setAnimationBeginsFromCurrentState:NO];
-    
+
     self.constraint.constant = newConstant;
-    
+
     [self.superview layoutIfNeeded];
     [UIView commitAnimations];
 }
@@ -124,3 +136,4 @@ static MVUFKKKeyboardManager *managerInstance;
 }
 
 @end
+

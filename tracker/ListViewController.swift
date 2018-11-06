@@ -18,7 +18,7 @@ class Filterer {
     init() {
         SSyncManager.data.asObservable().subscribe(onNext: { data in
             self.search = ""
-        }).addDisposableTo(disposeBag)
+        }).disposed(by: disposeBag)
     }
     func filteredEvents(search _s: String?) -> [SEvent] {
         var s = _s ?? ""
@@ -28,7 +28,7 @@ class Filterer {
             search = s
             s = s.lowercased()
             let searches = s.components(separatedBy: ",").map {
-                ($0.characters.last == " ", $0.trimmingCharacters(in: .whitespaces))
+                ($0.last == " ", $0.trimmingCharacters(in: .whitespaces))
             }
             filtered = SSyncManager.data.value.events.filter{ e in
                 searches.reduce(false, { acc, t in
@@ -84,11 +84,11 @@ class ListViewController: UIViewController {
             v.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 0))
             v.leftViewMode = .always
             v.attributedPlaceholder = NSAttributedString(string: "Search", attributes: [
-                NSForegroundColorAttributeName: UIColor.flatWhiteColorDark()
+                .foregroundColor: UIColor.flatWhiteColorDark()
             ])
             v.rx.text.subscribe(onNext: { search in
                 self.tableView.reloadData()
-            }).addDisposableTo(self.disposeBag)
+            }).disposed(by: self.disposeBag)
             make.height.equalTo(35)
             make.left.right.top.equalToSuperview().inset(10)
         }
@@ -136,7 +136,7 @@ extension ListViewController: UITableViewDataSource {
         return true
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             SSyncManager.data.value.events.remove(
                 at: SSyncManager.data.value.events.index(of: event(forRow: indexPath.row))!
@@ -196,10 +196,10 @@ class ListTableCell: UITableViewCell {
             circle.isHidden = !i.isEmpty
             nameLabel.attributedText = .build(
                 (true, event.name, [
-                    NSFontAttributeName: UIFont.systemFont(ofSize: 16, weight: UIFontWeightLight)
+                    .font: UIFont.systemFont(ofSize: 16, weight: .light)
                 ]),
                 (event.note != nil && !event.note!.isEmpty, "   \(event.note ?? "")", [
-                    NSFontAttributeName: UIFont.systemFont(ofSize: 9, weight: UIFontWeightUltraLight)
+                    .font: UIFont.systemFont(ofSize: 9, weight: .light)
                 ])
             )
             typeLabel.text = event.type.rawValue
@@ -224,12 +224,12 @@ class ListTableCell: UITableViewCell {
         }
         contentView.addSubview(typeLabel) { v, _ in
             v.textColor = UIColor.flatWhiteColorDark()
-            v.font = UIFont.systemFont(ofSize: 9, weight: UIFontWeightLight)
+            v.font = UIFont.systemFont(ofSize: 9, weight: .light)
         }
         contentView.addSubview(dateLabel) { v, _ in
             v.textColor = UIColor.flatWhiteColorDark()
             v.textAlignment = .right
-            v.font = UIFont.systemFont(ofSize: 9, weight: UIFontWeightLight)
+            v.font = UIFont.systemFont(ofSize: 9, weight: .light)
         }
         contentView.addSubview(bottomLine) { v, _ in
             v.backgroundColor = UIColor.flatWhiteColorDark().withAlphaComponent(0.3)
@@ -246,7 +246,7 @@ class ListTableCell: UITableViewCell {
             arcCenter: CGPoint(x: size/2, y: size/2),
             radius: CGFloat(size/2 - 10.0),
             startAngle: 0,
-            endAngle:CGFloat(M_PI) * 2,
+            endAngle:.pi * 2,
             clockwise: true
         ).cgPath
         

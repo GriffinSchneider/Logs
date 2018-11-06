@@ -43,7 +43,7 @@ import Toast_Swift
                         encoding: .utf8
                     )
                     #if !IS_TODAY_EXTENSION
-                        print("Completing background task: \($0.1)")
+                        print("Completing background task: \(String(describing: $0.1))")
                         UIApplication.shared.endBackgroundTask($0.1!)
                     #endif
                 } catch {
@@ -96,7 +96,7 @@ import Toast_Swift
     
     private static func download(path: String, url: URL, revKey: String) {
         DispatchQueue.main.async { viewController?.view.makeToastActivity(.center) }
-        DropboxClientsManager.authorizedClient!.files.download(path: path, overwrite: true) { _ in
+        DropboxClientsManager.authorizedClient!.files.download(path: path, overwrite: true) { _, _ in
             return url
         }.response { response, error in
             DispatchQueue.main.async { viewController?.view.hideToastActivity() }

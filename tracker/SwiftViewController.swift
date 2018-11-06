@@ -139,9 +139,8 @@ class SwiftViewController: UIViewController {
     
     
     override func viewDidLoad() {
-        
         view.backgroundColor = UIColor.flatNavyBlueColorDark()
-        
+
         let gridView = view.addSubview(ButtonGridView<SectionValue>() { b, data in
             Style.ButtonLabel(b)
             switch data {
@@ -167,15 +166,15 @@ class SwiftViewController: UIViewController {
                 let title = NSMutableAttributedString(
                     string: "\(s.count)",
                     attributes: [
-                        NSFontAttributeName: UIFont.systemFont(ofSize: 24, weight: UIFontWeightBold),
-                        NSForegroundColorAttributeName: UIColor.flatWhite()
+                        .font: UIFont.systemFont(ofSize: 24, weight: .bold),
+                        .foregroundColor: UIColor.flatWhite()
                     ]
                 )
                 title.append(NSAttributedString(
                     string: "\n\(v.name)" + (s.numberNeededToday > 0 ? " (\(s.numberNeededToday))" : ""),
                     attributes: [
-                        NSFontAttributeName: UIFont.systemFont(ofSize: 10, weight: UIFontWeightLight),
-                        NSForegroundColorAttributeName: UIColor.flatWhite().withAlphaComponent(0.8)
+                        .font: UIFont.systemFont(ofSize: 10, weight: .light),
+                        .foregroundColor: UIColor.flatWhite().withAlphaComponent(0.8)
                     ]
                 ))
                 b.setAttributedTitle(title, for: .normal)
@@ -183,7 +182,7 @@ class SwiftViewController: UIViewController {
             b.setHighlightedBackgroundColor(b.backgroundColor?.darken(byPercentage: 0.4))
         }) { v, make in
             v.backgroundColor = UIColor.flatNavyBlueColorDark()
-            make.edges.equalTo(v.superview!)
+            make.edges.equalTo(v.superview!.safeAreaLayoutGuide)
         }
         
         let topActions: [SectionValue] = [
@@ -250,8 +249,8 @@ class SwiftViewController: UIViewController {
                     bottomActions,
                 ]
             }
-            .bindTo(gridView.buttons)
-            .addDisposableTo(disposeBag)
+            .bind(to: gridView.buttons)
+            .disposed(by: disposeBag)
         
         gridView
             .selection
@@ -305,7 +304,7 @@ class SwiftViewController: UIViewController {
                         }
                     )]
                 )
-            }).addDisposableTo(disposeBag)
+            }).disposed(by: disposeBag)
         
         gridView
             .longPress
@@ -337,7 +336,7 @@ class SwiftViewController: UIViewController {
             .subscribe(onNext: { (b, buttons) in
                 popover(inView: self.view, onButton: b, disposeBag: self.disposeBag, buttons: buttons)
             })
-            .addDisposableTo(disposeBag)
+            .disposed(by: disposeBag)
     }
     
     public func addAndEdit(event: SEvent) {

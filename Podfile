@@ -1,5 +1,5 @@
 use_frameworks!
-platform :ios, '10.0'
+platform :ios, '11.0'
 
 target 'tracker' do
   pod 'DRYUI'
@@ -7,12 +7,12 @@ target 'tracker' do
   pod 'JSONModel'
   pod 'UIButton-ANDYHighlighted'
   pod 'Toast-Swift'
-  pod 'SwiftyDropbox'
-  pod 'RxSwift', '~> 3.0.0'
-  pod 'RxCocoa', '~> 3.0.0'
+  pod 'SwiftyDropbox', :git => 'https://github.com/SofteqDG/SwiftyDropbox.git', :branch => 'feature/swift-4.2'
+  pod 'RxSwift'
+  pod 'RxCocoa'
   pod 'RxGesture'
   pod "Popover", :path => 'Popover'
-  pod 'RxDataSources', '~> 1.0.0-beta.2'
+  pod 'RxDataSources'
   pod 'ObjectMapper'
 end
 
@@ -23,12 +23,12 @@ target 'TrackerToday' do
   pod 'JSONModel'
   pod 'UIButton-ANDYHighlighted'
   pod 'Toast-Swift'
-  pod 'SwiftyDropbox'
-  pod 'RxSwift', '~> 3.0.0'
-  pod 'RxCocoa', '~> 3.0.0'
+  pod 'SwiftyDropbox', :git => 'https://github.com/SofteqDG/SwiftyDropbox.git', :branch => 'feature/swift-4.2'
+  pod 'RxSwift'
+  pod 'RxCocoa'
   pod 'RxGesture'
   pod "Popover", :path => 'Popover'
-  pod 'RxDataSources', '~> 1.0.0-beta.2'
+  pod 'RxDataSources'
   pod 'ObjectMapper'
 end
 
