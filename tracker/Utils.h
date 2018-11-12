@@ -11,7 +11,6 @@
 
 NSString *formatDuration(NSTimeInterval interval);
 UIColor *colorForState(NSString *stateName);
-UIImage *iconForState(NSString *stateName);
 
 @interface Utils : NSObject
 

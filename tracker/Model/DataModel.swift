@@ -27,6 +27,7 @@ enum SEventType: String {
     case StreakExcuse = "StreakExcuse"
 }
 
+let EVENT_SLEEP = "Sleeping"
 
 struct SEvent: Mappable {
     var name: String!

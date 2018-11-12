@@ -191,12 +191,6 @@ class SwiftViewController: UIViewController {
                     self.dismiss(animated: true)
                 }), animated: true)
             },
-            .action("Timeline") {
-                SyncManager.i().loadFromDisk()
-                self.present(TimelineViewController {
-                    self.dismiss(animated: true)
-                }, animated: true)
-            },
             .action("Reload") {
                 let ac = UIAlertController(title: "u sure bro?", message: nil, preferredStyle: .alert)
                 ac.addAction(UIAlertAction(title: "yeah bro", style: .default) { _ in

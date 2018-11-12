@@ -6,8 +6,5 @@
 #import "UIColor+Chameleon.h"
 @import UIButton_ANDYHighlighted;
 
-#import "SyncManager.h"
 #import "Utils.h"
-#import "EEvent.h"
-#import "TimelineViewController.h"
 #import "Constants.h"

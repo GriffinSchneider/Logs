@@ -8,7 +8,6 @@
 
 #import "Utils.h"
 #import "ChameleonMacros.h"
-#import "SyncManager.h"
 
 NSString *formatDuration(NSTimeInterval interval) {
     int sec = (int)interval % 60;
@@ -51,20 +50,6 @@ UIImage *imageWithSize(NSString *string) {
     UIGraphicsEndImageContext();
     return iconImage;
 }
-
-static NSMutableDictionary<NSString *, UIImage *> *iconMap;
-UIImage *iconForState(NSString *stateName) {
-    if (!iconMap) {
-        iconMap = [NSMutableDictionary new];
-    }
-    UIImage *icon = iconMap[stateName];
-    if (!icon) {
-        NSString *iconString = [[SyncManager i].schema schemaForStateNamed:stateName].icon ?: @"";
-        iconMap[stateName] = icon = imageWithSize(iconString);
-    }
-    return icon;
-}
-
 
 @implementation Utils
 
