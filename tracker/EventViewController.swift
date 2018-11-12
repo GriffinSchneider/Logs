@@ -17,8 +17,8 @@ class EventViewController: UIViewController {
     required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     
     private let disposeBag = DisposeBag()
-    private let done: (SEvent?) -> Void
-    private var event: SEvent
+    private let done: (Event?) -> Void
+    private var event: Event
     
     fileprivate var suggester = Suggester()
     
@@ -34,7 +34,7 @@ class EventViewController: UIViewController {
         return f
     }()
     
-    init(event: SEvent, done: @escaping (SEvent?) -> Void) {
+    init(event: Event, done: @escaping (Event?) -> Void) {
         self.done = done
         self.event = event
         super.init(nibName: nil, bundle: nil)
@@ -44,8 +44,8 @@ class EventViewController: UIViewController {
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonPressed))
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelButtonPressed))
-        if let idx = SSyncManager.data.value.events.index(of: event) {
-            let icn = SSyncManager.schema.value.icon(for: event)
+        if let idx = SyncManager.data.value.events.index(of: event) {
+            let icn = SyncManager.schema.value.icon(for: event)
             navigationItem.title = "\(icn) #\(idx) \(icn)"
         }
     
@@ -148,10 +148,10 @@ class EventViewController: UIViewController {
 }
 
 private class Suggester {
-    var suggestions: [SData.Suggestion] = []
+    var suggestions: [Data.Suggestion] = []
     var eventName: String? = nil {
         didSet {
-            suggestions = SSyncManager.data.value.noteSuggestions(forEventNamed: eventName)
+            suggestions = SyncManager.data.value.noteSuggestions(forEventNamed: eventName)
         }
     }
 }

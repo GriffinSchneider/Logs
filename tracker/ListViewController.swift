@@ -12,25 +12,25 @@ import RxCocoa
 import DRYUI
 
 class Filterer {
-    private var filtered: [SEvent] = []
+    private var filtered: [Event] = []
     private var search: String = ""
     private let disposeBag = DisposeBag()
     init() {
-        SSyncManager.data.asObservable().subscribe(onNext: { data in
+        SyncManager.data.asObservable().subscribe(onNext: { data in
             self.search = ""
         }).disposed(by: disposeBag)
     }
-    func filteredEvents(search _s: String?) -> [SEvent] {
+    func filteredEvents(search _s: String?) -> [Event] {
         var s = _s ?? ""
         if s.isEmpty {
-            return SSyncManager.data.value.events
+            return SyncManager.data.value.events
         } else if s != search {
             search = s
             s = s.lowercased()
             let searches = s.components(separatedBy: ",").map {
                 ($0.last == " ", $0.trimmingCharacters(in: .whitespaces))
             }
-            filtered = SSyncManager.data.value.events.filter{ e in
+            filtered = SyncManager.data.value.events.filter{ e in
                 searches.reduce(false, { acc, t in
                     if t.0 {
                         return acc || e.name.lowercased() == t.1
@@ -106,7 +106,7 @@ class ListViewController: UIViewController {
         return filterer.filteredEvents(search: searchTextField.text).count - row - 1
     }
     
-    fileprivate func event(forRow row: Int) -> SEvent {
+    fileprivate func event(forRow row: Int) -> Event {
         return filterer.filteredEvents(search: searchTextField.text)[eventIndex(forRow: row)]
     }
     
@@ -138,8 +138,8 @@ extension ListViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            SSyncManager.data.value.events.remove(
-                at: SSyncManager.data.value.events.index(of: event(forRow: indexPath.row))!
+            SyncManager.data.value.events.remove(
+                at: SyncManager.data.value.events.index(of: event(forRow: indexPath.row))!
             )
             tableView.deleteRows(at: [indexPath], with: .top)
         }
@@ -153,9 +153,9 @@ extension ListViewController: UITableViewDelegate {
         navigationController?.pushViewController(EventViewController(event: oldEvent) { newEvent in
             tableView.deselectRow(at: indexPath, animated: true)
             if let e = newEvent {
-                let idx = SSyncManager.data.value.events.index(of: oldEvent)
-                SSyncManager.data.value.events[idx!] = e
-                SSyncManager.data.value.events.sort()
+                let idx = SyncManager.data.value.events.index(of: oldEvent)
+                SyncManager.data.value.events[idx!] = e
+                SyncManager.data.value.events.sort()
                 self.tableView.reloadData()
             }
             let _ = self.navigationController?.popViewController(animated: true)
@@ -187,10 +187,10 @@ class ListTableCell: UITableViewCell {
         buildView()
     }
     
-    var event: SEvent? = nil {
+    var event: Event? = nil {
         didSet {
             guard let event = event else { return }
-            let i = SSyncManager.schema.value.icon(for: event)
+            let i = SyncManager.schema.value.icon(for: event)
             icon.text = i
             icon.backgroundColor = event.color
             circle.isHidden = !i.isEmpty

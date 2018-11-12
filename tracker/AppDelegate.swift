@@ -20,20 +20,20 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             
         }
         
-        let vc = SwiftViewController()
+        let vc = MainViewController()
         let nc = UINavigationController()
         nc.isNavigationBarHidden = true
         
-        let _ = SSyncManager.data
+        let _ = SyncManager.data
         NotificationManager.setup(vc: vc)
-        SSyncManager.viewController = vc
+        SyncManager.viewController = vc
         
         UINavigationBar.appearance().isTranslucent = false
         UINavigationBar.appearance().barTintColor = UIColor.flatNavyBlue()
         UINavigationBar.appearance().tintColor = UIColor.flatWhiteColorDark()
         UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.flatWhiteColorDark()]
         
-        SSyncManager.initialize()
+        SyncManager.initialize()
        
         self.window = UIWindow()
         self.window?.makeKeyAndVisible()

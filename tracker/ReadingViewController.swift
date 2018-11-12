@@ -26,7 +26,7 @@ class ReadingViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        SSyncManager.schema.asObservable()
+        SyncManager.schema.asObservable()
             .map { $0.readings }
             .subscribe(onNext: update)
             .disposed(by: disposeBag)

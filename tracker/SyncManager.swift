@@ -12,18 +12,18 @@ import RxSwift
 import SwiftyDropbox
 import Toast_Swift
 
-@objc class SSyncManager: NSObject {
+@objc class SyncManager: NSObject {
     public static var viewController: UIViewController? = nil
     
     static var schema = Variable(schemaFromDisk())
     
-    static var data:Variable<SData> = {
+    static var data:Variable<Data> = {
         print(dataPath)
         let data = Variable(dataFromDisk())
         _ = data.asObservable()
             .skip(1)
             .debounce(0.1, scheduler: MainScheduler.instance)
-            .map { data -> (SData, UIBackgroundTaskIdentifier?) in
+            .map { data -> (Data, UIBackgroundTaskIdentifier?) in
                 #if IS_TODAY_EXTENSION
                     return (data, nil)
                 #else
@@ -38,7 +38,7 @@ import Toast_Swift
             .subscribe(onNext: {
                 do {
                     try $0.0.toJSONString(prettyPrint: true)!.write(
-                        to: SSyncManager.dataPath,
+                        to: SyncManager.dataPath,
                         atomically: true,
                         encoding: .utf8
                     )
@@ -57,14 +57,14 @@ import Toast_Swift
     private static let schemaPath = containerPath.appendingPathComponent("schema.json")
     private static let dataPath = containerPath.appendingPathComponent("data.json")
     
-    private static func dataFromDisk() -> SData {
+    private static func dataFromDisk() -> Data {
         let string = (try? String(contentsOf: dataPath, encoding: .utf8)) ?? "{}"
-        return Mapper<SData>().map(JSONString: string) ?? Mapper<SData>().map(JSONString: "{}")!
+        return Mapper<Data>().map(JSONString: string) ?? Mapper<Data>().map(JSONString: "{}")!
     }
     
-    private static func schemaFromDisk() -> SSchema {
+    private static func schemaFromDisk() -> Schema {
         let string = (try? String(contentsOf: schemaPath, encoding: .utf8)) ?? "{}"
-        return Mapper<SSchema>().map(JSONString: string) ?? Mapper<SSchema>().map(JSONString: "{}")!
+        return Mapper<Schema>().map(JSONString: string) ?? Mapper<Schema>().map(JSONString: "{}")!
     }
     
     @objc static func loadFromDisk() {

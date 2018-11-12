@@ -20,8 +20,8 @@ let BUTTON_INSETS = UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2)
 enum SectionValue {
     case action(String, () -> ())
     case occurrence(OccurrenceSchema)
-    case activeState(SEvent)
-    case state(SStateSchema, isActive: Bool)
+    case activeState(Event)
+    case state(StateSchema, isActive: Bool)
     indirect case streak(StreakStatus, val: SectionValue)
 }
 extension SectionValue: Hashable {
@@ -97,27 +97,27 @@ extension SectionValue {
     }
 }
 
-class SwiftViewController: UIViewController {
+class MainViewController: UIViewController {
     let disposeBag = DisposeBag()
     
-    private func valToEvent(_ v: SectionValue) -> SEvent? {
+    private func valToEvent(_ v: SectionValue) -> Event? {
         switch v {
         case .action:
             return nil
         case let .occurrence(o):
-            return SEvent(
+            return Event(
                 name: o.name,
                 date: Date(),
                 type: .Occurrence
             )
         case let .activeState(s):
-            return SEvent(
+            return Event(
                 name: s.name,
                 date: Date(),
                 type: .EndState
             )
         case let .state((s, isActive)):
-            return SEvent(
+            return Event(
                 name: s.name,
                 date: Date(),
                 type: isActive ? .EndState : .StartState
@@ -146,21 +146,21 @@ class SwiftViewController: UIViewController {
             switch data {
             case let .action(s, _):
                 b.setTitle(s, for: .normal)
-                b.backgroundColor = SEventType.readingColor
+                b.backgroundColor = EventType.readingColor
             case let .occurrence(s):
                 b.setTitle(s.name, for: .normal)
-                b.backgroundColor = SEventType.occurrenceColor
+                b.backgroundColor = EventType.occurrenceColor
             case let .activeState(a):
-                var icon = SSyncManager.schema.value.icon(for: a)
+                var icon = SyncManager.schema.value.icon(for: a)
                 if icon == "" { icon = a.name }
                 b.setTitle("\(icon) \(formatDuration(Date().timeIntervalSince(a.date))!)" , for: .normal)
-                b.backgroundColor = SEventType.streakColor
+                b.backgroundColor = EventType.streakColor
             case let .state(s, ia):
                 b.setTitle(s.icon, for: .normal)
-                b.backgroundColor = ia ? SEventType.streakColor : SEventType.stateColor
+                b.backgroundColor = ia ? EventType.streakColor : EventType.stateColor
                 b.titleLabel?.font = UIFont.systemFont(ofSize: 32)
             case let .streak(s, v):
-                b.backgroundColor = s.numberNeededToday > 0 ? SEventType.streakExcuseColor : SEventType.streakColor
+                b.backgroundColor = s.numberNeededToday > 0 ? EventType.streakExcuseColor : EventType.streakColor
                 b.titleLabel?.numberOfLines = 0
                 b.titleLabel?.textAlignment = .center
                 let title = NSMutableAttributedString(
@@ -196,7 +196,7 @@ class SwiftViewController: UIViewController {
                 ac.addAction(UIAlertAction(title: "yeah bro", style: .default) { _ in
                     let ac = UIAlertController(title: "rly tho?", message: nil, preferredStyle: .alert)
                     ac.addAction(UIAlertAction(title: "yeeeeeeeeeee", style: .default) { _ in
-                        SSyncManager.download()
+                        SyncManager.download()
                     })
                     ac.addAction(UIAlertAction(title: "NOPE", style: .cancel) { _ in })
                     self.present(ac, animated: true)
@@ -205,7 +205,7 @@ class SwiftViewController: UIViewController {
                 self.present(ac, animated: true)
             },
             .action("Save") {
-                SSyncManager.upload()
+                SyncManager.upload()
             },
         ]
         
@@ -216,7 +216,7 @@ class SwiftViewController: UIViewController {
         ]
         
         Observable
-            .combineLatest(SSyncManager.data.asObservable(), SSyncManager.schema.asObservable()) { ($0, $1) }
+            .combineLatest(SyncManager.data.asObservable(), SyncManager.schema.asObservable()) { ($0, $1) }
             .observeOn(MainScheduler.asyncInstance)
             .map { t -> [[SectionValue]] in
                 let data = t.0, schema = t.1
@@ -254,14 +254,14 @@ class SwiftViewController: UIViewController {
                 return sel
             }
             .observeOn(SerialDispatchQueueScheduler(internalSerialQueueName: "Background"))
-            .map { sel -> ((UIButton, SectionValue), SEvent?, [SData.Suggestion]) in
+            .map { sel -> ((UIButton, SectionValue), Event?, [Data.Suggestion]) in
                 
                 let event = self.valToEvent(sel.1)
                 let needsSuggs = event != nil && event?.type != .EndState
-                let suggs = needsSuggs ? SSyncManager.data.value
+                let suggs = needsSuggs ? SyncManager.data.value
                     .noteSuggestions(forEventNamed: event?.name!, filterExcuses: true)
                     .filter { $0.count > 1 } : []
-                if let e = event, suggs.count == 0 { SSyncManager.data.value.events.sortedAppend(e) }
+                if let e = event, suggs.count == 0 { SyncManager.data.value.events.sortedAppend(e) }
                 return (sel, event, suggs)
             }
             .observeOn(MainScheduler.instance)
@@ -274,27 +274,27 @@ class SwiftViewController: UIViewController {
                     buttons: suggs.map { sugg in
                         PopoverButtonInfo(
                             title: sugg.text ?? "",
-                            config: { $0.backgroundColor = SEventType.stateColor },
+                            config: { $0.backgroundColor = EventType.stateColor },
                             tap: {
                                 guard var event = event else { return }
                                 event.note = sugg.text
-                                SSyncManager.data.value.events.sortedAppend(event)
+                                SyncManager.data.value.events.sortedAppend(event)
                             }
                         )
                     },
                     barButtons: [PopoverButtonInfo(
                         title: "Edit",
-                        config: { $0.backgroundColor = SEventType.readingColor },
+                        config: { $0.backgroundColor = EventType.readingColor },
                         tap: {
                             guard let event = event else { return }
                             self.addAndEdit(event: event)
                         }
                     ), PopoverButtonInfo(
                         title: "Add",
-                        config: { $0.backgroundColor = SEventType.readingColor },
+                        config: { $0.backgroundColor = EventType.readingColor },
                         tap: {
                             guard let event = event else { return }
-                            SSyncManager.data.value.events.sortedAppend(event)
+                            SyncManager.data.value.events.sortedAppend(event)
                         }
                     )]
                 )
@@ -307,7 +307,7 @@ class SwiftViewController: UIViewController {
                 if let event = self.valToEvent(val) {
                     actions.append(PopoverButtonInfo(
                         title: "Add + Edit",
-                        config: { $0.backgroundColor = SEventType.readingColor },
+                        config: { $0.backgroundColor = EventType.readingColor },
                         tap: { self.addAndEdit(event: event) }
                     ))
                 }
@@ -315,11 +315,11 @@ class SwiftViewController: UIViewController {
                 case let .streak(_, val):
                     actions.append(PopoverButtonInfo(
                         title:"Extenuating Circumstances",
-                        config: { $0.backgroundColor = SEventType.streakExcuseColor },
+                        config: { $0.backgroundColor = EventType.streakExcuseColor },
                         tap: {
                             let event = self.valToEvent(val)
-                            let newEvent = SEvent(name: event!.name, date: Date(), type: .StreakExcuse)
-                            SSyncManager.data.value.events.sortedAppend(newEvent)
+                            let newEvent = Event(name: event!.name, date: Date(), type: .StreakExcuse)
+                            SyncManager.data.value.events.sortedAppend(newEvent)
                         }
                     ))
                 default:
@@ -333,10 +333,10 @@ class SwiftViewController: UIViewController {
             .disposed(by: disposeBag)
     }
     
-    public func addAndEdit(event: SEvent) {
+    public func addAndEdit(event: Event) {
         self.present(UINavigationController(rootViewController: EventViewController(event: event, done: {[weak self] newEvent in
             if let e = newEvent {
-                SSyncManager.data.value.events.sortedAppend(e)
+                SyncManager.data.value.events.sortedAppend(e)
             }
             self?.dismiss(animated: true)
         })), animated: true)
@@ -345,7 +345,7 @@ class SwiftViewController: UIViewController {
     public func doReading() {
         let vc = ReadingViewController {
             $0.forEach {
-                SSyncManager.data.value.events.sortedAppend(SEvent(
+                SyncManager.data.value.events.sortedAppend(Event(
                     name: $0.key.name,
                     date: Date(),
                     type: .Reading,

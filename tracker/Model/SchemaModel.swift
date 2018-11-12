@@ -14,9 +14,9 @@ protocol Iconable {
     var icon: String { get }
 }
 
-struct SSchema: Mappable {
+struct Schema: Mappable {
     var occurrences: [OccurrenceSchema] = []
-    var states: [SStateSchema] = []
+    var states: [StateSchema] = []
     var readings: [ReadingSchema] = []
     init?(map: Map) { }
     mutating func mapping(map: Map) {
@@ -27,7 +27,7 @@ struct SSchema: Mappable {
 }
 
 
-struct SStateSchema: Mappable, Streakable, Iconable {
+struct StateSchema: Mappable, Streakable, Iconable {
     var name: String!
     var icon: String = ""
     var streak: StreakSchema?
@@ -39,13 +39,13 @@ struct SStateSchema: Mappable, Streakable, Iconable {
     }
 }
 
-extension SStateSchema: Hashable {
+extension StateSchema: Hashable {
     var hashValue: Int {
         return name.hashValue ^ icon.hashValue
     }
 }
 
-func ==(lhs: SStateSchema, rhs: SStateSchema) -> Bool {
+func ==(lhs: StateSchema, rhs: StateSchema) -> Bool {
     return true &&
         lhs.name == rhs.name &&
         lhs.icon == rhs.icon

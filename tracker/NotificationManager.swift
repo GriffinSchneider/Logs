@@ -17,12 +17,12 @@ class NotificationManager {
     fileprivate static let reminderIds = [readingReminderId0, readingReminderId30]
     
     private static var centerDelegate: _NotificationDelegate!
-    static func setup(vc: SwiftViewController) {
+    static func setup(vc: MainViewController) {
         
         centerDelegate = _NotificationDelegate(vc: vc)
         UNUserNotificationCenter.current().delegate = centerDelegate
         
-        let _ = SSyncManager.data.asObservable().subscribe(onNext: { d in
+        let _ = SyncManager.data.asObservable().subscribe(onNext: { d in
             let center = UNUserNotificationCenter.current()
             center.removeAllPendingNotificationRequests()
             
@@ -53,8 +53,8 @@ class NotificationManager {
 }
 
 private class _NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
-    private let vc: SwiftViewController
-    init(vc: SwiftViewController) {
+    private let vc: MainViewController
+    init(vc: MainViewController) {
         self.vc = vc
     }
     

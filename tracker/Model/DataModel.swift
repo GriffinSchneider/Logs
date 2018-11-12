@@ -10,8 +10,8 @@ import Foundation
 import ObjectMapper
 
 
-struct SData: Mappable {
-    var events: [SEvent] = []
+struct Data: Mappable {
+    var events: [Event] = []
     init?(map: Map) { }
     mutating func mapping(map: Map) {
         events <- map["events"]
@@ -19,7 +19,7 @@ struct SData: Mappable {
 }
 
 
-enum SEventType: String {
+enum EventType: String {
     case StartState = "StartState"
     case EndState = "EndState"
     case Reading = "Reading"
@@ -29,17 +29,17 @@ enum SEventType: String {
 
 let EVENT_SLEEP = "Sleeping"
 
-struct SEvent: Mappable {
+struct Event: Mappable {
     var name: String!
     var date: Date!
-    var type: SEventType!
+    var type: EventType!
     var reading: Float?
     var note: String?
     init?(map: Map) { }
     init(
         name: String,
         date: Date,
-        type: SEventType,
+        type: EventType,
         reading: Float? = nil,
         note: String? = nil
         ) {
@@ -58,7 +58,7 @@ struct SEvent: Mappable {
     }
 }
 
-func ==(lhs:SEvent, rhs:SEvent) -> Bool {
+func ==(lhs:Event, rhs:Event) -> Bool {
     return true &&
         lhs.name == rhs.name &&
         lhs.date == rhs.date &&
@@ -67,13 +67,13 @@ func ==(lhs:SEvent, rhs:SEvent) -> Bool {
         lhs.note == rhs.note
 }
 
-func <(lhs:SEvent, rhs:SEvent) -> Bool {
+func <(lhs:Event, rhs:Event) -> Bool {
     return lhs.date.compare(rhs.date) == .orderedAscending
 }
 
-extension SEvent: Comparable { }
+extension Event: Comparable { }
 
-extension SEvent: Hashable {
+extension Event: Hashable {
     var hashValue: Int {
         var hash = name.hashValue ^ date.hashValue ^ type.hashValue
         if let r = reading {

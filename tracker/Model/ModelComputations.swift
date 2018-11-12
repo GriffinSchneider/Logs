@@ -9,9 +9,9 @@
 import Foundation
 
 
-extension SData {
-    func activeStates() -> [SEvent] {
-        var retVal = [String: SEvent]()
+extension Data {
+    func activeStates() -> [Event] {
+        var retVal = [String: Event]()
         for e in events {
             switch e.type! {
             case .StartState:
@@ -38,7 +38,7 @@ struct StreakStatus {
     var count: Int
 }
 
-extension SData {
+extension Data {
     func status(forStreak streak: StreakSchema, named name: String) -> StreakStatus {
         var retVal = StreakStatus(numberNeededToday: 0, count: 0)
         var daysSinceStreakCounterToday = -1
@@ -102,7 +102,7 @@ extension SData {
     }
 }
 
-extension SData {
+extension Data {
     struct Suggestion {
         let text: String?
         let count: Int
@@ -113,7 +113,7 @@ extension SData {
             .reversed()
             .filter { $0.name == eventName }
             .filter { !filterExcuses || $0.type != .StreakExcuse }
-            .flatMap {(e: SEvent) -> [String?] in e.note?.components(separatedBy: "\n") ?? [] }
+            .flatMap {(e: Event) -> [String?] in e.note?.components(separatedBy: "\n") ?? [] }
             .map { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
             .filter { !($0 == nil || $0!.isEmpty) }
         var freq: [String: Int] = [:]
@@ -126,15 +126,15 @@ extension SData {
     }
 }
 
-extension SSchema {
-    func icon(for event: SEvent) -> String {
+extension Schema {
+    func icon(for event: Event) -> String {
         let stuff = occurrences as [Iconable] + states as [Iconable] + readings as [Iconable]
         return stuff.first(where: {
             $0.name == event.name
         })?.icon ?? ""
     }
     
-    func spacedIcon(for event: SEvent) -> String {
+    func spacedIcon(for event: Event) -> String {
         let icon = self.icon(for: event)
         if icon == "" {
             return icon   
@@ -143,7 +143,7 @@ extension SSchema {
         }
     }
     
-    func hasStreak(event: SEvent) -> Bool {
+    func hasStreak(event: Event) -> Bool {
         let stuff = occurrences as [Streakable] + states as [Streakable] + readings as [Streakable]
         return stuff.first(where: {
             $0.name == event.name
@@ -151,7 +151,7 @@ extension SSchema {
     }
 }
 
-extension SEventType {
+extension EventType {
     static let stateColor = UIColor.flatBlueColorDark()!.lighten(byPercentage: 0.1)!
     static let readingColor = UIColor.flatPlum()!.lighten(byPercentage: 0.05)!
     static let occurrenceColor = UIColor.flatOrangeColorDark()!.darken(byPercentage: 0.1)!
@@ -161,21 +161,21 @@ extension SEventType {
     var color: UIColor {
         switch self {
         case .StartState, .EndState:
-            return SEventType.stateColor
+            return EventType.stateColor
         case .Reading:
-            return SEventType.readingColor
+            return EventType.readingColor
         case .Occurrence:
-            return SEventType.occurrenceColor
+            return EventType.occurrenceColor
         case .StreakExcuse:
-            return SEventType.streakExcuseColor
+            return EventType.streakExcuseColor
         }
     }
 }
 
-extension SEvent {
+extension Event {
     var color: UIColor {
-        if SSyncManager.schema.value.hasStreak(event: self) && type != .StreakExcuse {
-            return SEventType.streakColor
+        if SyncManager.schema.value.hasStreak(event: self) && type != .StreakExcuse {
+            return EventType.streakColor
         } else {
             return type.color
         }
