@@ -25,6 +25,8 @@ enum EventType: String {
     case Reading = "Reading"
     case Occurrence = "Occurrence"
     case StreakExcuse = "StreakExcuse"
+    case CreateTask = "CreateTask"
+    case CompleteTask = "CompleteTask"
 }
 
 let EVENT_SLEEP = "Sleeping"

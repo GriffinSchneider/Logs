@@ -26,7 +26,7 @@ extension Data {
                 } else {
                     print("Ending state that hasn't started\n\(e)")
                 }
-            case .Reading, .Occurrence, .StreakExcuse: break
+            default: break
             }
         }
         return Array(retVal.values)
@@ -87,7 +87,7 @@ extension Data {
                 continue
             }
             switch e.type! {
-            case .StartState, .Reading, .Occurrence:
+            case .StartState, .Reading, .Occurrence, .CompleteTask:
                 if e.name == name {
                     countThisDay += 1
                 }
@@ -95,10 +95,27 @@ extension Data {
                 if e.name == name {
                     excuseThisDay = true
                 }
-            case .EndState: break
+            case .EndState, .CreateTask: break
             }
         }
         return retVal
+    }
+}
+
+extension Data {
+    func openTasks() -> [Event] {
+        var retVal = [String: [Event]]()
+        for e in events {
+            switch e.type! {
+            case .CreateTask:
+                retVal[e.name] = (retVal[e.name] ?? [Event]()) + [e]
+            case .CompleteTask:
+                retVal[e.name] = Array((retVal[e.name] ?? [Event]()).dropFirst())
+            default: break
+            }
+        }
+        return Array(retVal.values.flatMap { $0 })
+
     }
 }
 
@@ -153,6 +170,7 @@ extension Schema {
 
 extension EventType {
     static let stateColor = UIColor.flatBlueColorDark()!.lighten(byPercentage: 0.1)!
+    static let taskColor = UIColor.flatForestGreenColorDark()!.lighten(byPercentage: 0.1)!
     static let readingColor = UIColor.flatPlum()!.lighten(byPercentage: 0.05)!
     static let occurrenceColor = UIColor.flatOrangeColorDark()!.darken(byPercentage: 0.1)!
     static let streakColor = UIColor.flatGreenColorDark()!.darken(byPercentage: 0.1)!
@@ -162,6 +180,8 @@ extension EventType {
         switch self {
         case .StartState, .EndState:
             return EventType.stateColor
+        case .CreateTask, .CompleteTask:
+            return EventType.taskColor
         case .Reading:
             return EventType.readingColor
         case .Occurrence:

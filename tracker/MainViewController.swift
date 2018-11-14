@@ -23,6 +23,7 @@ enum SectionValue {
     case activeState(Event)
     case state(StateSchema, isActive: Bool)
     indirect case streak(StreakStatus, val: SectionValue)
+    case task(Event)
 }
 extension SectionValue: Hashable {
     var hashValue: Int {
@@ -37,6 +38,8 @@ extension SectionValue: Hashable {
             return s.hashValue
         case let .streak(_, v):
             return v.hashValue
+        case let .task(e):
+            return e.hashValue
         }
     }
 }
@@ -51,6 +54,8 @@ func ==(lhs: SectionValue, rhs: SectionValue) -> Bool {
     case let (.state(l, _), .state(r, _)):
         return l == r
     case let (.streak(_, l), .streak(_, r)):
+        return l == r
+    case let (.task(l), .task(r)):
         return l == r
     default:
         return false
@@ -93,93 +98,108 @@ extension SectionValue {
             return s.name
         case let .streak(_, v):
             return v.name
+        case let .task(e):
+            return e.name
         }
     }
 }
 
+private func valToEvent(_ v: SectionValue) -> Event? {
+    switch v {
+    case .action:
+        return nil
+    case let .occurrence(o):
+        return Event(
+            name: o.name,
+            date: Date(),
+            type: .Occurrence
+        )
+    case let .activeState(s):
+        return Event(
+            name: s.name,
+            date: Date(),
+            type: .EndState
+        )
+    case let .state((s, isActive)):
+        return Event(
+            name: s.name,
+            date: Date(),
+            type: isActive ? .EndState : .StartState
+        )
+    case let .streak((_, val)):
+        return valToEvent(val)
+    case let .task(e):
+        return Event(
+            name: e.name,
+            date: Date(),
+            type: .CompleteTask
+        )
+
+    }
+}
+
+@discardableResult private func execVal(_ v: SectionValue) -> Bool {
+    switch v {
+    case let .action(_, b):
+        b()
+        return true
+    default:
+        return false
+    }
+}
+
+private func configure(button b: UIButton, forSectionValue data: SectionValue) {
+    Style.ButtonLabel(b)
+    switch data {
+    case let .action(s, _):
+        b.setTitle(s, for: .normal)
+        b.backgroundColor = EventType.readingColor
+    case let .occurrence(s):
+        b.setTitle(s.name, for: .normal)
+        b.backgroundColor = EventType.occurrenceColor
+    case let .activeState(a):
+        var icon = SyncManager.schema.value.icon(for: a)
+        if icon == "" { icon = a.name }
+        b.setTitle("\(icon) \(formatDuration(Date().timeIntervalSince(a.date))!)" , for: .normal)
+        b.backgroundColor = EventType.streakColor
+    case let .state(s, ia):
+        b.setTitle(s.icon, for: .normal)
+        b.backgroundColor = ia ? EventType.streakColor : EventType.stateColor
+        b.titleLabel?.font = UIFont.systemFont(ofSize: 32)
+    case let .streak(s, v):
+        b.backgroundColor = s.numberNeededToday > 0 ? EventType.streakExcuseColor : EventType.streakColor
+        b.titleLabel?.numberOfLines = 0
+        b.titleLabel?.textAlignment = .center
+        let title = NSMutableAttributedString(
+            string: "\(s.count)",
+            attributes: [
+                .font: UIFont.systemFont(ofSize: 24, weight: .bold),
+                .foregroundColor: UIColor.flatWhite()
+            ]
+        )
+        title.append(NSAttributedString(
+            string: "\n\(v.name)" + (s.numberNeededToday > 0 ? " (\(s.numberNeededToday))" : ""),
+            attributes: [
+                .font: UIFont.systemFont(ofSize: 10, weight: .light),
+                .foregroundColor: UIColor.flatWhite().withAlphaComponent(0.8)
+            ]
+        ))
+        b.setAttributedTitle(title, for: .normal)
+    case let .task(e):
+        b.setTitle(e.name, for: .normal)
+        b.backgroundColor = EventType.taskColor
+    }
+    b.setHighlightedBackgroundColor(b.backgroundColor?.darken(byPercentage: 0.4))
+}
+
 class MainViewController: UIViewController {
     let disposeBag = DisposeBag()
-    
-    private func valToEvent(_ v: SectionValue) -> Event? {
-        switch v {
-        case .action:
-            return nil
-        case let .occurrence(o):
-            return Event(
-                name: o.name,
-                date: Date(),
-                type: .Occurrence
-            )
-        case let .activeState(s):
-            return Event(
-                name: s.name,
-                date: Date(),
-                type: .EndState
-            )
-        case let .state((s, isActive)):
-            return Event(
-                name: s.name,
-                date: Date(),
-                type: isActive ? .EndState : .StartState
-            )
-        case let .streak((_, val)):
-            return valToEvent(val)
-        }
-    }
-    
-    @discardableResult private func execVal(_ v: SectionValue) -> Bool {
-        switch v {
-        case let .action(_, b):
-            b()
-            return true
-        default:
-            return false
-        }
-    }
-    
-    
+
     override func viewDidLoad() {
         view.backgroundColor = UIColor.flatNavyBlueColorDark()
 
-        let gridView = view.addSubview(ButtonGridView<SectionValue>() { b, data in
-            Style.ButtonLabel(b)
-            switch data {
-            case let .action(s, _):
-                b.setTitle(s, for: .normal)
-                b.backgroundColor = EventType.readingColor
-            case let .occurrence(s):
-                b.setTitle(s.name, for: .normal)
-                b.backgroundColor = EventType.occurrenceColor
-            case let .activeState(a):
-                var icon = SyncManager.schema.value.icon(for: a)
-                if icon == "" { icon = a.name }
-                b.setTitle("\(icon) \(formatDuration(Date().timeIntervalSince(a.date))!)" , for: .normal)
-                b.backgroundColor = EventType.streakColor
-            case let .state(s, ia):
-                b.setTitle(s.icon, for: .normal)
-                b.backgroundColor = ia ? EventType.streakColor : EventType.stateColor
-                b.titleLabel?.font = UIFont.systemFont(ofSize: 32)
-            case let .streak(s, v):
-                b.backgroundColor = s.numberNeededToday > 0 ? EventType.streakExcuseColor : EventType.streakColor
-                b.titleLabel?.numberOfLines = 0
-                b.titleLabel?.textAlignment = .center
-                let title = NSMutableAttributedString(
-                    string: "\(s.count)",
-                    attributes: [
-                        .font: UIFont.systemFont(ofSize: 24, weight: .bold),
-                        .foregroundColor: UIColor.flatWhite()
-                    ]
-                )
-                title.append(NSAttributedString(
-                    string: "\n\(v.name)" + (s.numberNeededToday > 0 ? " (\(s.numberNeededToday))" : ""),
-                    attributes: [
-                        .font: UIFont.systemFont(ofSize: 10, weight: .light),
-                        .foregroundColor: UIColor.flatWhite().withAlphaComponent(0.8)
-                    ]
-                ))
-                b.setAttributedTitle(title, for: .normal)
-            }
-            b.setHighlightedBackgroundColor(b.backgroundColor?.darken(byPercentage: 0.4))
+        let gridView = view.addSubview(ButtonGridView<SectionValue>() { b, v in
+            configure(button: b, forSectionValue: v)
         }) { v, make in
             v.backgroundColor = UIColor.flatNavyBlueColorDark()
             make.edges.equalTo(v.superview!.safeAreaLayoutGuide)
@@ -214,6 +234,11 @@ class MainViewController: UIViewController {
                 self.doReading()
             }
         ]
+        let taskActions: [SectionValue] = [
+            .action("New Task") {
+                self.addAndEdit(event: Event(name: "", date: Date(), type: .CreateTask))
+            }
+        ]
         
         Observable
             .combineLatest(SyncManager.data.asObservable(), SyncManager.schema.asObservable()) { ($0, $1) }
@@ -228,9 +253,12 @@ class MainViewController: UIViewController {
                     })
                 }
                 let streaks = occurrences.filter {$0.hasStreak} + states.filter {$0.hasStreak}
+                let tasks = data.openTasks()
                 
                 return [
                     topActions,
+                ] + tasks.map { [.task($0)] } + [
+                    taskActions,
                     streaks.map {
                         .streak(data.status(
                             forStreak: $0.streak,
@@ -250,13 +278,13 @@ class MainViewController: UIViewController {
             .selection
             .observeOn(MainScheduler.instance)
             .map { sel -> (UIButton, SectionValue) in
-                self.execVal(sel.1)
+                execVal(sel.1)
                 return sel
             }
             .observeOn(SerialDispatchQueueScheduler(internalSerialQueueName: "Background"))
             .map { sel -> ((UIButton, SectionValue), Event?, [Data.Suggestion]) in
                 
-                let event = self.valToEvent(sel.1)
+                let event = valToEvent(sel.1)
                 let needsSuggs = event != nil && event?.type != .EndState
                 let suggs = needsSuggs ? SyncManager.data.value
                     .noteSuggestions(forEventNamed: event?.name!, filterExcuses: true)
@@ -304,7 +332,7 @@ class MainViewController: UIViewController {
             .longPress
             .map { (b: UIButton, val: SectionValue) -> (UIButton, [PopoverButtonInfo]) in
                 var actions =  [PopoverButtonInfo]()
-                if let event = self.valToEvent(val) {
+                if let event = valToEvent(val) {
                     actions.append(PopoverButtonInfo(
                         title: "Add + Edit",
                         config: { $0.backgroundColor = EventType.readingColor },
@@ -317,7 +345,7 @@ class MainViewController: UIViewController {
                         title:"Extenuating Circumstances",
                         config: { $0.backgroundColor = EventType.streakExcuseColor },
                         tap: {
-                            let event = self.valToEvent(val)
+                            let event = valToEvent(val)
                             let newEvent = Event(name: event!.name, date: Date(), type: .StreakExcuse)
                             SyncManager.data.value.events.sortedAppend(newEvent)
                         }
