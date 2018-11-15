@@ -73,17 +73,24 @@ import Toast_Swift
     private static let dataPath = containerPath.appendingPathComponent("data.json")
 
     private static func dataFromDisk() -> Data {
-        if let nsdata = try? Foundation.Data(contentsOf: dataPath),
-           let decoded = try? jsonDecoder.decode(Data.self, from: nsdata) {
+        do {
+            let nsdata = try Foundation.Data(contentsOf: dataPath)
+            let decoded = try jsonDecoder.decode(Data.self, from: nsdata)
             return decoded
+        }
+        catch {
+            print("Exception decoding data: \(error)")
         }
         return Data()
     }
     
     private static func schemaFromDisk() -> Schema {
-        if let nsdata = try? Foundation.Data(contentsOf: schemaPath),
-           let decoded = try? jsonDecoder.decode(Schema.self, from: nsdata) {
+        do {
+            let nsdata = try Foundation.Data(contentsOf: schemaPath)
+            let decoded = try jsonDecoder.decode(Schema.self, from: nsdata)
             return decoded
+        } catch {
+            print("Exception decoding schema: \(error)")
         }
         return Schema()
     }
