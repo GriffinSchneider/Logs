@@ -4,7 +4,6 @@ platform :ios, '11.0'
 target 'tracker' do
   pod 'DRYUI'
   pod 'MoveViewUpForKeyboardKit'
-  pod 'JSONModel'
   pod 'UIButton-ANDYHighlighted'
   pod 'Toast-Swift'
   pod 'SwiftyDropbox', :git => 'https://github.com/SofteqDG/SwiftyDropbox.git', :branch => 'feature/swift-4.2'
@@ -19,7 +18,6 @@ end
 target 'TrackerToday' do
   pod 'DRYUI'
   pod 'MoveViewUpForKeyboardKit'
-  pod 'JSONModel'
   pod 'UIButton-ANDYHighlighted'
   pod 'Toast-Swift'
   pod 'SwiftyDropbox', :git => 'https://github.com/SofteqDG/SwiftyDropbox.git', :branch => 'feature/swift-4.2'
