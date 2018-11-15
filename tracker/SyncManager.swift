@@ -7,13 +7,32 @@
 //
 
 import Foundation
-import ObjectMapper
 import RxSwift
 import SwiftyDropbox
 import Toast_Swift
 
 @objc class SyncManager: NSObject {
     public static var viewController: UIViewController? = nil
+
+    private static let dateFormatter: DateFormatter = {
+        let df = DateFormatter()
+        df.locale = Locale(identifier: "en_US_POSIX")
+        df.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZ"
+        return df
+    }()
+
+    private static let jsonEncoder: JSONEncoder = {
+        let e = JSONEncoder()
+        e.outputFormatting = .prettyPrinted
+        e.dateEncodingStrategy = .formatted(dateFormatter)
+        return e
+    }()
+
+    private static let jsonDecoder: JSONDecoder = {
+        let d = JSONDecoder()
+        d.dateDecodingStrategy = .formatted(dateFormatter)
+        return d
+    }()
     
     static var schema = Variable(schemaFromDisk())
     
@@ -37,11 +56,7 @@ import Toast_Swift
             .observeOn(SerialDispatchQueueScheduler(internalSerialQueueName: "DataWriteQueue"))
             .subscribe(onNext: {
                 do {
-                    try $0.0.toJSONString(prettyPrint: true)!.write(
-                        to: SyncManager.dataPath,
-                        atomically: true,
-                        encoding: .utf8
-                    )
+                    try jsonEncoder.encode($0.0).write(to: SyncManager.dataPath, options: .atomic)
                     #if !IS_TODAY_EXTENSION
                         print("Completing background task: \(String(describing: $0.1))")
                         UIApplication.shared.endBackgroundTask($0.1!)
@@ -56,15 +71,21 @@ import Toast_Swift
     private static let containerPath = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.zone.griff.tracker")!
     private static let schemaPath = containerPath.appendingPathComponent("schema.json")
     private static let dataPath = containerPath.appendingPathComponent("data.json")
-    
+
     private static func dataFromDisk() -> Data {
-        let string = (try? String(contentsOf: dataPath, encoding: .utf8)) ?? "{}"
-        return Mapper<Data>().map(JSONString: string) ?? Mapper<Data>().map(JSONString: "{}")!
+        if let nsdata = try? Foundation.Data(contentsOf: dataPath),
+           let decoded = try? jsonDecoder.decode(Data.self, from: nsdata) {
+            return decoded
+        }
+        return Data()
     }
     
     private static func schemaFromDisk() -> Schema {
-        let string = (try? String(contentsOf: schemaPath, encoding: .utf8)) ?? "{}"
-        return Mapper<Schema>().map(JSONString: string) ?? Mapper<Schema>().map(JSONString: "{}")!
+        if let nsdata = try? Foundation.Data(contentsOf: schemaPath),
+           let decoded = try? jsonDecoder.decode(Schema.self, from: nsdata) {
+            return decoded
+        }
+        return Schema()
     }
     
     @objc static func loadFromDisk() {

@@ -287,7 +287,7 @@ class MainViewController: UIViewController {
                 let event = valToEvent(sel.1)
                 let needsSuggs = event != nil && event?.type != .EndState
                 let suggs = needsSuggs ? SyncManager.data.value
-                    .noteSuggestions(forEventNamed: event?.name!, filterExcuses: true)
+                    .noteSuggestions(forEventNamed: event?.name, filterExcuses: true)
                     .filter { $0.count > 1 } : []
                 if let e = event, suggs.count == 0 { SyncManager.data.value.events.sortedAppend(e) }
                 return (sel, event, suggs)

@@ -13,7 +13,7 @@ extension Data {
     func activeStates() -> [Event] {
         var retVal = [String: Event]()
         for e in events {
-            switch e.type! {
+            switch e.type {
             case .StartState:
                 if let old = retVal[e.name] {
                     print("Starting already started state!\n\(old)\n\(e)")
@@ -86,7 +86,7 @@ extension Data {
                 isToday = false
                 continue
             }
-            switch e.type! {
+            switch e.type {
             case .StartState, .Reading, .Occurrence, .CompleteTask:
                 if e.name == name {
                     countThisDay += 1
@@ -106,7 +106,7 @@ extension Data {
     func openTasks() -> [Event] {
         var retVal = [String: [Event]]()
         for e in events {
-            switch e.type! {
+            switch e.type {
             case .CreateTask:
                 retVal[e.name] = (retVal[e.name] ?? [Event]()) + [e]
             case .CompleteTask:
@@ -114,7 +114,7 @@ extension Data {
             default: break
             }
         }
-        return Array(retVal.values.flatMap { $0 })
+        return retVal.values.flatMap { $0 }.sorted { $0.date < $1.date }
 
     }
 }

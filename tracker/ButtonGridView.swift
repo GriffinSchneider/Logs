@@ -78,8 +78,10 @@ class ButtonGridView<ButtonDataType: Hashable>: UIView {
         outputDisposable = Observable.from(buttonMap.map { k, v in
             v.rx.tap.asObservable().map { (v, k) }
         }).merge().bind(to: _selection)
-        
+
+        UIView.beginAnimations(nil, context: nil)
         layoutSubviews()
+        UIView.commitAnimations()
     }
     
     @objc private func longPressed(g: UILongPressGestureRecognizer) {
@@ -96,8 +98,6 @@ class ButtonGridView<ButtonDataType: Hashable>: UIView {
         var lastButton: UIButton? = nil
         var isNewSection = false
         var lines: [[UIButton]] = [[]]
-        
-        UIView.beginAnimations(nil, context: nil)
         
         for section in self.buttons.value {
             isNewSection = true
@@ -152,8 +152,6 @@ class ButtonGridView<ButtonDataType: Hashable>: UIView {
                 lastButton = button
             }
         }
-        
-        UIView.commitAnimations()
         
         buttonMap.forEach { $0.value.isHighlighted = $0.value.isHighlighted }
     }

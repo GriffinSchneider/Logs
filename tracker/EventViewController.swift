@@ -118,7 +118,7 @@ class EventViewController: UIViewController {
                 make.height.equalTo(50)
                 
                 v.rx.text.subscribe(onNext: { text in
-                    self.event.name = text
+                    self.event.name = text ?? ""
                     self.suggester.eventName = self.event.name
                     self.suggestionsTableView.reloadData()
                 }).disposed(by: self.disposeBag)

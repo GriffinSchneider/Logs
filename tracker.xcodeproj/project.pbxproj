@@ -30,8 +30,6 @@
 		858916631DF4A30C005C53E1 /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8589164D1DF4A283005C53E1 /* DataModel.swift */; };
 		858916641DF4A30C005C53E1 /* SchemaModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8589164F1DF4A283005C53E1 /* SchemaModel.swift */; };
 		858916651DF4A30C005C53E1 /* ModelComputations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8589164E1DF4A283005C53E1 /* ModelComputations.swift */; };
-		8589166C1DF4A4F7005C53E1 /* StringDateJSONTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8589166B1DF4A4F7005C53E1 /* StringDateJSONTransform.swift */; };
-		8589166D1DF4A4F7005C53E1 /* StringDateJSONTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8589166B1DF4A4F7005C53E1 /* StringDateJSONTransform.swift */; };
 		858B4AC81DC990EE00D56020 /* EventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858B4AC71DC990EE00D56020 /* EventViewController.swift */; };
 		858B4AC91DC990EE00D56020 /* EventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858B4AC71DC990EE00D56020 /* EventViewController.swift */; };
 		85AC34C21D6E407900EBFC12 /* UIColor+Chameleon.m in Sources */ = {isa = PBXBuildFile; fileRef = 85AC34BF1D6E407900EBFC12 /* UIColor+Chameleon.m */; };
@@ -109,7 +107,6 @@
 		8589164D1DF4A283005C53E1 /* DataModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
 		8589164E1DF4A283005C53E1 /* ModelComputations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelComputations.swift; sourceTree = "<group>"; };
 		8589164F1DF4A283005C53E1 /* SchemaModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SchemaModel.swift; sourceTree = "<group>"; };
-		8589166B1DF4A4F7005C53E1 /* StringDateJSONTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StringDateJSONTransform.swift; path = tracker/StringDateJSONTransform.swift; sourceTree = SOURCE_ROOT; };
 		858B4AC71DC990EE00D56020 /* EventViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventViewController.swift; sourceTree = "<group>"; };
 		85AC34BE1D6E407900EBFC12 /* UIColor+Chameleon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Chameleon.h"; sourceTree = "<group>"; };
 		85AC34BF1D6E407900EBFC12 /* UIColor+Chameleon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Chameleon.m"; sourceTree = "<group>"; };
@@ -258,7 +255,6 @@
 				8589164D1DF4A283005C53E1 /* DataModel.swift */,
 				8589164F1DF4A283005C53E1 /* SchemaModel.swift */,
 				8589164E1DF4A283005C53E1 /* ModelComputations.swift */,
-				8589166B1DF4A4F7005C53E1 /* StringDateJSONTransform.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -496,7 +492,6 @@
 				8555660B1E620C2000E03555 /* AppDelegate.swift in Sources */,
 				85FAF1032199FE6B00A3565C /* Utils.m in Sources */,
 				858916521DF4A283005C53E1 /* SchemaModel.swift in Sources */,
-				8589166C1DF4A4F7005C53E1 /* StringDateJSONTransform.swift in Sources */,
 				8527E87D1DC68124008E8234 /* ReadingViewController.swift in Sources */,
 				85AC34C81D761D7500EBFC12 /* Extensions.swift in Sources */,
 				858B4AC81DC990EE00D56020 /* EventViewController.swift in Sources */,
@@ -529,7 +524,6 @@
 				858916641DF4A30C005C53E1 /* SchemaModel.swift in Sources */,
 				85FAF1042199FE6B00A3565C /* Utils.m in Sources */,
 				858916631DF4A30C005C53E1 /* DataModel.swift in Sources */,
-				8589166D1DF4A4F7005C53E1 /* StringDateJSONTransform.swift in Sources */,
 				85E7D41D1DC6C4F4004E67D9 /* MainViewController.swift in Sources */,
 				85E7D42A1DC6C625004E67D9 /* Extensions.swift in Sources */,
 				85E7D42B1DC6C70D004E67D9 /* UIColor+Chameleon.m in Sources */,

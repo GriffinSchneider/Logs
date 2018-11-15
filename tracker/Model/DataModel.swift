@@ -7,19 +7,13 @@
 //
 
 import Foundation
-import ObjectMapper
 
-
-struct Data: Mappable {
+struct Data: Codable {
     var events: [Event] = []
-    init?(map: Map) { }
-    mutating func mapping(map: Map) {
-        events <- map["events"]
-    }
 }
 
 
-enum EventType: String {
+enum EventType: String, Codable {
     case StartState = "StartState"
     case EndState = "EndState"
     case Reading = "Reading"
@@ -31,13 +25,12 @@ enum EventType: String {
 
 let EVENT_SLEEP = "Sleeping"
 
-struct Event: Mappable {
-    var name: String!
-    var date: Date!
-    var type: EventType!
+struct Event: Codable {
+    var name: String
+    var date: Date
+    var type: EventType
     var reading: Float?
     var note: String?
-    init?(map: Map) { }
     init(
         name: String,
         date: Date,
@@ -50,13 +43,6 @@ struct Event: Mappable {
         self.type = type
         self.reading = reading
         self.note = note
-    }
-    mutating func mapping(map: Map) {
-        name <- map["name"]
-        date <- (map["date"], StringDateJSONTransform())
-        type <- (map["type"], EnumTransform())
-        reading <- map["reading"]
-        note <- map["note"]
     }
 }
 

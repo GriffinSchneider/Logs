@@ -66,7 +66,7 @@ class ReadingViewController: UIViewController {
                     make.centerY.equalTo(label)
                 }
                 slider.rx.value.asObservable()
-                    .map { "\(reading.name!): \(Int(floorf($0)))" }
+                    .map { "\(reading.name): \(Int(floorf($0)))" }
                     .bind(to: label.rx.text)
                     .disposed(by: self.disposeBag)
                 slider.rx.value.asObservable()
