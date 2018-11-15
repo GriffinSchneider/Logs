@@ -13,7 +13,6 @@ target 'tracker' do
   pod 'RxGesture'
   pod "Popover", :path => 'Popover'
   pod 'RxDataSources'
-  pod 'ObjectMapper'
 end
 
 
@@ -29,7 +28,6 @@ target 'TrackerToday' do
   pod 'RxGesture'
   pod "Popover", :path => 'Popover'
   pod 'RxDataSources'
-  pod 'ObjectMapper'
 end
 
 post_install do |installer|

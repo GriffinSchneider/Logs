@@ -15,7 +15,6 @@ PODS:
   - JSONModel (1.8.0)
   - Masonry (1.1.0)
   - MoveViewUpForKeyboardKit (3.0.1)
-  - ObjectMapper (3.3.0)
   - Popover (1.0.2)
   - RxCocoa (4.3.1):
     - RxSwift (~> 4.0)
@@ -37,7 +36,6 @@ DEPENDENCIES:
   - DRYUI
   - JSONModel
   - MoveViewUpForKeyboardKit
-  - ObjectMapper
   - Popover (from `Popover`)
   - RxCocoa
   - RxDataSources
@@ -55,7 +53,6 @@ SPEC REPOS:
     - JSONModel
     - Masonry
     - MoveViewUpForKeyboardKit
-    - ObjectMapper
     - RxCocoa
     - RxDataSources
     - RxGesture
@@ -83,7 +80,6 @@ SPEC CHECKSUMS:
   JSONModel: 02ab723958366a3fd27da57ea2af2113658762e9
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   MoveViewUpForKeyboardKit: 33988bafaff9758443aa3584eda6bddeef33f0b2
-  ObjectMapper: b612bf8c8e99c4dc0bb6013a51f7c27966ed5da9
   Popover: d9da80e2965ded8495b20041c3ca92cbdd949f22
   RxCocoa: 78763c7b07d02455598d9fc3c1ad091a28b73635
   RxDataSources: a843bad90c29817f5923ec8163f4af2de084ceb3
@@ -94,6 +90,6 @@ SPEC CHECKSUMS:
   Toast-Swift: 594b5c5e5129f15438e410207e43287f027b3c00
   UIButton-ANDYHighlighted: 3fcadf780786d8d2b4928b0d0e7394e43e827254
 
-PODFILE CHECKSUM: e7332a50bd8b053e1d0f7bf2991e1c1ff83e17bd
+PODFILE CHECKSUM: 1c2c36da3ba7f1554c756e86ad10895be0a28c3e
 
 COCOAPODS: 1.5.3
