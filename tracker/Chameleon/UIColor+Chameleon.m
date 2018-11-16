@@ -879,7 +879,9 @@
         case kCGColorSpaceModelIndexed:
         case kCGColorSpaceModelLab:
         case kCGColorSpaceModelPattern:
-        case kCGColorSpaceModelUnknown: {
+        case kCGColorSpaceModelXYZ:
+        case kCGColorSpaceModelUnknown:
+        {
             
             #ifdef DEBUG
             NSLog(@"Unsupported color model: %i", model);
