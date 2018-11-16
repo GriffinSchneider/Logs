@@ -11,9 +11,7 @@ target 'tracker' do
   pod 'RxCocoa'
   pod 'RxGesture'
   pod "Popover", :path => 'Popover'
-  pod 'RxDataSources'
 end
-
 
 target 'TrackerToday' do
   pod 'DRYUI'
@@ -25,7 +23,6 @@ target 'TrackerToday' do
   pod 'RxCocoa'
   pod 'RxGesture'
   pod "Popover", :path => 'Popover'
-  pod 'RxDataSources'
 end
 
 post_install do |installer|

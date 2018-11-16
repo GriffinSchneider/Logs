@@ -1,6 +1,5 @@
 PODS:
   - Alamofire (4.7.3)
-  - Differentiator (3.1.0)
   - DRYUI (1.2.0):
     - DRYUI/base (= 1.2.0)
     - DRYUI/objc (= 1.2.0)
@@ -17,10 +16,6 @@ PODS:
   - Popover (1.0.2)
   - RxCocoa (4.3.1):
     - RxSwift (~> 4.0)
-  - RxDataSources (3.1.0):
-    - Differentiator (~> 3.0)
-    - RxCocoa (~> 4.0)
-    - RxSwift (~> 4.0)
   - RxGesture (2.0.1):
     - RxCocoa (~> 4.3.1)
     - RxSwift (~> 4.3.1)
@@ -36,7 +31,6 @@ DEPENDENCIES:
   - MoveViewUpForKeyboardKit
   - Popover (from `Popover`)
   - RxCocoa
-  - RxDataSources
   - RxGesture
   - RxSwift
   - SwiftyDropbox (from `https://github.com/SofteqDG/SwiftyDropbox.git`, branch `feature/swift-4.2`)
@@ -46,12 +40,10 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Alamofire
-    - Differentiator
     - DRYUI
     - Masonry
     - MoveViewUpForKeyboardKit
     - RxCocoa
-    - RxDataSources
     - RxGesture
     - RxSwift
     - SnapKit
@@ -72,13 +64,11 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   Alamofire: c7287b6e5d7da964a70935e5db17046b7fde6568
-  Differentiator: be49ca3408f0ecfc761e4c7763d20c62be01b9ad
   DRYUI: 0580fd938d797f3e04eb5054c62b30f1de3c92f7
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   MoveViewUpForKeyboardKit: 33988bafaff9758443aa3584eda6bddeef33f0b2
   Popover: d9da80e2965ded8495b20041c3ca92cbdd949f22
   RxCocoa: 78763c7b07d02455598d9fc3c1ad091a28b73635
-  RxDataSources: a843bad90c29817f5923ec8163f4af2de084ceb3
   RxGesture: 26ede4ed13ffc6336d29dbd9a8dff229bdb72de7
   RxSwift: fe0fd770a43acdb7d0a53da411c9b892e69bb6e4
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
@@ -86,6 +76,6 @@ SPEC CHECKSUMS:
   Toast-Swift: 594b5c5e5129f15438e410207e43287f027b3c00
   UIButton-ANDYHighlighted: 3fcadf780786d8d2b4928b0d0e7394e43e827254
 
-PODFILE CHECKSUM: 2f093656fed809deee92883562a28b5cd61ab7df
+PODFILE CHECKSUM: a6d7951f2f89ffa69d20111374065df4a99d87c0
 
 COCOAPODS: 1.5.3
