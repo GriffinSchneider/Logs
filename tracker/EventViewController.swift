@@ -42,7 +42,6 @@ class EventViewController: UIViewController {
     }
     
     override func viewDidLoad() {
-        
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonPressed))
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelButtonPressed))
         if let idx = SyncManager.data.value.events.index(of: event) {
@@ -52,89 +51,88 @@ class EventViewController: UIViewController {
     
         view.backgroundColor = UIColor.flatNavyBlueColorDark()
 
+        let stack = StackView(pad: 20)
+        view.addSubview(stack.inScrollView(insetPercent: 0.1)) { v, make in
+            make.edges.equalToSuperview()
+        }
+
+        stack.addSubview(UITextField.self) { v, make in
+            v.text = self.event.name
+            v.backgroundColor = UIColor.flatNavyBlue()
+            v.textColor = UIColor.flatWhiteColorDark()
+            v.keyboardAppearance = .dark
+            make.height.equalTo(50)
+
+            v.rx.text.subscribe(onNext: { text in
+                self.event.name = text ?? ""
+                self.suggester.eventName = self.event.name
+                self.suggestionsTableView.reloadData()
+            }).disposed(by: self.disposeBag)
+        }
+        stack.addSubview(self.linkButton, Style.ButtonLabel) { v, make in
+            v.backgroundColor = EventType.stateColor
+            v.setTitle("\(self.event.link?.uuidString ?? "")", for: .normal)
+            v.rx.tap.subscribe(onNext: {
+                guard let link = self.event.link, let event = SyncManager.data.value.event(forId: link) else {
+                    return
+                }
+                self.push(event: event)
+            }).disposed(by: self.disposeBag)
+        }
+        stack.addSubview(self.dateTextField) { v, make in
+            v.text = self.dateFormatter.string(from: self.event.date)
+            v.textColor = UIColor.flatWhiteColorDark()
+            v.backgroundColor = UIColor.flatNavyBlue()
+
+            let picker = UIDatePicker()
+            picker.date = self.event.date
+            v.inputView = picker
+
+            let keyboardDoneButtonView = UIToolbar()
+            keyboardDoneButtonView.barStyle = .black
+            keyboardDoneButtonView.isTranslucent = true
+            keyboardDoneButtonView.tintColor = nil
+            keyboardDoneButtonView.sizeToFit()
+
+            let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(self.keyboardDoneButtonPressed))
+            keyboardDoneButtonView.setItems([doneButton], animated: true)
+            v.inputAccessoryView = keyboardDoneButtonView
+
+            picker.rx.date.asObservable().subscribe(onNext: { date in
+                self.event.date = date
+                v.text = self.dateFormatter.string(from: date)
+            }).disposed(by: self.disposeBag)
+
+            make.height.equalTo(50)
+        }
+        stack.addSubview(self.suggestionsTableView) { v, make in
+            v.delegate = self
+            v.dataSource = self
+            v.backgroundColor = UIColor.flatNavyBlue()
+            v.layer.cornerRadius = 5
+            v.clipsToBounds = true
+            v.separatorColor = UIColor.flatWhiteColorDark()
+            make.height.equalToSuperview().priority(UILayoutPriority.defaultHigh)
+        }
+        stack.addSubview(self.noteTextView) { v, make in
+            v.text = self.event.note
+            v.backgroundColor = UIColor.flatNavyBlue()
+            v.textColor = UIColor.flatWhiteColorDark()
+            v.keyboardAppearance = .dark
+            make.height.equalTo(200)
+            v.rx.text.skip(1).subscribe(onNext: { text in
+                self.event.note = text
+            }).disposed(by: self.disposeBag)
+        }
+
+        stack.subviews.constrainEach { make in
+            make.left.right.equalToSuperview()
+        }
+
         view.addSubview(keyboardView) { _, _ in}
-        view.addSubview { v, make in
+        view.addSubview(stack) { v, make in
             make.top.left.right.equalToSuperview()
             make.bottom.equalTo(self.keyboardView.snp.top)
-            v.addSubview(self.noteTextView) { v, make in
-                v.text = self.event.note
-                v.backgroundColor = UIColor.flatNavyBlue()
-                v.textColor = UIColor.flatWhiteColorDark()
-                v.keyboardAppearance = .dark
-                make.left.right.equalToSuperview()
-                make.bottom.equalToSuperview().offset(-10)
-                make.height.equalTo(200)
-                v.rx.text.skip(1).subscribe(onNext: { text in
-                    self.event.note = text
-                }).disposed(by: self.disposeBag)
-            }
-            v.addSubview(self.suggestionsTableView) { v, make in
-                v.delegate = self
-                v.dataSource = self
-                v.backgroundColor = UIColor.flatNavyBlue()
-                v.layer.cornerRadius = 5
-                v.clipsToBounds = true
-                v.separatorColor = UIColor.flatWhiteColorDark()
-                make.bottom.equalTo(self.noteTextView.snp.top).offset(-10)
-                make.left.right.equalToSuperview().inset(10)
-                make.height.equalToSuperview().priority(UILayoutPriority.defaultHigh)
-            }
-            v.addSubview(self.dateTextField) { v, make in
-                v.text = self.dateFormatter.string(from: self.event.date)
-                v.textColor = UIColor.flatWhiteColorDark()
-                v.backgroundColor = UIColor.flatNavyBlue()
-                
-                let picker = UIDatePicker()
-                picker.date = self.event.date
-                v.inputView = picker
-                
-                let keyboardDoneButtonView = UIToolbar()
-                keyboardDoneButtonView.barStyle = .black
-                keyboardDoneButtonView.isTranslucent = true
-                keyboardDoneButtonView.tintColor = nil
-                keyboardDoneButtonView.sizeToFit()
-                
-                let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(self.keyboardDoneButtonPressed))
-                keyboardDoneButtonView.setItems([doneButton], animated: true)
-                v.inputAccessoryView = keyboardDoneButtonView
-                
-                picker.rx.date.asObservable().subscribe(onNext: { date in
-                    self.event.date = date
-                    v.text = self.dateFormatter.string(from: date)
-                }).disposed(by: self.disposeBag)
-                
-                make.left.right.equalToSuperview()
-                make.bottom.equalTo(self.suggestionsTableView.snp.top).offset(-10)
-                make.height.equalTo(50)
-            }
-            v.addSubview(self.linkButton) { v, make in
-                make.bottom.equalTo(self.dateTextField.snp.top).offset(-10)
-                make.left.right.equalToSuperview()
-                make.height.equalTo(50)
-                v.setTitle("\(self.event.link?.uuidString ?? "")", for: .normal)
-                v.rx.tap.subscribe(onNext: {
-                    guard let link = self.event.link, let event = SyncManager.data.value.event(forId: link) else {
-                        return
-                    }
-                    self.push(event: event)
-                }).disposed(by: self.disposeBag)
-            }
-            v.addSubview(UITextField.self) { v, make in
-                v.text = self.event.name
-                v.backgroundColor = UIColor.flatNavyBlue()
-                v.textColor = UIColor.flatWhiteColorDark()
-                v.keyboardAppearance = .dark
-                make.left.right.equalToSuperview()
-                make.top.equalToSuperview().offset(10)
-                make.bottom.equalTo(self.linkButton.snp.top).offset(-10)
-                make.height.equalTo(50)
-                
-                v.rx.text.subscribe(onNext: { text in
-                    self.event.name = text ?? ""
-                    self.suggester.eventName = self.event.name
-                    self.suggestionsTableView.reloadData()
-                }).disposed(by: self.disposeBag)
-            }
         }
     }
     

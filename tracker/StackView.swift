@@ -29,7 +29,7 @@ public class StackView: UIView {
             if let last = maybeLast {
                 make.top.equalTo(last.snp.bottom).offset(pad)
             } else {
-                make.top.equalToSuperview().priority(.low)
+                make.top.equalToSuperview()
             }
         }
     }

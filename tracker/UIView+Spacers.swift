@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SnapKit
 import DRYUI
 
 public extension UIView {
@@ -70,5 +71,14 @@ public extension UIView {
             make.right.equalToSuperview()
         }
         return (left, right)
+    }
+}
+
+extension Array where Element: UIView {
+    @discardableResult public func constrainEach(_ block: (ConstraintMaker) -> Void) -> [Element] {
+        for view in self {
+            view.snp.makeConstraints(block)
+        }
+        return self
     }
 }
