@@ -159,6 +159,8 @@ extension Data {
 
 extension Schema {
     func icon(for event: Event) -> String {
+        if event.type == .CreateTask { return "📝" }
+        if event.type == .CompleteTask { return "✅" }
         let stuff = occurrences as [Iconable] + states as [Iconable] + readings as [Iconable]
         return stuff.first(where: {
             $0.name == event.name
