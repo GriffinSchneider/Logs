@@ -152,9 +152,9 @@ extension ListViewController: UITableViewDelegate {
         let oldEvent = event(forRow: indexPath.row)
         navigationController?.pushViewController(EventViewController(event: oldEvent) { newEvent in
             tableView.deselectRow(at: indexPath, animated: true)
-            if let e = newEvent {
+            if let newEvent = newEvent, newEvent != oldEvent {
                 let idx = SyncManager.data.value.events.index(of: oldEvent)
-                SyncManager.data.value.events[idx!] = e
+                SyncManager.data.value.events[idx!] = newEvent
                 SyncManager.data.value.events.sort()
                 self.tableView.reloadData()
             }

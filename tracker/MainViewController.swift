@@ -21,7 +21,7 @@ enum SectionValue {
     case action(String, () -> ())
     case occurrence(OccurrenceSchema)
     case activeState(Event)
-    case state(StateSchema, isActive: Bool)
+    case state(StateSchema, isActive: UUID?)
     indirect case streak(StreakStatus, val: SectionValue)
     case task(Event)
 }
@@ -110,29 +110,36 @@ private func valToEvent(_ v: SectionValue) -> Event? {
         return nil
     case let .occurrence(o):
         return Event(
+            id: UUID(),
             name: o.name,
             date: Date(),
             type: .Occurrence
         )
     case let .activeState(s):
         return Event(
+            id: UUID(),
             name: s.name,
             date: Date(),
-            type: .EndState
+            type: .EndState,
+            link: s.id
         )
     case let .state((s, isActive)):
         return Event(
+            id: UUID(),
             name: s.name,
             date: Date(),
-            type: isActive ? .EndState : .StartState
+            type: isActive != nil ? .EndState : .StartState,
+            link: isActive
         )
     case let .streak((_, val)):
         return valToEvent(val)
     case let .task(e):
         return Event(
+            id: UUID(),
             name: e.name,
             date: Date(),
-            type: .CompleteTask
+            type: .CompleteTask,
+            link: e.id
         )
 
     }
@@ -164,7 +171,7 @@ private func configure(button b: UIButton, forSectionValue data: SectionValue) {
         b.backgroundColor = EventType.streakColor
     case let .state(s, ia):
         b.setTitle(s.icon, for: .normal)
-        b.backgroundColor = ia ? EventType.streakColor : EventType.stateColor
+        b.backgroundColor = ia != nil ? EventType.streakColor : EventType.stateColor
         b.titleLabel?.font = UIFont.systemFont(ofSize: 32)
     case let .streak(s, v):
         b.backgroundColor = s.numberNeededToday > 0 ? EventType.streakExcuseColor : EventType.streakColor
@@ -236,7 +243,7 @@ class MainViewController: UIViewController {
         ]
         let taskActions: [SectionValue] = [
             .action("New Task") {
-                self.addAndEdit(event: Event(name: "", date: Date(), type: .CreateTask))
+                self.addAndEdit(event: Event(id: UUID(), name: "", date: Date(), type: .CreateTask))
             }
         ]
         
@@ -248,9 +255,7 @@ class MainViewController: UIViewController {
                 let active = data.activeStates()
                 let occurrences: [SectionValue] = schema.occurrences.map { .occurrence($0) }
                 let states: [SectionValue] = schema.states.map { s in
-                    .state(s, isActive: active.contains { a in
-                        s.name == a.name
-                    })
+                    .state(s, isActive: active.first { a in s.name == a.name }?.id)
                 }
                 let streaks = occurrences.filter {$0.hasStreak} + states.filter {$0.hasStreak}
                 let tasks = data.openTasks()
@@ -346,7 +351,7 @@ class MainViewController: UIViewController {
                         config: { $0.backgroundColor = EventType.streakExcuseColor },
                         tap: {
                             let event = valToEvent(val)
-                            let newEvent = Event(name: event!.name, date: Date(), type: .StreakExcuse)
+                            let newEvent = Event(id: UUID(), name: event!.name, date: Date(), type: .StreakExcuse)
                             SyncManager.data.value.events.sortedAppend(newEvent)
                         }
                     ))
@@ -363,8 +368,8 @@ class MainViewController: UIViewController {
     
     public func addAndEdit(event: Event) {
         self.present(UINavigationController(rootViewController: EventViewController(event: event, done: {[weak self] newEvent in
-            if let e = newEvent {
-                SyncManager.data.value.events.sortedAppend(e)
+            if let newEvent = newEvent, newEvent != event {
+                SyncManager.data.value.events.sortedAppend(newEvent)
             }
             self?.dismiss(animated: true)
         })), animated: true)
@@ -374,6 +379,7 @@ class MainViewController: UIViewController {
         let vc = ReadingViewController {
             $0.forEach {
                 SyncManager.data.value.events.sortedAppend(Event(
+                    id: UUID(),
                     name: $0.key.name,
                     date: Date(),
                     type: .Reading,

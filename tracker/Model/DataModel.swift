@@ -26,21 +26,27 @@ enum EventType: String, Codable {
 let EVENT_SLEEP = "Sleeping"
 
 struct Event: Codable {
+    var id: UUID
     var name: String
     var date: Date
     var type: EventType
+    var link: UUID?
     var reading: Float?
     var note: String?
     init(
+        id: UUID,
         name: String,
         date: Date,
         type: EventType,
+        link: UUID? = nil,
         reading: Float? = nil,
         note: String? = nil
         ) {
+        self.id = id
         self.name = name
         self.date = date
         self.type = type
+        self.link = link
         self.reading = reading
         self.note = note
     }
@@ -48,6 +54,7 @@ struct Event: Codable {
 
 func ==(lhs:Event, rhs:Event) -> Bool {
     return true &&
+        lhs.id == rhs.id &&
         lhs.name == rhs.name &&
         lhs.date == rhs.date &&
         lhs.type == rhs.type &&
@@ -63,7 +70,7 @@ extension Event: Comparable { }
 
 extension Event: Hashable {
     var hashValue: Int {
-        var hash = name.hashValue ^ date.hashValue ^ type.hashValue
+        var hash = id.hashValue ^ name.hashValue ^ date.hashValue ^ type.hashValue
         if let r = reading {
             hash = hash ^ r.hashValue
         }

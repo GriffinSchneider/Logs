@@ -10,26 +10,34 @@ import Foundation
 
 
 extension Data {
+    /// A list of all the StartState events that don't have a corresponding EndState,
+    /// sorted chronologically.
     func activeStates() -> [Event] {
-        var retVal = [String: Event]()
+        var retVal = [UUID: Event]()
         for e in events {
             switch e.type {
             case .StartState:
-                if let old = retVal[e.name] {
-                    print("Starting already started state!\n\(old)\n\(e)")
+                if let link = e.link {
+                    if retVal[link] == nil {
+                        print("Found an un-linkable event: \(e)")
+                        retVal[e.id] = e
+                    } else {
+                        // This StartState is 'starting' an already-started event, so it won't affect
+                        // which states are active.
+                    }
                 } else {
-                    retVal[e.name] = e
+                    retVal[e.id] = e
                 }
             case .EndState:
-                if retVal[e.name] != nil {
-                    retVal.removeValue(forKey: e.name)
+                if let link = e.link, retVal[link] != nil {
+                    retVal.removeValue(forKey: link)
                 } else {
-                    print("Ending state that hasn't started\n\(e)")
+                    print("Found an un-linkable event: \(e)")
                 }
             default: break
             }
         }
-        return Array(retVal.values)
+        return retVal.values.sorted { $0.date < $1.date }
     }
 }
 
@@ -104,18 +112,18 @@ extension Data {
 
 extension Data {
     func openTasks() -> [Event] {
-        var retVal = [String: [Event]]()
+        var retVal = [UUID: Event]()
         for e in events {
             switch e.type {
             case .CreateTask:
-                retVal[e.name] = (retVal[e.name] ?? [Event]()) + [e]
+                if let overlap = retVal[e.id] { print("ID Overlap!\n\(e)\n\(overlap)") }
+                retVal[e.id] = e
             case .CompleteTask:
-                retVal[e.name] = Array((retVal[e.name] ?? [Event]()).dropFirst())
+                if let link = e.link { retVal.removeValue(forKey: link) }
             default: break
             }
         }
-        return retVal.values.flatMap { $0 }.sorted { $0.date < $1.date }
-
+        return retVal.values.sorted { $0.date < $1.date }
     }
 }
 
@@ -140,6 +148,12 @@ extension Data {
         return freq
             .sorted { l, r in l.value > r.value }
             .map { Suggestion(text: $0.key, count: $0.value) }
+    }
+}
+
+extension Data {
+    func event(forId id: UUID) -> Event? {
+        return events.first { $0.id == id }
     }
 }
 

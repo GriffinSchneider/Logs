@@ -24,6 +24,7 @@ class EventViewController: UIViewController {
     
     private let dateTextField = UITextField()
     fileprivate let noteTextView = UITextView()
+    private let linkButton = UIButton()
     private let suggestionsTableView = UITableView()
     private let keyboardView = MVUFKView()
     
@@ -51,7 +52,6 @@ class EventViewController: UIViewController {
     
         view.backgroundColor = UIColor.flatNavyBlueColorDark()
 
-        // TODO
         view.addSubview(keyboardView) { _, _ in}
         view.addSubview { v, make in
             make.top.left.right.equalToSuperview()
@@ -64,7 +64,7 @@ class EventViewController: UIViewController {
                 make.left.right.equalToSuperview()
                 make.bottom.equalToSuperview().offset(-10)
                 make.height.equalTo(200)
-                v.rx.text.subscribe(onNext: { text in
+                v.rx.text.skip(1).subscribe(onNext: { text in
                     self.event.note = text
                 }).disposed(by: self.disposeBag)
             }
@@ -107,6 +107,18 @@ class EventViewController: UIViewController {
                 make.bottom.equalTo(self.suggestionsTableView.snp.top).offset(-10)
                 make.height.equalTo(50)
             }
+            v.addSubview(self.linkButton) { v, make in
+                make.bottom.equalTo(self.dateTextField.snp.top).offset(-10)
+                make.left.right.equalToSuperview()
+                make.height.equalTo(50)
+                v.setTitle("\(self.event.link?.uuidString ?? "")", for: .normal)
+                v.rx.tap.subscribe(onNext: {
+                    guard let link = self.event.link, let event = SyncManager.data.value.event(forId: link) else {
+                        return
+                    }
+                    self.push(event: event)
+                }).disposed(by: self.disposeBag)
+            }
             v.addSubview(UITextField.self) { v, make in
                 v.text = self.event.name
                 v.backgroundColor = UIColor.flatNavyBlue()
@@ -114,7 +126,7 @@ class EventViewController: UIViewController {
                 v.keyboardAppearance = .dark
                 make.left.right.equalToSuperview()
                 make.top.equalToSuperview().offset(10)
-                make.bottom.equalTo(self.dateTextField.snp.top).offset(-10)
+                make.bottom.equalTo(self.linkButton.snp.top).offset(-10)
                 make.height.equalTo(50)
                 
                 v.rx.text.subscribe(onNext: { text in
@@ -132,6 +144,13 @@ class EventViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         keyboardView.enabled = false
+    }
+
+    private func push(event: Event) {
+        navigationController?.pushViewController(EventViewController(event: event) { newEvent in
+            if let newEvent = newEvent, newEvent != event { SyncManager.data.value.events.sortedAppend(newEvent) }
+            self.navigationController?.popViewController(animated: true)
+        }, animated: true)
     }
     
     @objc private func keyboardDoneButtonPressed() {
