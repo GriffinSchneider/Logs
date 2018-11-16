@@ -55,6 +55,10 @@
 		85E7D42C1DC6C70D004E67D9 /* UIColor+ChameleonPrivate.m in Sources */ = {isa = PBXBuildFile; fileRef = 85AC34C11D6E407900EBFC12 /* UIColor+ChameleonPrivate.m */; };
 		85FAF1032199FE6B00A3565C /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 85FAF1022199FE6B00A3565C /* Utils.m */; };
 		85FAF1042199FE6B00A3565C /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 85FAF1022199FE6B00A3565C /* Utils.m */; };
+		85FAF106219E65A400A3565C /* StackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FAF105219E65A400A3565C /* StackView.swift */; };
+		85FAF107219E65A400A3565C /* StackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FAF105219E65A400A3565C /* StackView.swift */; };
+		85FAF109219E664E00A3565C /* UIView+Spacers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FAF108219E664E00A3565C /* UIView+Spacers.swift */; };
+		85FAF10A219E664E00A3565C /* UIView+Spacers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FAF108219E664E00A3565C /* UIView+Spacers.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -129,6 +133,8 @@
 		85E7D42D1DC6CA70004E67D9 /* TrackerToday.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TrackerToday.entitlements; sourceTree = "<group>"; };
 		85FAF1012199FE6B00A3565C /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
 		85FAF1022199FE6B00A3565C /* Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utils.m; sourceTree = "<group>"; };
+		85FAF105219E65A400A3565C /* StackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackView.swift; sourceTree = "<group>"; };
+		85FAF108219E664E00A3565C /* UIView+Spacers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Spacers.swift"; sourceTree = "<group>"; };
 		9966693FBD0AEE9D859492DE /* Pods-tracker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tracker.release.xcconfig"; path = "Pods/Target Support Files/Pods-tracker/Pods-tracker.release.xcconfig"; sourceTree = "<group>"; };
 		AF11449F2EFACA3CE0CA70BB /* Pods_tracker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_tracker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B52C20B1681CFD3D6586731B /* Pods_TrackerToday.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TrackerToday.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -214,6 +220,8 @@
 				8589164C1DF4A283005C53E1 /* Model */,
 				85555FAF1D5D69AA003047BC /* tracker.entitlements */,
 				85AC34D31D77506000EBFC12 /* SyncManager.swift */,
+				85FAF105219E65A400A3565C /* StackView.swift */,
+				85FAF108219E664E00A3565C /* UIView+Spacers.swift */,
 				855566021E62008300E03555 /* NotificationManager.swift */,
 				85034EBB1DC9405A0032DEBC /* ListViewController.swift */,
 				8555660A1E620C2000E03555 /* AppDelegate.swift */,
@@ -500,8 +508,10 @@
 				85AC34D41D77506000EBFC12 /* SyncManager.swift in Sources */,
 				858916511DF4A283005C53E1 /* ModelComputations.swift in Sources */,
 				85AC34C41D6E407900EBFC12 /* UIColor+ChameleonPrivate.m in Sources */,
+				85FAF109219E664E00A3565C /* UIView+Spacers.swift in Sources */,
 				85C472631E7CADB20052C913 /* Constants.m in Sources */,
 				8564AEFD1ED7380800C1B195 /* Popover.swift in Sources */,
+				85FAF106219E65A400A3565C /* StackView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -514,12 +524,14 @@
 				858B4AC91DC990EE00D56020 /* EventViewController.swift in Sources */,
 				85034EBD1DC9405A0032DEBC /* ListViewController.swift in Sources */,
 				85C472641E7CADB20052C913 /* Constants.m in Sources */,
+				85FAF107219E65A400A3565C /* StackView.swift in Sources */,
 				85E7D42C1DC6C70D004E67D9 /* UIColor+ChameleonPrivate.m in Sources */,
 				855566041E62008300E03555 /* NotificationManager.swift in Sources */,
 				85E7D41E1DC6C4F4004E67D9 /* ReadingViewController.swift in Sources */,
 				858916641DF4A30C005C53E1 /* SchemaModel.swift in Sources */,
 				85FAF1042199FE6B00A3565C /* Utils.m in Sources */,
 				858916631DF4A30C005C53E1 /* DataModel.swift in Sources */,
+				85FAF10A219E664E00A3565C /* UIView+Spacers.swift in Sources */,
 				85E7D41D1DC6C4F4004E67D9 /* MainViewController.swift in Sources */,
 				85E7D42A1DC6C625004E67D9 /* Extensions.swift in Sources */,
 				85E7D42B1DC6C70D004E67D9 /* UIColor+Chameleon.m in Sources */,
