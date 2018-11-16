@@ -12,6 +12,7 @@ import RxSwift
 import RxCocoa
 import RxDataSources
 import DRYUI
+import NotificationCenter
 
 let SPACING: CGFloat = 5.0
 let SECTION_INSETS = UIEdgeInsets(top: 30, left: 10, bottom: 0, right: 10)
@@ -204,6 +205,8 @@ class MainViewController: UIViewController {
 
     override func viewDidLoad() {
         view.backgroundColor = UIColor.flatNavyBlueColorDark()
+        extensionContext?.widgetLargestAvailableDisplayMode = .expanded
+        preferredContentSize = CGSize(width: self.view.frame.size.width, height: 600)
 
         let gridView = view.addSubview(ButtonGridView<SectionValue>() { b, v in
             configure(button: b, forSectionValue: v)
