@@ -68,7 +68,7 @@ import Toast_Swift
         return data
     }()
     
-    private static let containerPath = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.zone.griff.tracker")!
+    private static let containerPath = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.zone.griff.logs")!
     private static let schemaPath = containerPath.appendingPathComponent("schema.json")
     private static let dataPath = containerPath.appendingPathComponent("data.json")
 

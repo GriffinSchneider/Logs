@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "tracker-Swift.h"
+#import "Logs-Swift.h"
 
 int main(int argc, char * argv[]) {
     @autoreleasepool {

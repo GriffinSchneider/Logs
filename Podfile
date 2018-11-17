@@ -1,7 +1,7 @@
 use_frameworks!
 platform :ios, '11.0'
 
-target 'tracker' do
+target 'Logs' do
   pod 'DRYUI'
   pod 'MoveViewUpForKeyboardKit'
   pod 'UIButton-ANDYHighlighted'
@@ -13,7 +13,7 @@ target 'tracker' do
   pod "Popover", :path => 'Popover'
 end
 
-target 'TrackerToday' do
+target 'LogsToday' do
   pod 'DRYUI'
   pod 'MoveViewUpForKeyboardKit'
   pod 'UIButton-ANDYHighlighted'

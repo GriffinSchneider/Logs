@@ -24,12 +24,12 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-TrackerToday.xcscheme</key>
+		<key>Pods-Logs.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-tracker.xcscheme</key>
+		<key>Pods-LogsToday.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>

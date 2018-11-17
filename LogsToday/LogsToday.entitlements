@@ -4,7 +4,7 @@
 <dict>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.zone.griff.tracker</string>
+		<string>group.zone.griff.logs</string>
 	</array>
 </dict>
 </plist>

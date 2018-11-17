@@ -11,6 +11,6 @@
 #endif
 
 
-FOUNDATION_EXPORT double Pods_TrackerTodayVersionNumber;
-FOUNDATION_EXPORT const unsigned char Pods_TrackerTodayVersionString[];
+FOUNDATION_EXPORT double Pods_LogsVersionNumber;
+FOUNDATION_EXPORT const unsigned char Pods_LogsVersionString[];
 

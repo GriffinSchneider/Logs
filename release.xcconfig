@@ -1,2 +1,2 @@
-#include "Pods/Target Support Files/Pods-tracker/Pods-tracker.release.xcconfig"
+#include "Pods/Target Support Files/Pods-Logs/Pods-Logs.release.xcconfig"
 #include "./secrets.xcconfig"

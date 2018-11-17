@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0930"
+   LastUpgradeVersion = "1000"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CA19FF65F0EBD335D87624F6723DFF36"
-               BuildableName = "Pods_tracker.framework"
-               BlueprintName = "Pods-tracker"
-               ReferencedContainer = "container:Pods.xcodeproj">
+               BlueprintIdentifier = "857DA4AD1D090C7B00497E60"
+               BuildableName = "Logs.app"
+               BlueprintName = "Logs"
+               ReferencedContainer = "container:Logs.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -42,24 +42,34 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "CA19FF65F0EBD335D87624F6723DFF36"
-            BuildableName = "Pods_tracker.framework"
-            BlueprintName = "Pods-tracker"
-            ReferencedContainer = "container:Pods.xcodeproj">
+            BlueprintIdentifier = "857DA4AD1D090C7B00497E60"
+            BuildableName = "Logs.app"
+            BlueprintName = "Logs"
+            ReferencedContainer = "container:Logs.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
-      buildConfiguration = "Release"
+      buildConfiguration = "Debug"
       shouldUseLaunchSchemeArgsEnv = "YES"
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "857DA4AD1D090C7B00497E60"
+            BuildableName = "Logs.app"
+            BlueprintName = "Logs"
+            ReferencedContainer = "container:Logs.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
