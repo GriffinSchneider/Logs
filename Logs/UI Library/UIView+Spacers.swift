@@ -11,7 +11,6 @@ import SnapKit
 import DRYUI
 
 public extension UIView {
-
     /// Returns 2 clear views with nothing in them and no constraints, and a block that will
     /// constrain the views' heights to be equal to one another. Useful to center the contents
     /// of a StackView without stretching them.
@@ -71,6 +70,26 @@ public extension UIView {
             make.right.equalToSuperview()
         }
         return (left, right)
+    }
+}
+
+extension UIView {
+    /// A convenience method intended to be used to space out views in a vertical stack view.
+    /// - returns A `UIView` instance constrained to the given height using auto-layout.
+    public class func spacer(withHeight height: CGFloat) -> Self {
+        return buildView { v, make in
+            v.backgroundColor = .clear
+            make.height.equalTo(height)
+        }
+    }
+
+    /// A convenience method intended to be used to space out views in a horiztonal stack view.
+    /// - returns A `UIView` instance constrained to the given width using auto-layout.
+    public class func spacer(withWidth width: CGFloat) -> Self {
+        return buildView { v, make in
+            v.backgroundColor = .clear
+            make.width.equalTo(width)
+        }
     }
 }
 
