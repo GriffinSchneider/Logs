@@ -39,7 +39,7 @@ class ButtonGridView<ButtonDataType: Hashable>: UIView {
             self?.display(inputData: data)
         }).disposed(by: disposeBag)
         
-        Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(layoutSubviews), userInfo: nil, repeats: true)
+        Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(configureButtons), userInfo: nil, repeats: true)
     }
     
     private func display(inputData: [[ButtonDataType]]) {
@@ -90,6 +90,15 @@ class ButtonGridView<ButtonDataType: Hashable>: UIView {
             if g.view == button {
                 _longPress.value = (button, data)
                 return
+            }
+        }
+    }
+
+    @objc private func configureButtons() {
+        for section in self.buttons.value {
+            for data in section {
+                let v = self.buttonMap[data]!
+                self.configBlock(v, data)
             }
         }
     }
@@ -152,7 +161,7 @@ class ButtonGridView<ButtonDataType: Hashable>: UIView {
                 lastButton = button
             }
         }
-        
+
         buttonMap.forEach { $0.value.isHighlighted = $0.value.isHighlighted }
     }
 }
