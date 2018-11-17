@@ -15,4 +15,13 @@ class Style {
         l.clipsToBounds = true
         l.setHighlightedBackgroundColor(l.backgroundColor?.darken(byPercentage: 0.4))
     }
+
+    static func Label(_ l: UILabel) {
+        l.textColor = UIColor.flatWhite()
+    }
+
+    static func SubtitleLabel(_ l: UILabel) {
+        Label(l)
+        l.font = UIFont.preferredFont(forTextStyle: .caption2)
+    }
 }

@@ -19,9 +19,11 @@ class EventViewController: UIViewController {
     private let disposeBag = DisposeBag()
     private let done: (Event?) -> Void
     private var event: Event
+    private var timer: Timer?
     
     fileprivate var suggester = Suggester()
-    
+
+    private let timeAgoLabel = UILabel()
     private let dateTextField = UITextField()
     fileprivate let noteTextView = UITextView()
     private let linkButton = UIButton()
@@ -51,11 +53,12 @@ class EventViewController: UIViewController {
     
         view.backgroundColor = UIColor.flatNavyBlueColorDark()
 
-        let stack = StackView(pad: 20)
+        let stack = StackView()
         view.addSubview(stack.inScrollView(insetPercent: 0.1)) { v, make in
             make.edges.equalToSuperview()
         }
 
+        stack.addSubview(.spacer(withHeight: 20))
         stack.addSubview(UITextField.self) { v, make in
             v.text = self.event.name
             v.backgroundColor = UIColor.flatNavyBlue()
@@ -69,16 +72,20 @@ class EventViewController: UIViewController {
                 self.suggestionsTableView.reloadData()
             }).disposed(by: self.disposeBag)
         }
-        stack.addSubview(self.linkButton, Style.ButtonLabel) { v, make in
-            v.backgroundColor = EventType.stateColor
-            v.setTitle("\(self.event.link?.uuidString ?? "")", for: .normal)
-            v.rx.tap.subscribe(onNext: {
-                guard let link = self.event.link, let event = SyncManager.data.value.event(forId: link) else {
-                    return
-                }
-                self.push(event: event)
-            }).disposed(by: self.disposeBag)
+        if self.event.link != nil {
+            stack.addSubview(.spacer(withHeight: 20))
+            stack.addSubview(self.linkButton, Style.ButtonLabel) { v, make in
+                v.backgroundColor = EventType.stateColor
+                v.setTitle("\(self.event.link?.uuidString ?? "")", for: .normal)
+                v.rx.tap.subscribe(onNext: {
+                    guard let link = self.event.link, let event = SyncManager.data.value.event(forId: link) else {
+                        return
+                    }
+                    self.push(event: event)
+                }).disposed(by: self.disposeBag)
+            }
         }
+        stack.addSubview(.spacer(withHeight: 20))
         stack.addSubview(self.dateTextField) { v, make in
             v.text = self.dateFormatter.string(from: self.event.date)
             v.textColor = UIColor.flatWhiteColorDark()
@@ -105,6 +112,8 @@ class EventViewController: UIViewController {
 
             make.height.equalTo(50)
         }
+        stack.addSubview(self.timeAgoLabel, Style.SubtitleLabel)
+        stack.addSubview(.spacer(withHeight: 20))
         stack.addSubview(self.suggestionsTableView) { v, make in
             v.delegate = self
             v.dataSource = self
@@ -114,6 +123,7 @@ class EventViewController: UIViewController {
             v.separatorColor = UIColor.flatWhiteColorDark()
             make.height.equalToSuperview().priority(UILayoutPriority.defaultHigh)
         }
+        stack.addSubview(.spacer(withHeight: 20))
         stack.addSubview(self.noteTextView) { v, make in
             v.text = self.event.note
             v.backgroundColor = UIColor.flatNavyBlue()
@@ -135,13 +145,21 @@ class EventViewController: UIViewController {
             make.bottom.equalTo(self.keyboardView.snp.top)
         }
     }
+
+    @objc private func updateTimeAgo() {
+        timeAgoLabel.text = timeAgoString(fromDate: self.event.date)
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         keyboardView.enabled = true
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimeAgo), userInfo: nil, repeats: true)
+        updateTimeAgo()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         keyboardView.enabled = false
+        timer?.invalidate()
+        timer = nil
     }
 
     private func push(event: Event) {

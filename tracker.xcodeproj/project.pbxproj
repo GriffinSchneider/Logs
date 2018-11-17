@@ -59,6 +59,8 @@
 		85FAF107219E65A400A3565C /* StackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FAF105219E65A400A3565C /* StackView.swift */; };
 		85FAF109219E664E00A3565C /* UIView+Spacers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FAF108219E664E00A3565C /* UIView+Spacers.swift */; };
 		85FAF10A219E664E00A3565C /* UIView+Spacers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FAF108219E664E00A3565C /* UIView+Spacers.swift */; };
+		85FAF10C219F630B00A3565C /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FAF10B219F630B00A3565C /* Utils.swift */; };
+		85FAF10D219F630B00A3565C /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FAF10B219F630B00A3565C /* Utils.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -135,6 +137,7 @@
 		85FAF1022199FE6B00A3565C /* Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utils.m; sourceTree = "<group>"; };
 		85FAF105219E65A400A3565C /* StackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackView.swift; sourceTree = "<group>"; };
 		85FAF108219E664E00A3565C /* UIView+Spacers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Spacers.swift"; sourceTree = "<group>"; };
+		85FAF10B219F630B00A3565C /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		9966693FBD0AEE9D859492DE /* Pods-tracker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tracker.release.xcconfig"; path = "Pods/Target Support Files/Pods-tracker/Pods-tracker.release.xcconfig"; sourceTree = "<group>"; };
 		AF11449F2EFACA3CE0CA70BB /* Pods_tracker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_tracker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B52C20B1681CFD3D6586731B /* Pods_TrackerToday.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TrackerToday.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -233,6 +236,7 @@
 				85AC34CA1D76288B00EBFC12 /* Styles.swift */,
 				85FAF1012199FE6B00A3565C /* Utils.h */,
 				85FAF1022199FE6B00A3565C /* Utils.m */,
+				85FAF10B219F630B00A3565C /* Utils.swift */,
 				857DA4BD1D090C7B00497E60 /* Assets.xcassets */,
 				857DA4BF1D090C7B00497E60 /* LaunchScreen.storyboard */,
 				857DA4C21D090C7B00497E60 /* Info.plist */,
@@ -494,6 +498,7 @@
 				858916521DF4A283005C53E1 /* SchemaModel.swift in Sources */,
 				8527E87D1DC68124008E8234 /* ReadingViewController.swift in Sources */,
 				85AC34C81D761D7500EBFC12 /* Extensions.swift in Sources */,
+				85FAF10C219F630B00A3565C /* Utils.swift in Sources */,
 				858B4AC81DC990EE00D56020 /* EventViewController.swift in Sources */,
 				85034EBC1DC9405A0032DEBC /* ListViewController.swift in Sources */,
 				855566031E62008300E03555 /* NotificationManager.swift in Sources */,
@@ -530,6 +535,7 @@
 				85FAF10A219E664E00A3565C /* UIView+Spacers.swift in Sources */,
 				85E7D41D1DC6C4F4004E67D9 /* MainViewController.swift in Sources */,
 				85E7D42A1DC6C625004E67D9 /* Extensions.swift in Sources */,
+				85FAF10D219F630B00A3565C /* Utils.swift in Sources */,
 				85E7D42B1DC6C70D004E67D9 /* UIColor+Chameleon.m in Sources */,
 				85E7D4201DC6C4F4004E67D9 /* Styles.swift in Sources */,
 				8564AEFE1ED7380800C1B195 /* Popover.swift in Sources */,
