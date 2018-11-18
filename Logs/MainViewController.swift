@@ -17,8 +17,10 @@ let SPACING: CGFloat = 5.0
 let SECTION_INSETS = UIEdgeInsets(top: 30, left: 10, bottom: 0, right: 10)
 let BUTTON_INSETS = UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2)
 
+private typealias ButtonAndValue = (UIButton, SectionValue)
+
 enum SectionValue {
-    case action(String, () -> ())
+    case action(String, (UIButton) -> ())
     case occurrence(OccurrenceSchema)
     case activeState(Event)
     case state(StateSchema, isActive: UUID?)
@@ -41,6 +43,13 @@ extension SectionValue: Hashable {
         case let .task(e):
             return e.hashValue
         }
+    }
+}
+extension SectionValue: GridViewButtonData {
+    var keepSmall: Bool {
+        // TODO: Ugly.
+        if case let .action(s, _) = self, s == "🔎" { return true }
+        return false
     }
 }
 func ==(lhs: SectionValue, rhs: SectionValue) -> Bool {
@@ -145,14 +154,9 @@ private func valToEvent(_ v: SectionValue) -> Event? {
     }
 }
 
-@discardableResult private func execVal(_ v: SectionValue) -> Bool {
-    switch v {
-    case let .action(_, b):
-        b()
-        return true
-    default:
-        return false
-    }
+@discardableResult private func execVal(bv: ButtonAndValue) -> ButtonAndValue {
+    if case let .action(_, block) = bv.1 { block(bv.0) }
+    return bv
 }
 
 private func configure(button b: UIButton, forSectionValue data: SectionValue) {
@@ -215,12 +219,12 @@ class MainViewController: UIViewController {
         }
         
         let topActions: [SectionValue] = [
-            .action("Edit") {
+            .action("Edit") { _ in
                 self.present(UINavigationController(rootViewController: ListViewController() {
                     self.dismiss(animated: true)
                 }), animated: true)
             },
-            .action("Reload") {
+            .action("Reload") { _ in
                 let ac = UIAlertController(title: "u sure bro?", message: nil, preferredStyle: .alert)
                 ac.addAction(UIAlertAction(title: "yeah bro", style: .default) { _ in
                     let ac = UIAlertController(title: "rly tho?", message: nil, preferredStyle: .alert)
@@ -233,18 +237,27 @@ class MainViewController: UIViewController {
                 ac.addAction(UIAlertAction(title: "nah bro", style: .cancel) { _ in })
                 self.present(ac, animated: true)
             },
-            .action("Save") {
+            .action("Save") { _ in
                 SyncManager.upload()
             },
+            .action("🔎") { b in
+                // TODO: Filtering Popover
+//                PopoverButtonInfo(
+//                    config: { $0.backgroundColor = EventType.stateColor },
+//                    tap: {
+//                    }
+//                )
+//                popover(inView: self.view, onButton: b, disposeBag: self.disposeBag, buttons: buttons)
+            }
         ]
         
         let bottomActions: [SectionValue] = [
-            .action("Reading") {
+            .action("Reading") { _ in
                 self.doReading()
             }
         ]
         let taskActions: [SectionValue] = [
-            .action("New Task") {
+            .action("New Task") { _ in
                 self.addAndEdit(event: Event(id: UUID(), name: "", date: Date(), type: .CreateTask))
             }
         ]
@@ -284,10 +297,7 @@ class MainViewController: UIViewController {
         gridView
             .selection
             .observeOn(MainScheduler.instance)
-            .map { sel -> (UIButton, SectionValue) in
-                execVal(sel.1)
-                return sel
-            }
+            .map (execVal)
             .observeOn(SerialDispatchQueueScheduler(internalSerialQueueName: "Background"))
             .map { sel -> ((UIButton, SectionValue), Event?, [Data.Suggestion]) in
                 

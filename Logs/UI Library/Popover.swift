@@ -19,7 +19,7 @@ struct PopoverButtonInfo {
 
 func popover(
     inView: UIView,
-    onButton button: UIButton,
+    onButton button: UIView,
     disposeBag: DisposeBag,
     buttons: [PopoverButtonInfo],
     barButtons: [PopoverButtonInfo] = []
